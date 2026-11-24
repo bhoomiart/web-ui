@@ -65,13 +65,20 @@ Generic primitives used everywhere — storefront and admin alike.
 
 > Output: `components/ui/` (9 components + barrel index)
 
-### A1-T4 · Route Group Shells
+### A1-T4 · Route Group Shells ✅
 Create the two route groups that separate storefront from admin.
 
-- [ ] A1-T4-1 · `app/(storefront)/layout.tsx` shell
-- [ ] A1-T4-2 · `app/(admin)/layout.tsx` shell
-- [ ] A1-T4-3 · Confirm existing `/` route still resolves correctly
-- [ ] A1-T4-4 · Decide where the coming-soon page lives long-term (keep at root or move)
+- [x] A1-T4-1 · `app/(storefront)/layout.tsx` shell
+- [x] A1-T4-2 · `app/(admin)/layout.tsx` shell
+- [x] A1-T4-3 · Confirm existing `/` route still resolves correctly — ✅ verified in build
+- [x] A1-T4-4 · Coming-soon stays at root `app/page.tsx`; storefront pages live under `app/(storefront)/`; admin pages under `app/(admin)/admin/`
+
+> Output:
+> - `app/(storefront)/layout.tsx` — passthrough shell, Navbar/Footer placeholder comments
+> - `app/(storefront)/shop/page.tsx` — placeholder for A5-T3
+> - `app/(admin)/layout.tsx` — flex layout shell, Sidebar/Topbar placeholder comments
+> - `app/(admin)/admin/dashboard/page.tsx` — placeholder for A3-T2
+> - Build: `/` ✓  `/shop` ✓  `/admin/dashboard` ✓
 
 ### A1-T5 · Storefront Navigation & Footer
 The chrome every storefront page shares.
