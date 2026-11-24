@@ -72,7 +72,25 @@ export default function Home() {
         <div className="animate-float-up delay-200 mb-6">
           <Image
             src="/logo-icon.png"
-            alt="Bhoomi Art — The beauty of Mother Earth"
+            alt="Bhoomi Art Logo"
+            width={300}
+            height={240}
+            priority
+            className="mx-auto drop-shadow-xl mb-4"
+            style={{ width: "300px", height: "auto" }}
+          />
+          <Image
+            src="/Bhoomi_Art_Wordmark_HD.png"
+            alt="Bhoomi Art"
+            width={300}
+            height={240}
+            priority
+            className="mx-auto drop-shadow-xl mb-8"
+            style={{ width: "300px", height: "auto" }}
+          />
+          <Image
+            src="/Bhoomi_Art_Tagline_HD.png"
+            alt=" — The beauty of Mother Earth — "
             width={300}
             height={240}
             priority
@@ -82,7 +100,7 @@ export default function Home() {
         </div>
 
         {/* Brand name */}
-        <h1
+        {/* <h1
           className="animate-float-up delay-300 leading-tight mb-1"
           style={{
             fontFamily: "var(--font-playfair)",
@@ -93,7 +111,7 @@ export default function Home() {
             textShadow: "2px 3px 10px rgba(168,104,58,0.18)",
           }}
         >
-          BHOOMI ART
+          BHOOMI<br/>ART
         </h1>
         <p
           className="animate-float-up delay-400 mb-1"
@@ -105,10 +123,10 @@ export default function Home() {
           }}
         >
           The beauty of Mother Earth
-        </p>
+        </p> */}
 
         {/* Divider */}
-        <div className="animate-float-up delay-600 flex items-center gap-3 my-5 w-full max-w-xs">
+        <div className="animate-float-up delay-600 flex items-center gap-3 mb-5 w-full max-w-xs">
           <div className="flex-1 h-px" style={{ background: "#d4b08a" }} />
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path d="M12 2C8 2 4 6 4 12s4 10 8 10 8-4 8-10S16 2 12 2z" fill="#c08b5c" opacity="0.6" />
