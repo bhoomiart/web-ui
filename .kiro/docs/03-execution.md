@@ -32,12 +32,14 @@ A1 → A2 ─┬─ A3 → A4 → A6 → A7 → A8
 
 ## A1 — Foundation & Design System
 
-### A1-T1 · Next.js 16 Audit
+### A1-T1 · Next.js 16 Audit ✅
 Before writing a single line of code, understand what changed in Next.js 16.
 
-- [ ] A1-T1-1 · Read `node_modules/next/dist/docs/` and note breaking changes vs Next.js 14/15
-- [ ] A1-T1-2 · Document changes to: LayoutProps, metadata API, Server Actions, font loading, caching, generateMetadata
-- [ ] A1-T1-3 · Confirm route-group conventions and middleware API for this version
+- [x] A1-T1-1 · Read `node_modules/next/dist/docs/` and note breaking changes vs Next.js 14/15
+- [x] A1-T1-2 · Document changes to: LayoutProps, metadata API, Server Actions, font loading, caching, generateMetadata
+- [x] A1-T1-3 · Confirm route-group conventions and middleware API for this version
+
+> Output: `.kiro/docs/A1-T1-nextjs16-audit.md`
 
 ### A1-T2 · Design Token Expansion
 Extend the existing `globals.css` into a full design system.
