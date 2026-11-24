@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-earth-50: #fdf8f3;
+  /* ─────────────────────────────────────────────
+     COLOUR PALETTE
+     All existing tokens preserved exactly.
+     ───────────────────────────────────────────── */
+
+  /* Terracotta / Earth */
+  --color-earth-50:  #fdf8f3;
   --color-earth-100: #f5ede0;
   --color-earth-200: #e8d5be;
   --color-earth-300: #d4b08a;
@@ -12,7 +18,8 @@
   --color-earth-800: #522e1c;
   --color-earth-900: #3a1f12;
 
-  --color-forest-50: #f0f7f2;
+  /* Forest / Earthy Green */
+  --color-forest-50:  #f0f7f2;
   --color-forest-100: #d6ead9;
   --color-forest-200: #a8d0ae;
   --color-forest-300: #72b07b;
@@ -23,15 +30,387 @@
   --color-forest-800: #0e3018;
   --color-forest-900: #082010;
 
+  /* Semantic brand colours — these are the "named" colours used in components */
+  --color-brand-primary:    #B65E3C;   /* Terracotta — per requirements */
+  --color-brand-clay:       #80513B;   /* Clay Brown */
+  --color-brand-sand:       #E9DCC8;   /* Sand Beige */
+  --color-brand-ivory:      #FAF7F0;   /* Warm Ivory */
+  --color-brand-green:      #68765A;   /* Earthy Green */
+  --color-brand-charcoal:   #302923;   /* Deep Charcoal */
+
+  /* Status colours */
+  --color-success-light: #d1fae5;
+  --color-success:       #059669;
+  --color-success-dark:  #065f46;
+  --color-warning-light: #fef3c7;
+  --color-warning:       #d97706;
+  --color-warning-dark:  #92400e;
+  --color-error-light:   #fee2e2;
+  --color-error:         #dc2626;
+  --color-error-dark:    #991b1b;
+  --color-info-light:    #dbeafe;
+  --color-info:          #2563eb;
+  --color-info-dark:     #1e40af;
+
+  /* ─────────────────────────────────────────────
+     TYPOGRAPHY
+     ───────────────────────────────────────────── */
+
+  /* Font families — existing variables preserved */
   --font-serif: var(--font-playfair);
-  --font-sans: var(--font-lato);
+  --font-sans:  var(--font-lato);
+  --font-mono:  ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+
+  /* Type scale — fluid-ish, all rem-based on 16px root */
+  --font-size-2xs:  0.625rem;   /* 10px */
+  --font-size-xs:   0.75rem;    /* 12px */
+  --font-size-sm:   0.875rem;   /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg:   1.125rem;   /* 18px */
+  --font-size-xl:   1.25rem;    /* 20px */
+  --font-size-2xl:  1.5rem;     /* 24px */
+  --font-size-3xl:  1.875rem;   /* 30px */
+  --font-size-4xl:  2.25rem;    /* 36px */
+  --font-size-5xl:  3rem;       /* 48px */
+  --font-size-6xl:  3.75rem;    /* 60px */
+  --font-size-7xl:  4.5rem;     /* 72px */
+
+  /* Line heights paired with sizes */
+  --line-height-tight:   1.2;
+  --line-height-snug:    1.35;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.65;
+  --line-height-loose:   2;
+
+  /* Letter spacings */
+  --letter-spacing-tighter: -0.04em;
+  --letter-spacing-tight:   -0.02em;
+  --letter-spacing-normal:   0em;
+  --letter-spacing-wide:     0.04em;
+  --letter-spacing-wider:    0.08em;
+  --letter-spacing-widest:   0.16em;
+
+  /* Font weights */
+  --font-weight-light:    300;
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+  --font-weight-extrabold: 800;
+
+  /* ─────────────────────────────────────────────
+     SPACING SCALE  (4px grid)
+     Named steps so components can reference tokens
+     instead of arbitrary numbers.
+     ───────────────────────────────────────────── */
+
+  --spacing-0:   0px;
+  --spacing-px:  1px;
+  --spacing-0-5: 2px;
+  --spacing-1:   4px;
+  --spacing-1-5: 6px;
+  --spacing-2:   8px;
+  --spacing-2-5: 10px;
+  --spacing-3:   12px;
+  --spacing-3-5: 14px;
+  --spacing-4:   16px;
+  --spacing-5:   20px;
+  --spacing-6:   24px;
+  --spacing-7:   28px;
+  --spacing-8:   32px;
+  --spacing-9:   36px;
+  --spacing-10:  40px;
+  --spacing-11:  44px;
+  --spacing-12:  48px;
+  --spacing-14:  56px;
+  --spacing-16:  64px;
+  --spacing-18:  72px;
+  --spacing-20:  80px;
+  --spacing-24:  96px;
+  --spacing-28:  112px;
+  --spacing-32:  128px;
+  --spacing-36:  144px;
+  --spacing-40:  160px;
+  --spacing-48:  192px;
+  --spacing-56:  224px;
+  --spacing-64:  256px;
+  --spacing-72:  288px;
+  --spacing-80:  320px;
+  --spacing-96:  384px;
+
+  /* ─────────────────────────────────────────────
+     BORDER RADIUS
+     ───────────────────────────────────────────── */
+
+  --radius-none: 0px;
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-3xl:  32px;
+  --radius-full: 9999px;
+
+  /* Component-level radius aliases */
+  --radius-button: var(--radius-full);    /* pill buttons — matches brand */
+  --radius-card:   var(--radius-lg);
+  --radius-input:  var(--radius-md);
+  --radius-badge:  var(--radius-full);
+  --radius-modal:  var(--radius-xl);
+  --radius-image:  var(--radius-md);
+
+  /* ─────────────────────────────────────────────
+     SHADOWS
+     Warm-tinted to complement the earthy palette.
+     ───────────────────────────────────────────── */
+
+  --shadow-xs:     0 1px 2px 0 rgba(58, 31, 18, 0.06);
+  --shadow-sm:     0 1px 3px 0 rgba(58, 31, 18, 0.10), 0 1px 2px -1px rgba(58, 31, 18, 0.06);
+  --shadow-md:     0 4px 6px -1px rgba(58, 31, 18, 0.10), 0 2px 4px -2px rgba(58, 31, 18, 0.06);
+  --shadow-lg:     0 10px 15px -3px rgba(58, 31, 18, 0.10), 0 4px 6px -4px rgba(58, 31, 18, 0.06);
+  --shadow-xl:     0 20px 25px -5px rgba(58, 31, 18, 0.10), 0 8px 10px -6px rgba(58, 31, 18, 0.06);
+  --shadow-2xl:    0 25px 50px -12px rgba(58, 31, 18, 0.25);
+  --shadow-inner:  inset 0 2px 4px 0 rgba(58, 31, 18, 0.06);
+  --shadow-none:   0 0 #0000;
+
+  /* Component-level shadow aliases */
+  --shadow-card:   0 2px 8px 0 rgba(58, 31, 18, 0.08), 0 1px 2px -1px rgba(58, 31, 18, 0.05);
+  --shadow-card-hover: 0 8px 24px 0 rgba(58, 31, 18, 0.12), 0 2px 8px -2px rgba(58, 31, 18, 0.08);
+  --shadow-button: 0 4px 14px 0 rgba(166, 104, 58, 0.30);
+  --shadow-button-green: 0 4px 14px 0 rgba(45, 115, 64, 0.30);
+  --shadow-modal:  0 24px 48px -8px rgba(58, 31, 18, 0.20);
+  --shadow-dropdown: 0 8px 16px -4px rgba(58, 31, 18, 0.12);
+  --shadow-image:  2px 4px 12px rgba(58, 31, 18, 0.15);
+
+  /* ─────────────────────────────────────────────
+     Z-INDEX SCALE
+     ───────────────────────────────────────────── */
+
+  --z-index-below:    -1;
+  --z-index-base:      0;
+  --z-index-raised:    10;
+  --z-index-dropdown:  100;
+  --z-index-sticky:    200;
+  --z-index-overlay:   300;
+  --z-index-modal:     400;
+  --z-index-toast:     500;
+  --z-index-tooltip:   600;
+
+  /* ─────────────────────────────────────────────
+     TRANSITION & ANIMATION
+     ───────────────────────────────────────────── */
+
+  --duration-instant:  50ms;
+  --duration-fast:     100ms;
+  --duration-normal:   200ms;
+  --duration-slow:     300ms;
+  --duration-slower:   500ms;
+  --duration-slowest:  700ms;
+
+  --ease-default:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:      cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ─────────────────────────────────────────────
+     LAYOUT
+     ───────────────────────────────────────────── */
+
+  --max-width-xs:    320px;
+  --max-width-sm:    384px;
+  --max-width-md:    448px;
+  --max-width-lg:    512px;
+  --max-width-xl:    576px;
+  --max-width-2xl:   672px;
+  --max-width-3xl:   768px;
+  --max-width-4xl:   896px;
+  --max-width-5xl:   1024px;
+  --max-width-6xl:   1152px;
+  --max-width-7xl:   1280px;
+  --max-width-prose: 65ch;
+  --max-width-full:  100%;
 }
 
+/* ─────────────────────────────────────────────
+   BASE STYLES
+   ───────────────────────────────────────────── */
+
 body {
-  background: #fdf8f3;
-  color: #3a1f12;
+  background: var(--color-earth-50);
+  color: var(--color-earth-900);
   font-family: var(--font-lato), "Lato", Arial, sans-serif;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY UTILITY CLASSES
+   Used across storefront and admin for consistent
+   heading and body text styles.
+   ───────────────────────────────────────────── */
+
+.heading-display {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: var(--font-size-7xl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-brand-charcoal);
+}
+
+.heading-1 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-brand-charcoal);
+}
+
+.heading-2 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-snug);
+  color: var(--color-brand-charcoal);
+}
+
+.heading-3 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  color: var(--color-earth-800);
+}
+
+.heading-4 {
+  font-family: var(--font-lato), Arial, sans-serif;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-snug);
+  color: var(--color-earth-800);
+}
+
+.heading-5 {
+  font-family: var(--font-lato), Arial, sans-serif;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  color: var(--color-earth-800);
+}
+
+.heading-6 {
+  font-family: var(--font-lato), Arial, sans-serif;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+  color: var(--color-earth-700);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.body-large {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-earth-800);
+}
+
+.body-base {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-earth-800);
+}
+
+.body-small {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  color: var(--color-earth-700);
+}
+
+.caption {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
+  color: var(--color-earth-500);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.label-uppercase {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--color-earth-600);
+}
+
+/* Brand signature text */
+.brand-signature {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--color-earth-400);
+}
+
+/* ─────────────────────────────────────────────
+   FOCUS RING
+   Accessible, brand-coloured focus indicator.
+   Applied to interactive elements.
+   ───────────────────────────────────────────── */
+
+.focus-ring {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR
+   Subtle, brand-tinted scrollbar for webkit.
+   ───────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-earth-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-earth-300);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-earth-400);
+}
+
+/* ─────────────────────────────────────────────
+   SELECTION
+   Brand-tinted text selection.
+   ───────────────────────────────────────────── */
+
+::selection {
+  background: var(--color-earth-200);
+  color: var(--color-earth-900);
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+   All existing keyframes and utility classes
+   preserved exactly — coming-soon page relies on these.
+   ───────────────────────────────────────────── */
 
 @keyframes float-up {
   0% {
@@ -54,6 +433,43 @@ body {
   100% { background-position: 200% center; }
 }
 
+@keyframes blink-dot {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%       { opacity: 0.25; transform: scale(0.75); }
+}
+
+/* New animations for components */
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* Existing utility classes — unchanged */
 .animate-float-up {
   animation: float-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -62,18 +478,101 @@ body {
   animation: fade-in 1.2s ease both;
 }
 
-.delay-200  { animation-delay: 0.2s; }
-.delay-400  { animation-delay: 0.4s; }
-.delay-600  { animation-delay: 0.6s; }
-.delay-800  { animation-delay: 0.8s; }
-.delay-1000 { animation-delay: 1.0s; }
-.delay-1200 { animation-delay: 1.2s; }
-
-@keyframes blink-dot {
-  0%, 100% { opacity: 1;    transform: scale(1); }
-  50%       { opacity: 0.25; transform: scale(0.75); }
-}
-
 .animate-blink-dot {
   animation: blink-dot 1.6s ease-in-out infinite;
+}
+
+/* New animation utilities */
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s var(--ease-spring) both;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.4s var(--ease-spring) both;
+}
+
+.animate-slide-in-up {
+  animation: slide-in-up 0.35s var(--ease-spring) both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s var(--ease-out) both;
+}
+
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Delay utilities — existing ones preserved, extended set added */
+.delay-50   { animation-delay:  0.05s; }
+.delay-100  { animation-delay:  0.1s; }
+.delay-200  { animation-delay:  0.2s; }
+.delay-300  { animation-delay:  0.3s; }
+.delay-400  { animation-delay:  0.4s; }
+.delay-600  { animation-delay:  0.6s; }
+.delay-800  { animation-delay:  0.8s; }
+.delay-1000 { animation-delay:  1.0s; }
+.delay-1200 { animation-delay:  1.2s; }
+.delay-1500 { animation-delay:  1.5s; }
+
+/* ─────────────────────────────────────────────
+   LAYOUT HELPERS
+   ───────────────────────────────────────────── */
+
+/* Safe area padding for mobile bottom bar */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Visually hide but keep accessible to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Container with brand max-width */
+.container-brand {
+  width: 100%;
+  max-width: var(--max-width-7xl);
+  margin-inline: auto;
+  padding-inline: var(--spacing-6);
+}
+
+@media (min-width: 640px) {
+  .container-brand {
+    padding-inline: var(--spacing-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-brand {
+    padding-inline: var(--spacing-12);
+  }
+}
+
+/* Divider with optional label */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  color: var(--color-earth-400);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-earth-200);
 }

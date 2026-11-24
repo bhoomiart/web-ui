@@ -41,14 +41,14 @@ Before writing a single line of code, understand what changed in Next.js 16.
 
 > Output: `.kiro/docs/A1-T1-nextjs16-audit.md`
 
-### A1-T2 · Design Token Expansion
+### A1-T2 · Design Token Expansion ✅
 Extend the existing `globals.css` into a full design system.
 
-- [ ] A1-T2-1 · Full spacing scale on a 4px grid (4px → 96px named steps)
-- [ ] A1-T2-2 · Type scale (xs to 5xl) with matching line-height pairs
-- [ ] A1-T2-3 · Shadow tokens: sm, md, lg, xl, card, button
-- [ ] A1-T2-4 · Border-radius tokens: sm, md, lg, full
-- [ ] A1-T2-5 · Smoke test — coming-soon page looks identical after changes
+- [x] A1-T2-1 · Full spacing scale on a 4px grid (4px → 96px named steps)
+- [x] A1-T2-2 · Type scale (xs to 5xl) with matching line-height pairs
+- [x] A1-T2-3 · Shadow tokens: sm, md, lg, xl, card, button
+- [x] A1-T2-4 · Border-radius tokens: sm, md, lg, full
+- [x] A1-T2-5 · Smoke test — build passes, coming-soon page unchanged
 
 ### A1-T3 · Base UI Component Library
 Generic primitives used everywhere — storefront and admin alike.
