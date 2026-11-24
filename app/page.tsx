@@ -101,7 +101,6 @@ export default function Home() {
             fontFamily: "var(--font-playfair)",
             fontSize: "clamp(0.95rem, 2.5vw, 1.15rem)",
             color: "#8b5230",
-            fontStyle: "italic",
             letterSpacing: "0.06em",
           }}
         >
