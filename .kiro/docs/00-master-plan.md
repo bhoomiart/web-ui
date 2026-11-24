@@ -12,6 +12,7 @@ A premium terracotta e-commerce platform for **Bhoomi Art** — a handcrafted go
 Two interfaces: a customer storefront and a secure admin dashboard.
 
 **Brand identity:**
+
 - Name: Bhoomi Art
 - Tagline: Beauty of Mother Earth
 - Signature: Rooted in Earth · Shaped by Hand · Born with Love
@@ -20,27 +21,27 @@ Two interfaces: a customer storefront and a secure admin dashboard.
 
 ## Document Index
 
-| Doc | Purpose |
-|---|---|
-| [01-requirements.md](./01-requirements.md) | What the product must do — features, rules, constraints |
-| [02-design.md](./02-design.md) | How we're building it — architecture, schema, tech decisions |
-| [03-execution.md](./03-execution.md) | Who does what, in what order — agents, tasks, subtasks, status |
+| Doc                                        | Purpose                                                        |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| [01-requirements.md](./01-requirements.md) | What the product must do — features, rules, constraints        |
+| [02-design.md](./02-design.md)             | How we're building it — architecture, schema, tech decisions   |
+| [03-execution.md](./03-execution.md)       | Who does what, in what order — agents, tasks, subtasks, status |
 
 ---
 
 ## Technology Stack
 
-| Layer | Choice | Notes |
-|---|---|---|
-| Framework | Next.js 16.4.6 (App Router) | Already in repo — has breaking changes from 14/15 |
-| Language | TypeScript 5 | Strict mode |
-| Styling | Tailwind CSS 4.3 | Via `@tailwindcss/turbopack` |
-| Fonts | Playfair Display + Lato | Already configured |
-| Backend / DB | Supabase (PostgreSQL) | Not yet configured |
-| Auth | Supabase Auth | Not yet configured |
-| Storage | Supabase Storage | Not yet configured |
-| State (client) | Zustand (to be installed) | Cart, UI state |
-| Build | Turbopack | Dev + build |
+| Layer          | Choice                      | Notes                                             |
+| -------------- | --------------------------- | ------------------------------------------------- |
+| Framework      | Next.js 16.4.6 (App Router) | Already in repo — has breaking changes from 14/15 |
+| Language       | TypeScript 5                | Strict mode                                       |
+| Styling        | Tailwind CSS 4.3            | Via `@tailwindcss/turbopack`                      |
+| Fonts          | Playfair Display + Lato     | Already configured                                |
+| Backend / DB   | Supabase (PostgreSQL)       | Not yet configured                                |
+| Auth           | Supabase Auth               | Not yet configured                                |
+| Storage        | Supabase Storage            | Not yet configured                                |
+| State (client) | Zustand (to be installed)   | Cart, UI state                                    |
+| Build          | Turbopack                   | Dev + build                                       |
 
 ---
 

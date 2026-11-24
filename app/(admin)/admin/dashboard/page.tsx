@@ -10,5 +10,5 @@ export default function DashboardPage() {
         Admin dashboard — coming in A3-T2.
       </p>
     </div>
-  )
+  );
 }

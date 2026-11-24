@@ -10,35 +10,42 @@
  * - Bottom bar (copyright, policy links, brand signature)
  */
 
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from 'next/image';
+import Link from 'next/link';
 
 // ─── Nav data ────────────────────────────────────────────────────────────────
 
 const SHOP_LINKS = [
-  { label: 'All Products',       href: '/shop' },
-  { label: 'Collections',        href: '/collections' },
-  { label: 'New Arrivals',       href: '/shop?collection=new-arrivals' },
-  { label: 'Best Sellers',       href: '/shop?collection=bestsellers' },
-  { label: 'Signature Items',    href: '/shop?collection=signature' },
-  { label: 'Custom Creations',   href: '/custom' },
-]
+  { label: 'All Products', href: '/shop' },
+  { label: 'Collections', href: '/collections' },
+  { label: 'New Arrivals', href: '/shop?collection=new-arrivals' },
+  { label: 'Best Sellers', href: '/shop?collection=bestsellers' },
+  { label: 'Signature Items', href: '/shop?collection=signature' },
+  { label: 'Custom Creations', href: '/custom' },
+];
 
 const COMPANY_LINKS = [
-  { label: 'Our Story',          href: '/about' },
+  { label: 'Our Story', href: '/about' },
   { label: 'The Art of Terracotta', href: '/craft' },
-  { label: 'Contact Us',         href: '/contact' },
-  { label: 'FAQs',               href: '/faqs' },
-  { label: 'Shipping Policy',    href: '/policies/shipping' },
-  { label: 'Returns & Refunds',  href: '/policies/returns' },
-]
+  { label: 'Contact Us', href: '/contact' },
+  { label: 'FAQs', href: '/faqs' },
+  { label: 'Shipping Policy', href: '/policies/shipping' },
+  { label: 'Returns & Refunds', href: '/policies/returns' },
+];
 
 const SOCIAL_LINKS = [
   {
     label: 'Instagram',
     href: 'https://www.instagram.com/ba4bhoomiart',
     icon: (
-      <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+      <svg
+        aria-hidden="true"
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+      >
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
         <circle cx="12" cy="12" r="4" />
         <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
@@ -58,31 +65,41 @@ const SOCIAL_LINKS = [
     label: 'Email',
     href: 'mailto:ba4bhoomiart@gmail.com',
     icon: (
-      <svg aria-hidden="true" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      <svg
+        aria-hidden="true"
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth="1.75"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+        />
       </svg>
     ),
   },
-]
+];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 // Computed at module scope (build time) — a predictable value, not a runtime call.
 // Next.js 16 with cacheComponents:true treats new Date() inside render as dynamic;
 // module-scope evaluation is prerendered once and stable.
-const CURRENT_YEAR = new Date().getFullYear()
+const CURRENT_YEAR = new Date().getFullYear();
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function Footer() {
-  const year = CURRENT_YEAR
+  const year = CURRENT_YEAR;
 
   return (
     <footer className="bg-[var(--color-earth-900)] text-[var(--color-earth-200)]">
       {/* Main footer content */}
       <div className="container-brand py-[var(--spacing-16)]">
         <div className="grid grid-cols-1 gap-[var(--spacing-12)] sm:grid-cols-2 lg:grid-cols-4">
-
           {/* ── Brand column ───────────────────────────────────────── */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link
@@ -108,7 +125,8 @@ export function Footer() {
             </Link>
 
             <p className="text-[var(--font-size-sm)] leading-relaxed text-[var(--color-earth-400)] mb-[var(--spacing-6)] max-w-[260px]">
-              Handcrafted terracotta creations rooted in the beauty of Mother Earth. Each piece shaped by hand and born with love.
+              Handcrafted terracotta creations rooted in the beauty of Mother Earth. Each piece
+              shaped by hand and born with love.
             </p>
 
             {/* Social links */}
@@ -196,8 +214,19 @@ export function Footer() {
                 href="mailto:ba4bhoomiart@gmail.com"
                 className="flex items-center gap-[var(--spacing-3)] text-[var(--font-size-sm)] text-[var(--color-earth-300)] hover:text-white transition-colors duration-[var(--duration-fast)] focus-visible:outline-none focus-visible:underline"
               >
-                <svg aria-hidden="true" className="w-4 h-4 shrink-0 text-[var(--color-earth-500)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4 shrink-0 text-[var(--color-earth-500)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
                 </svg>
                 ba4bhoomiart@gmail.com
               </a>
@@ -208,7 +237,12 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-[var(--spacing-3)] text-[var(--font-size-sm)] text-[var(--color-earth-300)] hover:text-white transition-colors duration-[var(--duration-fast)] focus-visible:outline-none focus-visible:underline"
               >
-                <svg aria-hidden="true" className="w-4 h-4 shrink-0 text-[var(--color-earth-500)]" viewBox="0 0 24 24" fill="currentColor">
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4 shrink-0 text-[var(--color-earth-500)]"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
                   <path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.22-1.57A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52z" />
                 </svg>
                 +91 70194 00775
@@ -220,7 +254,14 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-[var(--spacing-3)] text-[var(--font-size-sm)] text-[var(--color-earth-300)] hover:text-white transition-colors duration-[var(--duration-fast)] focus-visible:outline-none focus-visible:underline"
               >
-                <svg aria-hidden="true" className="w-4 h-4 shrink-0 text-[var(--color-earth-500)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.75">
+                <svg
+                  aria-hidden="true"
+                  className="w-4 h-4 shrink-0 text-[var(--color-earth-500)]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                >
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                   <circle cx="12" cy="12" r="4" />
                 </svg>
@@ -261,9 +302,7 @@ export function Footer() {
               © {year} Bhoomi Art. All rights reserved.
             </p>
 
-            <p className="brand-signature">
-              Rooted in Earth · Shaped by Hand · Born with Love
-            </p>
+            <p className="brand-signature">Rooted in Earth · Shaped by Hand · Born with Love</p>
 
             <div className="flex items-center gap-[var(--spacing-4)]">
               <Link
@@ -289,5 +328,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

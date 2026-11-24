@@ -93,6 +93,7 @@ components/
 ### Identity & Auth
 
 **profiles**
+
 ```
 id            uuid  PK  (references auth.users)
 role          enum  'admin' | 'staff'
@@ -106,6 +107,7 @@ created_at    timestamptz
 ### Catalogue
 
 **categories**
+
 ```
 id              uuid  PK
 name            text  NOT NULL
@@ -121,6 +123,7 @@ updated_at      timestamptz
 ```
 
 **subcategories**
+
 ```
 id              uuid  PK
 category_id     uuid  FK → categories
@@ -137,6 +140,7 @@ updated_at      timestamptz
 ```
 
 **products**
+
 ```
 id                    uuid  PK
 name                  text  NOT NULL
@@ -167,6 +171,7 @@ updated_at            timestamptz
 ```
 
 **product_media**
+
 ```
 id             uuid  PK
 product_id     uuid  FK → products
@@ -177,6 +182,7 @@ display_order  int   DEFAULT 0
 ```
 
 **product_variants**
+
 ```
 id              uuid  PK
 product_id      uuid  FK → products
@@ -188,12 +194,14 @@ status          enum  'active' | 'archived'
 ```
 
 **product_tags** + **product_tag_map**
+
 ```
 product_tags:    id, name, slug
 product_tag_map: product_id FK, tag_id FK  (composite PK)
 ```
 
 **product_category_map**
+
 ```
 product_id    uuid  FK → products
 category_id   uuid  FK → categories
@@ -201,6 +209,7 @@ category_id   uuid  FK → categories
 ```
 
 **product_recommendations**
+
 ```
 id                    uuid  PK
 product_id            uuid  FK → products
@@ -214,6 +223,7 @@ display_order         int   DEFAULT 0
 ### Inventory
 
 **inventory**
+
 ```
 id                  uuid  PK
 product_id          uuid  FK → products
@@ -226,6 +236,7 @@ tracking_enabled    bool  DEFAULT true
 ```
 
 **inventory_movements**
+
 ```
 id              uuid  PK
 inventory_id    uuid  FK → inventory
@@ -247,6 +258,7 @@ created_at      timestamptz
 ### Orders
 
 **orders**
+
 ```
 id               uuid  PK
 order_number     text  UNIQUE NOT NULL  (e.g. BA-20261124-0001)
@@ -276,6 +288,7 @@ refund_requested, refund_under_review, refund_approved, refund_processing,
 partially_refunded, refunded, refund_rejected
 
 **order_items**
+
 ```
 id           uuid  PK
 order_id     uuid  FK → orders
@@ -288,6 +301,7 @@ snapshot     jsonb  (product name, sku, image at time of order)
 ```
 
 **order_status_history**
+
 ```
 id               uuid  PK
 order_id         uuid  FK → orders
@@ -299,6 +313,7 @@ created_at       timestamptz
 ```
 
 **return_requests**
+
 ```
 id           uuid  PK
 order_id     uuid  FK → orders
@@ -311,6 +326,7 @@ updated_at   timestamptz
 ```
 
 **return_request_items**
+
 ```
 id                uuid  PK
 return_request_id uuid  FK → return_requests
@@ -320,6 +336,7 @@ image_urls        text[]
 ```
 
 **refunds**
+
 ```
 id                uuid  PK
 order_id          uuid  FK → orders
@@ -334,6 +351,7 @@ actor_id          uuid  FK → profiles
 ```
 
 **refund_status_history**
+
 ```
 id               uuid  PK
 refund_id        uuid  FK → refunds
@@ -349,6 +367,7 @@ created_at       timestamptz
 ### Reviews
 
 **product_reviews**
+
 ```
 id                   uuid  PK
 product_id           uuid  FK → products
@@ -363,6 +382,7 @@ created_at           timestamptz
 ```
 
 **review_media**
+
 ```
 id         uuid  PK
 review_id  uuid  FK → product_reviews
@@ -375,6 +395,7 @@ alt_text   text
 ### Restock
 
 **restock_subscriptions**
+
 ```
 id           uuid  PK
 product_id   uuid  FK → products
@@ -387,6 +408,7 @@ subscribed_at timestamptz
 ```
 
 **restock_notification_history**
+
 ```
 id              uuid  PK
 subscription_id uuid  FK → restock_subscriptions
@@ -401,6 +423,7 @@ provider_response text
 ### Content & Config
 
 **homepage_sections**
+
 ```
 id            uuid  PK
 section_key   text  UNIQUE  (hero, brand_intro, featured_categories, etc.)
@@ -411,6 +434,7 @@ config        jsonb  (section-specific settings)
 ```
 
 **banners**
+
 ```
 id             uuid  PK
 image_url      text  NOT NULL
@@ -423,6 +447,7 @@ display_order  int   DEFAULT 0
 ```
 
 **collections**
+
 ```
 id           uuid  PK
 name         text  NOT NULL
@@ -434,6 +459,7 @@ is_visible   bool  DEFAULT true
 ```
 
 **collection_products**
+
 ```
 collection_id  uuid  FK → collections
 product_id     uuid  FK → products
@@ -442,6 +468,7 @@ display_order  int   DEFAULT 0
 ```
 
 **site_settings**
+
 ```
 key         text  PK
 value       text
@@ -450,6 +477,7 @@ updated_at  timestamptz
 ```
 
 **pages**
+
 ```
 id              uuid  PK
 slug            text  UNIQUE
@@ -462,6 +490,7 @@ updated_at      timestamptz
 ```
 
 **blog_posts** (stub — not surfaced in UI yet)
+
 ```
 id              uuid  PK
 slug            text  UNIQUE
@@ -474,6 +503,7 @@ seo_description text
 ```
 
 **audit_logs**
+
 ```
 id          uuid  PK
 actor_id    uuid  FK → profiles  NULLABLE
@@ -490,22 +520,23 @@ created_at  timestamptz
 
 ### Row Level Security — Summary
 
-| Table | Anon | Authenticated (staff) | Admin only |
-|---|---|---|---|
-| products | SELECT active | — | INSERT, UPDATE, DELETE |
-| categories | SELECT visible | — | INSERT, UPDATE, DELETE |
-| orders | INSERT | SELECT own (phone match) | SELECT all, UPDATE |
-| order_items | — | — | SELECT all |
-| restock_subscriptions | INSERT | — | SELECT, UPDATE |
-| product_reviews | INSERT pending | — | SELECT all, UPDATE |
-| profiles | — | SELECT own | SELECT all, UPDATE |
-| audit_logs | — | — | SELECT (service-role INSERT) |
-| site_settings | SELECT | — | UPDATE |
-| homepage_sections | SELECT | — | UPDATE |
+| Table                 | Anon           | Authenticated (staff)    | Admin only                   |
+| --------------------- | -------------- | ------------------------ | ---------------------------- |
+| products              | SELECT active  | —                        | INSERT, UPDATE, DELETE       |
+| categories            | SELECT visible | —                        | INSERT, UPDATE, DELETE       |
+| orders                | INSERT         | SELECT own (phone match) | SELECT all, UPDATE           |
+| order_items           | —              | —                        | SELECT all                   |
+| restock_subscriptions | INSERT         | —                        | SELECT, UPDATE               |
+| product_reviews       | INSERT pending | —                        | SELECT all, UPDATE           |
+| profiles              | —              | SELECT own               | SELECT all, UPDATE           |
+| audit_logs            | —              | —                        | SELECT (service-role INSERT) |
+| site_settings         | SELECT         | —                        | UPDATE                       |
+| homepage_sections     | SELECT         | —                        | UPDATE                       |
 
 **Rule:** Never trust client-provided role claims. Always derive role from `profiles` table in server-side context.
 
 ### Order Lookup Security
+
 Customers look up orders by supplying **both** phone number **and** order number.
 No route exposes order data by ID alone.
 
@@ -513,11 +544,11 @@ No route exposes order data by ID alone.
 
 ## Storage Buckets
 
-| Bucket | Who uploads | Who reads | Notes |
-|---|---|---|---|
-| `product-media` | Admin only | Public | Product images and videos |
-| `review-media` | Anon (with limits) | Admin only | Review evidence images |
-| `brand-assets` | Admin only | Public | Logos, banners, story images |
+| Bucket          | Who uploads        | Who reads  | Notes                        |
+| --------------- | ------------------ | ---------- | ---------------------------- |
+| `product-media` | Admin only         | Public     | Product images and videos    |
+| `review-media`  | Anon (with limits) | Admin only | Review evidence images       |
+| `brand-assets`  | Admin only         | Public     | Logos, banners, story images |
 
 ---
 
@@ -553,14 +584,14 @@ using the same interface from `lib/communications/index.ts`.
 
 ## SEO Architecture
 
-| Page type | Rendering | Metadata |
-|---|---|---|
-| Homepage | SSR | Static + dynamic sections |
-| Category / Subcategory | SSR + ISR | `generateMetadata` from DB |
-| Product detail | SSR + ISR | `generateMetadata` from DB |
-| Search results | SSR | Dynamic title |
-| Admin pages | SSR (behind auth) | No index |
-| Static pages (About, etc.) | SSG | From `pages` table |
+| Page type                  | Rendering         | Metadata                   |
+| -------------------------- | ----------------- | -------------------------- |
+| Homepage                   | SSR               | Static + dynamic sections  |
+| Category / Subcategory     | SSR + ISR         | `generateMetadata` from DB |
+| Product detail             | SSR + ISR         | `generateMetadata` from DB |
+| Search results             | SSR               | Dynamic title              |
+| Admin pages                | SSR (behind auth) | No index                   |
+| Static pages (About, etc.) | SSG               | From `pages` table         |
 
 Schema.org JSON-LD is rendered as `<script type="application/ld+json">` in `<head>` via each page's layout.
 
@@ -570,27 +601,17 @@ Schema.org JSON-LD is rendered as `<script type="application/ld+json">` in `<hea
 
 ```css
 /* Terracotta palette */
---color-earth-50:  #fdf8f3   /* Warm Ivory */
---color-earth-100: #f5ede0
---color-earth-200: #e8d5be   /* Sand Beige */
---color-earth-300: #d4b08a
---color-earth-400: #c08b5c
---color-earth-500: #a8683a   /* Terracotta mid */
---color-earth-600: #8b5230   /* Clay Brown */
---color-earth-700: #6e3f26
---color-earth-800: #522e1c
---color-earth-900: #3a1f12   /* Deep Charcoal */
-
-/* Forest / earthy green */
---color-forest-500: #2d7340  /* Earthy Green */
---color-forest-600: #1f5a30
-
-/* Typography */
---font-serif: Playfair Display  (headings, editorial)
---font-sans:  Lato              (body, UI)
+--color-earth-50: #fdf8f3 /* Warm Ivory */ --color-earth-100: #f5ede0 --color-earth-200: #e8d5be
+  /* Sand Beige */ --color-earth-300: #d4b08a --color-earth-400: #c08b5c --color-earth-500: #a8683a
+  /* Terracotta mid */ --color-earth-600: #8b5230 /* Clay Brown */ --color-earth-700: #6e3f26
+  --color-earth-800: #522e1c --color-earth-900: #3a1f12 /* Deep Charcoal */
+  /* Forest / earthy green */ --color-forest-500: #2d7340 /* Earthy Green */
+  --color-forest-600: #1f5a30 /* Typography */ --font-serif: Playfair Display (headings, editorial)
+  --font-sans: Lato (body, UI);
 ```
 
 Target brand colors from requirements:
+
 - Terracotta `#B65E3C` → maps to earth-500/600 range
 - Clay Brown `#80513B` → maps to earth-600
 - Sand Beige `#E9DCC8` → maps to earth-200

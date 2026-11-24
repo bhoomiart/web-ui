@@ -1,12 +1,12 @@
-import * as React from 'react'
+import * as React from 'react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info'
+type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: BadgeVariant
-  dot?:     boolean
+  variant?: BadgeVariant;
+  dot?: boolean;
 }
 
 // ─── Style maps ──────────────────────────────────────────────────────────────
@@ -14,7 +14,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 const BASE =
   'inline-flex items-center gap-1.5 ' +
   'rounded-[var(--radius-badge)] border px-2.5 py-0.5 ' +
-  'text-[var(--font-size-xs)] font-semibold leading-none '
+  'text-[var(--font-size-xs)] font-semibold leading-none ';
 
 const VARIANTS: Record<BadgeVariant, string> = {
   default:
@@ -36,21 +36,21 @@ const VARIANTS: Record<BadgeVariant, string> = {
   info:
     'bg-[var(--color-info-light)] text-[var(--color-info-dark)] ' +
     'border-[var(--color-info-light)]',
-}
+};
 
 const DOT_COLORS: Record<BadgeVariant, string> = {
   default: 'bg-[var(--color-earth-500)]',
   success: 'bg-[var(--color-success)]',
   warning: 'bg-[var(--color-warning)]',
-  error:   'bg-[var(--color-error)]',
-  info:    'bg-[var(--color-info)]',
-}
+  error: 'bg-[var(--color-error)]',
+  info: 'bg-[var(--color-info)]',
+};
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function Badge({
-  variant   = 'default',
-  dot       = false,
+  variant = 'default',
+  dot = false,
   className = '',
   children,
   ...rest
@@ -65,7 +65,7 @@ export function Badge({
       )}
       {children}
     </span>
-  )
+  );
 }
 
-Badge.displayName = 'Badge'
+Badge.displayName = 'Badge';

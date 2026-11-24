@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme inline {
   /* ─────────────────────────────────────────────
@@ -7,7 +7,7 @@
      ───────────────────────────────────────────── */
 
   /* Terracotta / Earth */
-  --color-earth-50:  #fdf8f3;
+  --color-earth-50: #fdf8f3;
   --color-earth-100: #f5ede0;
   --color-earth-200: #e8d5be;
   --color-earth-300: #d4b08a;
@@ -19,7 +19,7 @@
   --color-earth-900: #3a1f12;
 
   /* Forest / Earthy Green */
-  --color-forest-50:  #f0f7f2;
+  --color-forest-50: #f0f7f2;
   --color-forest-100: #d6ead9;
   --color-forest-200: #a8d0ae;
   --color-forest-300: #72b07b;
@@ -31,26 +31,26 @@
   --color-forest-900: #082010;
 
   /* Semantic brand colours — these are the "named" colours used in components */
-  --color-brand-primary:    #B65E3C;   /* Terracotta — per requirements */
-  --color-brand-clay:       #80513B;   /* Clay Brown */
-  --color-brand-sand:       #E9DCC8;   /* Sand Beige */
-  --color-brand-ivory:      #FAF7F0;   /* Warm Ivory */
-  --color-brand-green:      #68765A;   /* Earthy Green */
-  --color-brand-charcoal:   #302923;   /* Deep Charcoal */
+  --color-brand-primary: #b65e3c; /* Terracotta — per requirements */
+  --color-brand-clay: #80513b; /* Clay Brown */
+  --color-brand-sand: #e9dcc8; /* Sand Beige */
+  --color-brand-ivory: #faf7f0; /* Warm Ivory */
+  --color-brand-green: #68765a; /* Earthy Green */
+  --color-brand-charcoal: #302923; /* Deep Charcoal */
 
   /* Status colours */
   --color-success-light: #d1fae5;
-  --color-success:       #059669;
-  --color-success-dark:  #065f46;
+  --color-success: #059669;
+  --color-success-dark: #065f46;
   --color-warning-light: #fef3c7;
-  --color-warning:       #d97706;
-  --color-warning-dark:  #92400e;
-  --color-error-light:   #fee2e2;
-  --color-error:         #dc2626;
-  --color-error-dark:    #991b1b;
-  --color-info-light:    #dbeafe;
-  --color-info:          #2563eb;
-  --color-info-dark:     #1e40af;
+  --color-warning: #d97706;
+  --color-warning-dark: #92400e;
+  --color-error-light: #fee2e2;
+  --color-error: #dc2626;
+  --color-error-dark: #991b1b;
+  --color-info-light: #dbeafe;
+  --color-info: #2563eb;
+  --color-info-dark: #1e40af;
 
   /* ─────────────────────────────────────────────
      TYPOGRAPHY
@@ -58,44 +58,44 @@
 
   /* Font families — existing variables preserved */
   --font-serif: var(--font-playfair);
-  --font-sans:  var(--font-lato);
-  --font-mono:  ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  --font-sans: var(--font-lato);
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
 
   /* Type scale — fluid-ish, all rem-based on 16px root */
-  --font-size-2xs:  0.625rem;   /* 10px */
-  --font-size-xs:   0.75rem;    /* 12px */
-  --font-size-sm:   0.875rem;   /* 14px */
-  --font-size-base: 1rem;       /* 16px */
-  --font-size-lg:   1.125rem;   /* 18px */
-  --font-size-xl:   1.25rem;    /* 20px */
-  --font-size-2xl:  1.5rem;     /* 24px */
-  --font-size-3xl:  1.875rem;   /* 30px */
-  --font-size-4xl:  2.25rem;    /* 36px */
-  --font-size-5xl:  3rem;       /* 48px */
-  --font-size-6xl:  3.75rem;    /* 60px */
-  --font-size-7xl:  4.5rem;     /* 72px */
+  --font-size-2xs: 0.625rem; /* 10px */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+  --font-size-6xl: 3.75rem; /* 60px */
+  --font-size-7xl: 4.5rem; /* 72px */
 
   /* Line heights paired with sizes */
-  --line-height-tight:   1.2;
-  --line-height-snug:    1.35;
-  --line-height-normal:  1.5;
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.5;
   --line-height-relaxed: 1.65;
-  --line-height-loose:   2;
+  --line-height-loose: 2;
 
   /* Letter spacings */
   --letter-spacing-tighter: -0.04em;
-  --letter-spacing-tight:   -0.02em;
-  --letter-spacing-normal:   0em;
-  --letter-spacing-wide:     0.04em;
-  --letter-spacing-wider:    0.08em;
-  --letter-spacing-widest:   0.16em;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.04em;
+  --letter-spacing-wider: 0.08em;
+  --letter-spacing-widest: 0.16em;
 
   /* Font weights */
-  --font-weight-light:    300;
-  --font-weight-normal:   400;
-  --font-weight-medium:   500;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
   --font-weight-semibold: 600;
-  --font-weight-bold:     700;
+  --font-weight-bold: 700;
   --font-weight-extrabold: 800;
 
   /* ─────────────────────────────────────────────
@@ -104,134 +104,134 @@
      instead of arbitrary numbers.
      ───────────────────────────────────────────── */
 
-  --spacing-0:   0px;
-  --spacing-px:  1px;
+  --spacing-0: 0px;
+  --spacing-px: 1px;
   --spacing-0-5: 2px;
-  --spacing-1:   4px;
+  --spacing-1: 4px;
   --spacing-1-5: 6px;
-  --spacing-2:   8px;
+  --spacing-2: 8px;
   --spacing-2-5: 10px;
-  --spacing-3:   12px;
+  --spacing-3: 12px;
   --spacing-3-5: 14px;
-  --spacing-4:   16px;
-  --spacing-5:   20px;
-  --spacing-6:   24px;
-  --spacing-7:   28px;
-  --spacing-8:   32px;
-  --spacing-9:   36px;
-  --spacing-10:  40px;
-  --spacing-11:  44px;
-  --spacing-12:  48px;
-  --spacing-14:  56px;
-  --spacing-16:  64px;
-  --spacing-18:  72px;
-  --spacing-20:  80px;
-  --spacing-24:  96px;
-  --spacing-28:  112px;
-  --spacing-32:  128px;
-  --spacing-36:  144px;
-  --spacing-40:  160px;
-  --spacing-48:  192px;
-  --spacing-56:  224px;
-  --spacing-64:  256px;
-  --spacing-72:  288px;
-  --spacing-80:  320px;
-  --spacing-96:  384px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-11: 44px;
+  --spacing-12: 48px;
+  --spacing-14: 56px;
+  --spacing-16: 64px;
+  --spacing-18: 72px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-28: 112px;
+  --spacing-32: 128px;
+  --spacing-36: 144px;
+  --spacing-40: 160px;
+  --spacing-48: 192px;
+  --spacing-56: 224px;
+  --spacing-64: 256px;
+  --spacing-72: 288px;
+  --spacing-80: 320px;
+  --spacing-96: 384px;
 
   /* ─────────────────────────────────────────────
      BORDER RADIUS
      ───────────────────────────────────────────── */
 
   --radius-none: 0px;
-  --radius-xs:   2px;
-  --radius-sm:   4px;
-  --radius-md:   8px;
-  --radius-lg:   12px;
-  --radius-xl:   16px;
-  --radius-2xl:  24px;
-  --radius-3xl:  32px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
   --radius-full: 9999px;
 
   /* Component-level radius aliases */
-  --radius-button: var(--radius-full);    /* pill buttons — matches brand */
-  --radius-card:   var(--radius-lg);
-  --radius-input:  var(--radius-md);
-  --radius-badge:  var(--radius-full);
-  --radius-modal:  var(--radius-xl);
-  --radius-image:  var(--radius-md);
+  --radius-button: var(--radius-full); /* pill buttons — matches brand */
+  --radius-card: var(--radius-lg);
+  --radius-input: var(--radius-md);
+  --radius-badge: var(--radius-full);
+  --radius-modal: var(--radius-xl);
+  --radius-image: var(--radius-md);
 
   /* ─────────────────────────────────────────────
      SHADOWS
      Warm-tinted to complement the earthy palette.
      ───────────────────────────────────────────── */
 
-  --shadow-xs:     0 1px 2px 0 rgba(58, 31, 18, 0.06);
-  --shadow-sm:     0 1px 3px 0 rgba(58, 31, 18, 0.10), 0 1px 2px -1px rgba(58, 31, 18, 0.06);
-  --shadow-md:     0 4px 6px -1px rgba(58, 31, 18, 0.10), 0 2px 4px -2px rgba(58, 31, 18, 0.06);
-  --shadow-lg:     0 10px 15px -3px rgba(58, 31, 18, 0.10), 0 4px 6px -4px rgba(58, 31, 18, 0.06);
-  --shadow-xl:     0 20px 25px -5px rgba(58, 31, 18, 0.10), 0 8px 10px -6px rgba(58, 31, 18, 0.06);
-  --shadow-2xl:    0 25px 50px -12px rgba(58, 31, 18, 0.25);
-  --shadow-inner:  inset 0 2px 4px 0 rgba(58, 31, 18, 0.06);
-  --shadow-none:   0 0 #0000;
+  --shadow-xs: 0 1px 2px 0 rgba(58, 31, 18, 0.06);
+  --shadow-sm: 0 1px 3px 0 rgba(58, 31, 18, 0.1), 0 1px 2px -1px rgba(58, 31, 18, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(58, 31, 18, 0.1), 0 2px 4px -2px rgba(58, 31, 18, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(58, 31, 18, 0.1), 0 4px 6px -4px rgba(58, 31, 18, 0.06);
+  --shadow-xl: 0 20px 25px -5px rgba(58, 31, 18, 0.1), 0 8px 10px -6px rgba(58, 31, 18, 0.06);
+  --shadow-2xl: 0 25px 50px -12px rgba(58, 31, 18, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(58, 31, 18, 0.06);
+  --shadow-none: 0 0 #0000;
 
   /* Component-level shadow aliases */
-  --shadow-card:   0 2px 8px 0 rgba(58, 31, 18, 0.08), 0 1px 2px -1px rgba(58, 31, 18, 0.05);
+  --shadow-card: 0 2px 8px 0 rgba(58, 31, 18, 0.08), 0 1px 2px -1px rgba(58, 31, 18, 0.05);
   --shadow-card-hover: 0 8px 24px 0 rgba(58, 31, 18, 0.12), 0 2px 8px -2px rgba(58, 31, 18, 0.08);
-  --shadow-button: 0 4px 14px 0 rgba(166, 104, 58, 0.30);
-  --shadow-button-green: 0 4px 14px 0 rgba(45, 115, 64, 0.30);
-  --shadow-modal:  0 24px 48px -8px rgba(58, 31, 18, 0.20);
+  --shadow-button: 0 4px 14px 0 rgba(166, 104, 58, 0.3);
+  --shadow-button-green: 0 4px 14px 0 rgba(45, 115, 64, 0.3);
+  --shadow-modal: 0 24px 48px -8px rgba(58, 31, 18, 0.2);
   --shadow-dropdown: 0 8px 16px -4px rgba(58, 31, 18, 0.12);
-  --shadow-image:  2px 4px 12px rgba(58, 31, 18, 0.15);
+  --shadow-image: 2px 4px 12px rgba(58, 31, 18, 0.15);
 
   /* ─────────────────────────────────────────────
      Z-INDEX SCALE
      ───────────────────────────────────────────── */
 
-  --z-index-below:    -1;
-  --z-index-base:      0;
-  --z-index-raised:    10;
-  --z-index-dropdown:  100;
-  --z-index-sticky:    200;
-  --z-index-overlay:   300;
-  --z-index-modal:     400;
-  --z-index-toast:     500;
-  --z-index-tooltip:   600;
+  --z-index-below: -1;
+  --z-index-base: 0;
+  --z-index-raised: 10;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-overlay: 300;
+  --z-index-modal: 400;
+  --z-index-toast: 500;
+  --z-index-tooltip: 600;
 
   /* ─────────────────────────────────────────────
      TRANSITION & ANIMATION
      ───────────────────────────────────────────── */
 
-  --duration-instant:  50ms;
-  --duration-fast:     100ms;
-  --duration-normal:   200ms;
-  --duration-slow:     300ms;
-  --duration-slower:   500ms;
-  --duration-slowest:  700ms;
+  --duration-instant: 50ms;
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --duration-slowest: 700ms;
 
-  --ease-default:  cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-in:       cubic-bezier(0.4, 0, 1, 1);
-  --ease-out:      cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring:   cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* ─────────────────────────────────────────────
      LAYOUT
      ───────────────────────────────────────────── */
 
-  --max-width-xs:    320px;
-  --max-width-sm:    384px;
-  --max-width-md:    448px;
-  --max-width-lg:    512px;
-  --max-width-xl:    576px;
-  --max-width-2xl:   672px;
-  --max-width-3xl:   768px;
-  --max-width-4xl:   896px;
-  --max-width-5xl:   1024px;
-  --max-width-6xl:   1152px;
-  --max-width-7xl:   1280px;
+  --max-width-xs: 320px;
+  --max-width-sm: 384px;
+  --max-width-md: 448px;
+  --max-width-lg: 512px;
+  --max-width-xl: 576px;
+  --max-width-2xl: 672px;
+  --max-width-3xl: 768px;
+  --max-width-4xl: 896px;
+  --max-width-5xl: 1024px;
+  --max-width-6xl: 1152px;
+  --max-width-7xl: 1280px;
   --max-width-prose: 65ch;
-  --max-width-full:  100%;
+  --max-width-full: 100%;
 }
 
 /* ─────────────────────────────────────────────
@@ -241,7 +241,7 @@
 body {
   background: var(--color-earth-50);
   color: var(--color-earth-900);
-  font-family: var(--font-lato), "Lato", Arial, sans-serif;
+  font-family: var(--font-lato), 'Lato', Arial, sans-serif;
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   -webkit-font-smoothing: antialiased;
@@ -424,49 +424,97 @@ body {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes blink-dot {
-  0%, 100% { opacity: 1;    transform: scale(1); }
-  50%       { opacity: 0.25; transform: scale(0.75); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.75);
+  }
 }
 
 /* New animations for components */
 @keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(24px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-in-left {
-  from { opacity: 0; transform: translateX(-24px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 /* Existing utility classes — unchanged */
@@ -508,16 +556,36 @@ body {
 }
 
 /* Delay utilities — existing ones preserved, extended set added */
-.delay-50   { animation-delay:  0.05s; }
-.delay-100  { animation-delay:  0.1s; }
-.delay-200  { animation-delay:  0.2s; }
-.delay-300  { animation-delay:  0.3s; }
-.delay-400  { animation-delay:  0.4s; }
-.delay-600  { animation-delay:  0.6s; }
-.delay-800  { animation-delay:  0.8s; }
-.delay-1000 { animation-delay:  1.0s; }
-.delay-1200 { animation-delay:  1.2s; }
-.delay-1500 { animation-delay:  1.5s; }
+.delay-50 {
+  animation-delay: 0.05s;
+}
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-600 {
+  animation-delay: 0.6s;
+}
+.delay-800 {
+  animation-delay: 0.8s;
+}
+.delay-1000 {
+  animation-delay: 1s;
+}
+.delay-1200 {
+  animation-delay: 1.2s;
+}
+.delay-1500 {
+  animation-delay: 1.5s;
+}
 
 /* ─────────────────────────────────────────────
    LAYOUT HELPERS
@@ -571,7 +639,7 @@ body {
 
 .divider::before,
 .divider::after {
-  content: "";
+  content: '';
   flex: 1;
   height: 1px;
   background: var(--color-earth-200);

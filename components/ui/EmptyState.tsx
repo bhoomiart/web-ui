@@ -1,30 +1,24 @@
-import * as React from 'react'
-import { Button } from './Button'
+import * as React from 'react';
+import { Button } from './Button';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface EmptyStateProps {
   /** SVG / React element shown above the title */
-  icon?:        React.ReactNode
-  title:        string
-  description?: string
+  icon?: React.ReactNode;
+  title: string;
+  description?: string;
   /** If provided, renders a primary button below the description */
   action?: {
-    label:   string
-    onClick: () => void
-  }
-  className?: string
+    label: string;
+    onClick: () => void;
+  };
+  className?: string;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-  className = '',
-}: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action, className = '' }: EmptyStateProps) {
   return (
     <div
       className={
@@ -59,7 +53,7 @@ export function EmptyState({
         </Button>
       )}
     </div>
-  )
+  );
 }
 
-EmptyState.displayName = 'EmptyState'
+EmptyState.displayName = 'EmptyState';

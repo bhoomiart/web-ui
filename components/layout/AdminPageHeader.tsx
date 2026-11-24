@@ -15,22 +15,17 @@
  *   />
  */
 
-import { BreadcrumbNav, type BreadcrumbItem } from './BreadcrumbNav'
+import { BreadcrumbNav, type BreadcrumbItem } from './BreadcrumbNav';
 
 interface AdminPageHeaderProps {
-  title:        string
-  description?: string
+  title: string;
+  description?: string;
   /** Optional element rendered in the top-right — usually a primary action button */
-  action?:      React.ReactNode
-  breadcrumbs?: BreadcrumbItem[]
+  action?: React.ReactNode;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-export function AdminPageHeader({
-  title,
-  description,
-  action,
-  breadcrumbs,
-}: AdminPageHeaderProps) {
+export function AdminPageHeader({ title, description, action, breadcrumbs }: AdminPageHeaderProps) {
   return (
     <div className="mb-[var(--spacing-8)]">
       {/* Breadcrumbs */}
@@ -51,18 +46,11 @@ export function AdminPageHeader({
           )}
         </div>
 
-        {action && (
-          <div className="shrink-0">
-            {action}
-          </div>
-        )}
+        {action && <div className="shrink-0">{action}</div>}
       </div>
 
       {/* Divider */}
-      <div
-        aria-hidden="true"
-        className="mt-[var(--spacing-5)] h-px bg-[var(--color-earth-100)]"
-      />
+      <div aria-hidden="true" className="mt-[var(--spacing-5)] h-px bg-[var(--color-earth-100)]" />
     </div>
-  )
+  );
 }

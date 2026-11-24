@@ -27,11 +27,13 @@ The config export with `matcher` is identical. Everything else works the same.
 The existing project has no middleware file yet, so there is nothing to migrate — just write `proxy.ts` from the start.
 
 Auto-migration command (if ever needed):
+
 ```bash
 npx @next/codemod@canary middleware-to-proxy .
 ```
 
 A new type `NextProxy` is also available for concise typing:
+
 ```ts
 import type { NextProxy } from 'next/server'
 export const proxy: NextProxy = (request, event) => { ... }
@@ -46,30 +48,28 @@ Both `params` and `searchParams` props in layouts and pages are now **async Prom
 ```ts
 // ❌ Old (Next.js 14 / common training data)
 export default function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params  // synchronous access
+  const { slug } = params; // synchronous access
 }
 
 // ✅ New (Next.js 16)
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params  // must await
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // must await
 }
 ```
 
 For **Client Components** that cannot be async, use React's `use()`:
+
 ```ts
-'use client'
-import { use } from 'react'
+'use client';
+import { use } from 'react';
 
 export default function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
+  const { slug } = use(params);
 }
 ```
 
 **Impact on Bhoomi Art:** Every page and layout with dynamic segments (`[slug]`, `[id]`, etc.) must `await params`. This applies to:
+
 - `/category/[slug]/page.tsx`
 - `/category/[slug]/[sub]/page.tsx`
 - `/product/[slug]/page.tsx`
@@ -92,8 +92,8 @@ export default function Layout(props: LayoutProps<'/dashboard'>) {
 
 // PageProps — for page files
 export default async function Page(props: PageProps<'/product/[slug]'>) {
-  const { slug } = await props.params
-  const filters = await props.searchParams
+  const { slug } = await props.params;
+  const filters = await props.searchParams;
 }
 ```
 
@@ -138,38 +138,38 @@ Data that changes per request (cookies, user-specific, real-time stock) is NOT w
 export default function Page() {
   return (
     <>
-      <StaticHero />        {/* included in static shell */}
+      <StaticHero /> {/* included in static shell */}
       <Suspense fallback={<Spinner />}>
         <LiveStockStatus /> {/* streams at request time */}
       </Suspense>
     </>
-  )
+  );
 }
 ```
 
 ### Key rule for Bhoomi Art
 
-| Data type | Strategy |
-|---|---|
-| Product catalogue (changes rarely) | `'use cache'` + `cacheLife('hours')` |
-| Category/homepage sections | `'use cache'` + `cacheLife('hours')` |
-| Order status (per-user) | `<Suspense>` — no cache |
-| Cart contents | Client-side only (Zustand + localStorage) |
-| Stock counts on product page | `<Suspense>` — streams fresh |
-| Admin dashboard metrics | `<Suspense>` — streams fresh |
+| Data type                          | Strategy                                  |
+| ---------------------------------- | ----------------------------------------- |
+| Product catalogue (changes rarely) | `'use cache'` + `cacheLife('hours')`      |
+| Category/homepage sections         | `'use cache'` + `cacheLife('hours')`      |
+| Order status (per-user)            | `<Suspense>` — no cache                   |
+| Cart contents                      | Client-side only (Zustand + localStorage) |
+| Stock counts on product page       | `<Suspense>` — streams fresh              |
+| Admin dashboard metrics            | `<Suspense>` — streams fresh              |
 
 ### Cache invalidation after mutations
 
 After an admin updates a product, call `revalidateTag` or `revalidatePath` from the Server Action:
 
 ```ts
-'use server'
-import { revalidatePath, revalidateTag } from 'next/cache'
+'use server';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function updateProduct(id: string, data: FormData) {
   // ... update DB
-  revalidatePath(`/product/${slug}`)
-  revalidateTag('products')
+  revalidatePath(`/product/${slug}`);
+  revalidateTag('products');
 }
 ```
 
@@ -183,20 +183,21 @@ The `'use server'` directive is unchanged, but the docs now call them **Server F
 
 ```ts
 // app/actions/products.ts
-'use server'
+'use server';
 
 export async function createProduct(formData: FormData) {
   // Always verify auth inside — do NOT rely on proxy alone
-  const session = await getSession()
-  if (!session?.user) throw new Error('Unauthorized')
-  
+  const session = await getSession();
+  if (!session?.user) throw new Error('Unauthorized');
+
   // mutate DB
-  revalidatePath('/admin/products')
-  redirect('/admin/products')
+  revalidatePath('/admin/products');
+  redirect('/admin/products');
 }
 ```
 
 **Critical warning from the docs:**
+
 > Server Functions are reachable via direct POST requests, not just through your application's UI. Always verify authentication and authorization inside every Server Function.
 
 **Impact on Bhoomi Art:** Every Server Action in `app/actions/` must call `requireAdmin()` or `requireStaff()` at the top — never rely on proxy/middleware alone.
@@ -209,10 +210,10 @@ export async function createProduct(formData: FormData) {
 
 ```ts
 // ❌ Will fail with use cache
-return { metadataBase: new URL('https://bhoomiart.com') }
+return { metadataBase: new URL('https://bhoomiart.com') };
 
 // ✅ Correct with use cache
-return { metadataBase: 'https://bhoomiart.com' }
+return { metadataBase: 'https://bhoomiart.com' };
 ```
 
 Params in `generateMetadata` are also Promises now — must be awaited:
@@ -221,12 +222,12 @@ Params in `generateMetadata` are also Promises now — must be awaited:
 export async function generateMetadata({
   params,
 }: PageProps<'/product/[slug]'>): Promise<Metadata> {
-  const { slug } = await params
-  const product = await getProduct(slug)
+  const { slug } = await params;
+  const product = await getProduct(slug);
   return {
     title: `${product.name} | Bhoomi Art`,
     description: product.seo_description,
-  }
+  };
 }
 ```
 
@@ -256,25 +257,25 @@ Here is the correct pattern for protecting admin routes in Next.js 16:
 
 ```ts
 // proxy.ts  (at project root)
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    const session = request.cookies.get('sb-access-token')
+    const session = request.cookies.get('sb-access-token');
     if (!session) {
-      return NextResponse.redirect(new URL('/admin/login', request.url))
+      return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: ['/admin/:path*'],
-}
+};
 ```
 
 Note: proxy only checks for the cookie's existence. Full role verification must still happen inside each Server Action via `requireAdmin()`.
@@ -285,12 +286,12 @@ Note: proxy only checks for the cookie's existence. Full role verification must 
 
 ```ts
 // ❌ Old
-const cookieStore = cookies()
-const token = cookieStore.get('token')
+const cookieStore = cookies();
+const token = cookieStore.get('token');
 
 // ✅ Next.js 16
-const cookieStore = await cookies()
-const token = cookieStore.get('token')
+const cookieStore = await cookies();
+const token = cookieStore.get('token');
 ```
 
 Same for `headers()`. This was introduced in Next.js 15 — still required in 16.
@@ -299,17 +300,17 @@ Same for `headers()`. This was introduced in Next.js 15 — still required in 16
 
 ## Summary Checklist for All Agents
 
-| Thing to remember | Rule |
-|---|---|
-| Middleware file | Use `proxy.ts`, export `proxy()` function |
-| Dynamic route params | Always `await params` — it's a Promise |
-| Search params | Always `await searchParams` — it's a Promise |
-| Page/Layout typing | Use `PageProps<'/route'>` and `LayoutProps<'/route'>` |
-| Caching | Use `'use cache'` + `cacheLife()`, not `fetch` cache options |
-| Dynamic data | Wrap in `<Suspense>` — do not use `'use cache'` for per-request data |
-| Cache invalidation | Call `revalidatePath()` or `revalidateTag()` in Server Actions |
-| Server Actions | Always verify auth inside — never trust proxy alone |
-| `generateMetadata` | Await params; return serializable object when using `use cache` |
-| `cookies()` / `headers()` | Must be awaited |
-| Font loading | Existing setup is correct — no changes needed |
-| Route groups | Work as expected — cross-root-layout nav causes full page reload |
+| Thing to remember         | Rule                                                                 |
+| ------------------------- | -------------------------------------------------------------------- |
+| Middleware file           | Use `proxy.ts`, export `proxy()` function                            |
+| Dynamic route params      | Always `await params` — it's a Promise                               |
+| Search params             | Always `await searchParams` — it's a Promise                         |
+| Page/Layout typing        | Use `PageProps<'/route'>` and `LayoutProps<'/route'>`                |
+| Caching                   | Use `'use cache'` + `cacheLife()`, not `fetch` cache options         |
+| Dynamic data              | Wrap in `<Suspense>` — do not use `'use cache'` for per-request data |
+| Cache invalidation        | Call `revalidatePath()` or `revalidateTag()` in Server Actions       |
+| Server Actions            | Always verify auth inside — never trust proxy alone                  |
+| `generateMetadata`        | Await params; return serializable object when using `use cache`      |
+| `cookies()` / `headers()` | Must be awaited                                                      |
+| Font loading              | Existing setup is correct — no changes needed                        |
+| Route groups              | Work as expected — cross-root-layout nav causes full page reload     |

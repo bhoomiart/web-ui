@@ -10,5 +10,5 @@ export default function ShopPage() {
         Coming soon — products will appear here.
       </p>
     </div>
-  )
+  );
 }

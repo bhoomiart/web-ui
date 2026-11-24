@@ -1,53 +1,62 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { createPortal } from 'react-dom'
+import * as React from 'react';
+import { createPortal } from 'react-dom';
 
 // ─── Focus trap hook ──────────────────────────────────────────────────────────
 
 function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean) {
   React.useEffect(() => {
-    if (!active || !ref.current) return
+    if (!active || !ref.current) return;
 
-    const el = ref.current
+    const el = ref.current;
     const focusable = el.querySelectorAll<HTMLElement>(
       'a[href], button:not([disabled]), input:not([disabled]), ' +
-      'select:not([disabled]), textarea:not([disabled]), ' +
-      '[tabindex]:not([tabindex="-1"])',
-    )
-    const first = focusable[0]
-    const last  = focusable[focusable.length - 1]
+        'select:not([disabled]), textarea:not([disabled]), ' +
+        '[tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
 
     // Move focus into modal
-    first?.focus()
+    first?.focus();
 
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key !== 'Tab') return
-      if (focusable.length === 0) { e.preventDefault(); return }
+      if (e.key !== 'Tab') return;
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
       if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
       } else {
-        if (document.activeElement === last)  { e.preventDefault(); first?.focus() }
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
       }
     }
 
-    el.addEventListener('keydown', onKeyDown)
-    return () => el.removeEventListener('keydown', onKeyDown)
-  }, [active, ref])
+    el.addEventListener('keydown', onKeyDown);
+    return () => el.removeEventListener('keydown', onKeyDown);
+  }, [active, ref]);
 }
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface ModalProps {
-  open:       boolean
-  onClose:    () => void
-  title?:     string
+  open: boolean;
+  onClose: () => void;
+  title?: string;
   /** Prevents closing on backdrop click when true */
-  persistent?: boolean
-  size?:      'sm' | 'md' | 'lg' | 'xl'
-  children:   React.ReactNode
+  persistent?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  children: React.ReactNode;
   /** Extra classes on the panel */
-  className?: string
+  className?: string;
 }
 
 // ─── Style maps ──────────────────────────────────────────────────────────────
@@ -57,7 +66,7 @@ const SIZE_CLASSES: Record<NonNullable<ModalProps['size']>, string> = {
   md: 'max-w-md',
   lg: 'max-w-lg',
   xl: 'max-w-xl',
-}
+};
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -66,40 +75,45 @@ export function Modal({
   onClose,
   title,
   persistent = false,
-  size       = 'md',
+  size = 'md',
   children,
-  className  = '',
+  className = '',
 }: ModalProps) {
-  const panelRef = React.useRef<HTMLDivElement>(null)
-  const [mounted, setMounted] = React.useState(false)
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
 
   // Portal mount — avoids SSR mismatch
-  React.useEffect(() => { setMounted(true) }, [])
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Focus trap
-  useFocusTrap(panelRef, open)
+  useFocusTrap(panelRef, open);
 
   // Lock body scroll
   React.useEffect(() => {
     if (open) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = ''
+      document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = '' }
-  }, [open])
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
 
   // Keyboard close
   React.useEffect(() => {
-    if (!open) return
+    if (!open) return;
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape' && !persistent) onClose()
+      if (e.key === 'Escape' && !persistent) onClose();
     }
-    document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
-  }, [open, persistent, onClose])
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, persistent, onClose]);
 
-  if (!mounted || !open) return null
+  if (!mounted || !open) return null;
 
   return createPortal(
     <div
@@ -149,7 +163,14 @@ export function Modal({
               }
             >
               {/* ✕ close icon */}
-              <svg aria-hidden="true" className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M2 2l12 12M14 2L2 14" strokeLinecap="round" />
               </svg>
             </button>
@@ -160,8 +181,8 @@ export function Modal({
         <div className="px-6 py-5">{children}</div>
       </div>
     </div>,
-    document.body,
-  )
+    document.body
+  );
 }
 
-Modal.displayName = 'Modal'
+Modal.displayName = 'Modal';

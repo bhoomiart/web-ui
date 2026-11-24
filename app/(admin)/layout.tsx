@@ -8,20 +8,12 @@
  * Route protection (proxy.ts) added in A3-T1.
  */
 
-import { AdminShell } from '@/components/layout/AdminShell'
+import { AdminShell } from '@/components/layout/AdminShell';
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   // userName will come from the Supabase session in A3-T1.
   // Passed as a prop so AdminShell stays a pure client component.
-  const userName = 'Admin'
+  const userName = 'Admin';
 
-  return (
-    <AdminShell userName={userName}>
-      {children}
-    </AdminShell>
-  )
+  return <AdminShell userName={userName}>{children}</AdminShell>;
 }

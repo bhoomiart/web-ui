@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 /**
  * MobileMenu — slide-out drawer for storefront navigation on small screens.
@@ -11,67 +11,80 @@
  * - Body scroll lock when open
  */
 
-import Image from 'next/image'
-import Link from 'next/link'
-import * as React from 'react'
-import { createPortal } from 'react-dom'
-import { NAV_LINKS } from './Navbar'
+import Image from 'next/image';
+import Link from 'next/link';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
+import { NAV_LINKS } from './Navbar';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface MobileMenuProps {
-  id:          string
-  open:        boolean
-  onClose:     () => void
-  currentPath: string
+  id: string;
+  open: boolean;
+  onClose: () => void;
+  currentPath: string;
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function MobileMenu({ id, open, onClose, currentPath }: MobileMenuProps) {
-  const drawerRef                 = React.useRef<HTMLDivElement>(null)
-  const [mounted, setMounted]     = React.useState(false)
+  const drawerRef = React.useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => { setMounted(true) }, [])
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Body scroll lock
   React.useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [open])
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
 
   // Escape key
   React.useEffect(() => {
-    if (!open) return
-    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [open, onClose])
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
 
   // Focus trap — keep focus inside drawer while open
   React.useEffect(() => {
-    if (!open || !drawerRef.current) return
-    const el = drawerRef.current
+    if (!open || !drawerRef.current) return;
+    const el = drawerRef.current;
     const focusable = el.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-    )
-    const first = focusable[0]
-    const last  = focusable[focusable.length - 1]
-    first?.focus()
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
 
     function onTab(e: KeyboardEvent) {
-      if (e.key !== 'Tab') return
+      if (e.key !== 'Tab') return;
       if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
       } else {
-        if (document.activeElement === last)  { e.preventDefault(); first?.focus() }
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
       }
     }
-    el.addEventListener('keydown', onTab)
-    return () => el.removeEventListener('keydown', onTab)
-  }, [open])
+    el.addEventListener('keydown', onTab);
+    return () => el.removeEventListener('keydown', onTab);
+  }, [open]);
 
-  if (!mounted) return null
+  if (!mounted) return null;
 
   return createPortal(
     <div
@@ -146,17 +159,27 @@ export function MobileMenu({ id, open, onClose, currentPath }: MobileMenuProps) 
               'focus-visible:ring-[var(--color-brand-primary)]',
             ].join(' ')}
           >
-            <svg aria-hidden="true" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <svg
+              aria-hidden="true"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
         </div>
 
         {/* Navigation links */}
-        <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto py-[var(--spacing-4)]">
+        <nav
+          aria-label="Mobile navigation"
+          className="flex-1 overflow-y-auto py-[var(--spacing-4)]"
+        >
           <ul className="list-none m-0 p-0 px-[var(--spacing-3)]" role="list">
             {NAV_LINKS.map(({ label, href }) => {
-              const active = currentPath === href || currentPath.startsWith(href + '/')
+              const active = currentPath === href || currentPath.startsWith(href + '/');
               return (
                 <li key={href}>
                   <Link
@@ -177,17 +200,27 @@ export function MobileMenu({ id, open, onClose, currentPath }: MobileMenuProps) 
                     ].join(' ')}
                   >
                     <span>{label}</span>
-                    <svg aria-hidden="true" className="w-4 h-4 text-[var(--color-earth-400)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      aria-hidden="true"
+                      className="w-4 h-4 text-[var(--color-earth-400)]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 18l6-6-6-6" />
                     </svg>
                   </Link>
                 </li>
-              )
+              );
             })}
           </ul>
 
           {/* Divider */}
-          <div className="mx-[var(--spacing-6)] my-[var(--spacing-4)] h-px bg-[var(--color-earth-200)]" aria-hidden="true" />
+          <div
+            className="mx-[var(--spacing-6)] my-[var(--spacing-4)] h-px bg-[var(--color-earth-200)]"
+            aria-hidden="true"
+          />
 
           {/* WhatsApp CTA */}
           <div className="px-[var(--spacing-6)]">
@@ -206,7 +239,12 @@ export function MobileMenu({ id, open, onClose, currentPath }: MobileMenuProps) 
                 'focus-visible:ring-[var(--color-forest-500)]',
               ].join(' ')}
             >
-              <svg aria-hidden="true" className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <svg
+                aria-hidden="true"
+                className="w-4 h-4 shrink-0"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
                 <path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.22-1.57A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52z" />
               </svg>
               Chat on WhatsApp
@@ -222,6 +260,6 @@ export function MobileMenu({ id, open, onClose, currentPath }: MobileMenuProps) 
         </div>
       </div>
     </div>,
-    document.body,
-  )
+    document.body
+  );
 }

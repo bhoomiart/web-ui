@@ -17,19 +17,19 @@
  */
 
 export interface BreadcrumbItem {
-  label: string
+  label: string;
   /** Omit for the current/last page */
-  href?: string
+  href?: string;
 }
 
 interface BreadcrumbNavProps {
-  items: BreadcrumbItem[]
+  items: BreadcrumbItem[];
   /** Additional class names on the <nav> wrapper */
-  className?: string
+  className?: string;
 }
 
 export function BreadcrumbNav({ items, className = '' }: BreadcrumbNavProps) {
-  if (items.length < 2) return null
+  if (items.length < 2) return null;
 
   // Schema.org JSON-LD for BreadcrumbList (A5 / A8 wires this fully)
   const jsonLd = {
@@ -41,7 +41,7 @@ export function BreadcrumbNav({ items, className = '' }: BreadcrumbNavProps) {
       name: item.label,
       ...(item.href ? { item: item.href } : {}),
     })),
-  }
+  };
 
   return (
     <>
@@ -51,10 +51,7 @@ export function BreadcrumbNav({ items, className = '' }: BreadcrumbNavProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav
-        aria-label="Breadcrumb"
-        className={`${className}`}
-      >
+      <nav aria-label="Breadcrumb" className={`${className}`}>
         <ol
           className={[
             'flex flex-wrap items-center gap-[var(--spacing-1)]',
@@ -64,7 +61,7 @@ export function BreadcrumbNav({ items, className = '' }: BreadcrumbNavProps) {
           role="list"
         >
           {items.map((item, index) => {
-            const isLast = index === items.length - 1
+            const isLast = index === items.length - 1;
 
             return (
               <li
@@ -110,10 +107,10 @@ export function BreadcrumbNav({ items, className = '' }: BreadcrumbNavProps) {
                   </a>
                 )}
               </li>
-            )
+            );
           })}
         </ol>
       </nav>
     </>
-  )
+  );
 }

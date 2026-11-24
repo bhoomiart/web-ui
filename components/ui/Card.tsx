@@ -1,18 +1,13 @@
-import * as React from 'react'
+import * as React from 'react';
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Lifts the card shadow on hover. Default: false */
-  hoverable?: boolean
+  hoverable?: boolean;
 }
 
-export function Card({
-  hoverable  = false,
-  className  = '',
-  children,
-  ...rest
-}: CardProps) {
+export function Card({ hoverable = false, className = '', children, ...rest }: CardProps) {
   return (
     <div
       className={
@@ -28,14 +23,14 @@ export function Card({
     >
       {children}
     </div>
-  )
+  );
 }
 
-Card.displayName = 'Card'
+Card.displayName = 'Card';
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
-export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function CardHeader({ className = '', children, ...rest }: CardHeaderProps) {
   return (
@@ -49,31 +44,28 @@ export function CardHeader({ className = '', children, ...rest }: CardHeaderProp
     >
       {children}
     </div>
-  )
+  );
 }
 
-CardHeader.displayName = 'CardHeader'
+CardHeader.displayName = 'CardHeader';
 
 // ─── Body ─────────────────────────────────────────────────────────────────────
 
-export interface CardBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardBodyProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function CardBody({ className = '', children, ...rest }: CardBodyProps) {
   return (
-    <div
-      className={`px-[var(--spacing-6)] py-[var(--spacing-5)] ${className}`}
-      {...rest}
-    >
+    <div className={`px-[var(--spacing-6)] py-[var(--spacing-5)] ${className}`} {...rest}>
       {children}
     </div>
-  )
+  );
 }
 
-CardBody.displayName = 'CardBody'
+CardBody.displayName = 'CardBody';
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
-export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CardFooterProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function CardFooter({ className = '', children, ...rest }: CardFooterProps) {
   return (
@@ -88,15 +80,15 @@ export function CardFooter({ className = '', children, ...rest }: CardFooterProp
     >
       {children}
     </div>
-  )
+  );
 }
 
-CardFooter.displayName = 'CardFooter'
+CardFooter.displayName = 'CardFooter';
 
 // ─── CardTitle convenience ───────────────────────────────────────────────────
 
 export interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
 export function CardTitle({ as: Tag = 'h3', className = '', children, ...rest }: CardTitleProps) {
@@ -111,7 +103,7 @@ export function CardTitle({ as: Tag = 'h3', className = '', children, ...rest }:
     >
       {children}
     </Tag>
-  )
+  );
 }
 
-CardTitle.displayName = 'CardTitle'
+CardTitle.displayName = 'CardTitle';
