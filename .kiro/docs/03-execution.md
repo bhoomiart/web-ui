@@ -97,13 +97,22 @@ The chrome every storefront page shares.
 > - `app/(storefront)/layout.tsx` — wired with Navbar + Footer
 > - Build: all routes ✓, zero errors
 
-### A1-T6 · Admin Shell Navigation
+### A1-T6 · Admin Shell Navigation ✅
 The chrome every admin page shares.
 
-- [ ] A1-T6-1 · `AdminSidebar` — full nav from requirements §11.8, collapsed and expanded states
-- [ ] A1-T6-2 · `AdminTopbar` — user info, logout, mobile toggle
-- [ ] A1-T6-3 · `AdminPageHeader` — page title, description, action slot
-- [ ] A1-T6-4 · Mobile-responsive admin layout
+- [x] A1-T6-1 · `AdminSidebar` — full §11.8 nav, groups with expand/collapse, collapsed icon-only mode (localStorage persisted), active link/group highlight
+- [x] A1-T6-2 · `AdminTopbar` — hamburger, View Store link, user pill, logout button
+- [x] A1-T6-3 · `AdminPageHeader` — title, description, action slot, breadcrumb slot
+- [x] A1-T6-4 · Mobile-responsive admin layout via `AdminShell` client wrapper
+
+> Output:
+> - `components/layout/AdminSidebar.tsx`
+> - `components/layout/AdminTopbar.tsx`
+> - `components/layout/AdminPageHeader.tsx`
+> - `components/layout/AdminShell.tsx`
+> - `components/layout/index.ts` (updated)
+> - `app/(admin)/layout.tsx` (wired with AdminShell)
+> - Build: all routes ✓, zero errors
 
 ---
 

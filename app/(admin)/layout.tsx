@@ -1,38 +1,27 @@
 /**
- * Admin layout
+ * Admin layout — Server Component.
  *
- * Wraps every admin page under app/(admin)/.
- * Currently a passthrough shell — AdminSidebar and AdminTopbar
- * will be added in A1-T6 once those components are built.
+ * Uses AdminShell (a client component) to hold the mobile sidebar state,
+ * keeping this layout itself a Server Component so it can eventually read
+ * the Supabase session server-side (A3-T1).
  *
- * Route protection (proxy.ts) will be added in A3-T1.
- *
- * This layout does NOT replace app/layout.tsx (the root layout).
- * It sits beneath it, so it inherits fonts, globals.css, and <html>/<body>.
+ * Route protection (proxy.ts) added in A3-T1.
  */
+
+import { AdminShell } from '@/components/layout/AdminShell'
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // userName will come from the Supabase session in A3-T1.
+  // Passed as a prop so AdminShell stays a pure client component.
+  const userName = 'Admin'
+
   return (
-    <div className="flex min-h-screen bg-[var(--color-earth-50)]">
-      {/*
-        AdminSidebar goes here in A1-T6.
-        <AdminSidebar />
-      */}
-
-      <div className="flex flex-1 flex-col min-w-0">
-        {/*
-          AdminTopbar goes here in A1-T6.
-          <AdminTopbar />
-        */}
-
-        <main className="flex-1 p-[var(--spacing-6)]">
-          {children}
-        </main>
-      </div>
-    </div>
+    <AdminShell userName={userName}>
+      {children}
+    </AdminShell>
   )
 }
