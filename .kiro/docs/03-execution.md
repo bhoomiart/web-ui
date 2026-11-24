@@ -10,16 +10,16 @@ Status: `[ ]` not started · `[~]` in progress · `[x]` done · `[!]` blocked
 
 ## Agent Map
 
-| Agent | Focus area | Starts after |
-|---|---|---|
-| **A1** Foundation | App shell, design system, shared components | Nothing |
-| **A2** Data Layer | Supabase setup, full DB schema, RLS, storage | A1 |
-| **A3** Admin Dashboard | All admin pages and content management | A1 + A2 |
-| **A4** Inventory | Stock tracking, movements, restock subscriptions | A1 + A2 + A3 |
-| **A5** Storefront | All public customer pages | A1 + A2 (parallel with A3) |
-| **A6** Orders | Cart, checkout, order lifecycle, returns, refunds | A1 + A2 + A4 + A5 |
-| **A7** Communications | Reviews, WhatsApp templates, communication layer | A1 + A2 + A5 + A6 |
-| **A8** SEO & Deploy | Sitemap, robots, perf, accessibility, analytics | All agents |
+| Agent                  | Focus area                                        | Starts after               |
+| ---------------------- | ------------------------------------------------- | -------------------------- |
+| **A1** Foundation      | App shell, design system, shared components       | Nothing                    |
+| **A2** Data Layer      | Supabase setup, full DB schema, RLS, storage      | A1                         |
+| **A3** Admin Dashboard | All admin pages and content management            | A1 + A2                    |
+| **A4** Inventory       | Stock tracking, movements, restock subscriptions  | A1 + A2 + A3               |
+| **A5** Storefront      | All public customer pages                         | A1 + A2 (parallel with A3) |
+| **A6** Orders          | Cart, checkout, order lifecycle, returns, refunds | A1 + A2 + A4 + A5          |
+| **A7** Communications  | Reviews, WhatsApp templates, communication layer  | A1 + A2 + A5 + A6          |
+| **A8** SEO & Deploy    | Sitemap, robots, perf, accessibility, analytics   | All agents                 |
 
 ```
 A1 → A2 ─┬─ A3 → A4 → A6 → A7 → A8
@@ -33,6 +33,7 @@ A1 → A2 ─┬─ A3 → A4 → A6 → A7 → A8
 ## A1 — Foundation & Design System
 
 ### A1-T1 · Next.js 16 Audit ✅
+
 Before writing a single line of code, understand what changed in Next.js 16.
 
 - [x] A1-T1-1 · Read `node_modules/next/dist/docs/` and note breaking changes vs Next.js 14/15
@@ -42,6 +43,7 @@ Before writing a single line of code, understand what changed in Next.js 16.
 > Output: `.kiro/docs/A1-T1-nextjs16-audit.md`
 
 ### A1-T2 · Design Token Expansion ✅
+
 Extend the existing `globals.css` into a full design system.
 
 - [x] A1-T2-1 · Full spacing scale on a 4px grid (4px → 96px named steps)
@@ -51,6 +53,7 @@ Extend the existing `globals.css` into a full design system.
 - [x] A1-T2-5 · Smoke test — build passes, coming-soon page unchanged
 
 ### A1-T3 · Base UI Component Library ✅
+
 Generic primitives used everywhere — storefront and admin alike.
 
 - [x] A1-T3-1 · `Button` — primary, secondary, ghost, destructive variants; sm/md/lg sizes
@@ -66,6 +69,7 @@ Generic primitives used everywhere — storefront and admin alike.
 > Output: `components/ui/` (9 components + barrel index)
 
 ### A1-T4 · Route Group Shells ✅
+
 Create the two route groups that separate storefront from admin.
 
 - [x] A1-T4-1 · `app/(storefront)/layout.tsx` shell
@@ -74,13 +78,15 @@ Create the two route groups that separate storefront from admin.
 - [x] A1-T4-4 · Coming-soon stays at root `app/page.tsx`; storefront pages live under `app/(storefront)/`; admin pages under `app/(admin)/admin/`
 
 > Output:
+>
 > - `app/(storefront)/layout.tsx` — passthrough shell, Navbar/Footer placeholder comments
 > - `app/(storefront)/shop/page.tsx` — placeholder for A5-T3
 > - `app/(admin)/layout.tsx` — flex layout shell, Sidebar/Topbar placeholder comments
 > - `app/(admin)/admin/dashboard/page.tsx` — placeholder for A3-T2
-> - Build: `/` ✓  `/shop` ✓  `/admin/dashboard` ✓
+> - Build: `/` ✓ `/shop` ✓ `/admin/dashboard` ✓
 
 ### A1-T5 · Storefront Navigation & Footer ✅
+
 The chrome every storefront page shares.
 
 - [x] A1-T5-1 · `Navbar` — logo, nav links, cart icon, mobile hamburger, scroll-aware elevation, active link highlight
@@ -89,6 +95,7 @@ The chrome every storefront page shares.
 - [x] A1-T5-4 · `BreadcrumbNav` — generic, data-driven, Schema.org JSON-LD BreadcrumbList
 
 > Output:
+>
 > - `components/layout/Navbar.tsx`
 > - `components/layout/MobileMenu.tsx`
 > - `components/layout/Footer.tsx`
@@ -98,6 +105,7 @@ The chrome every storefront page shares.
 > - Build: all routes ✓, zero errors
 
 ### A1-T6 · Admin Shell Navigation ✅
+
 The chrome every admin page shares.
 
 - [x] A1-T6-1 · `AdminSidebar` — full §11.8 nav, groups with expand/collapse, collapsed icon-only mode (localStorage persisted), active link/group highlight
@@ -106,6 +114,7 @@ The chrome every admin page shares.
 - [x] A1-T6-4 · Mobile-responsive admin layout via `AdminShell` client wrapper
 
 > Output:
+>
 > - `components/layout/AdminSidebar.tsx`
 > - `components/layout/AdminTopbar.tsx`
 > - `components/layout/AdminPageHeader.tsx`
@@ -118,89 +127,74 @@ The chrome every admin page shares.
 
 ## A2 — Data Layer (Supabase)
 
-### A2-T1 · Supabase Project Setup
+### A2-T1 · Supabase Project Setup ✅
+
 Wire up Supabase into the Next.js project.
 
-- [ ] A2-T1-1 · Install `@supabase/supabase-js` and `@supabase/ssr`
-- [ ] A2-T1-2 · Create `.env.local.example` with all required keys documented
-- [ ] A2-T1-3 · Build `lib/supabase/server.ts` — SSR client
-- [ ] A2-T1-4 · Build `lib/supabase/client.ts` — browser client
-- [ ] A2-T1-5 · Build `lib/supabase/admin.ts` — service-role client, server-only, never imported by client code
+- [x] A2-T1-1 · Install `@supabase/supabase-js` and `@supabase/ssr`
+- [x] A2-T1-2 · `.env.local.example` with all required keys documented
+- [x] A2-T1-3 · `lib/supabase/server.ts` — SSR client (cookies via @supabase/ssr)
+- [x] A2-T1-4 · `lib/supabase/client.ts` — browser singleton client
+- [x] A2-T1-5 · `lib/supabase/admin.ts` — service-role client, server-only guard
 
-### A2-T2 · Core Catalogue Schema
-Tables that hold products, categories, media, and variants.
+> Output:
+>
+> - `lib/supabase/server.ts`, `client.ts`, `admin.ts`
+> - `lib/types/database.ts` — full typed schema (stub until migrations run)
+> - `.env.local.example`
+> - TypeScript: zero errors
 
-- [ ] A2-T2-1 · `profiles` table
-- [ ] A2-T2-2 · `categories` table
-- [ ] A2-T2-3 · `subcategories` table
-- [ ] A2-T2-4 · `products` table
-- [ ] A2-T2-5 · `product_media` table
-- [ ] A2-T2-6 · `product_variants` table
-- [ ] A2-T2-7 · `product_tags` and `product_tag_map` tables
-- [ ] A2-T2-8 · `product_category_map` junction
-- [ ] A2-T2-9 · `product_recommendations` table
+### A2-T2 · Core Catalogue Schema ✅
 
-### A2-T3 · Inventory Schema
-- [ ] A2-T3-1 · `inventory` table with available_stock computed column
-- [ ] A2-T3-2 · `inventory_movements` table
+- [x] All 9 tables created: profiles, categories, subcategories, products, product_media, product_variants, product_tags, product_tag_map, product_category_map + subcategory_map + recommendations
 
-### A2-T4 · Orders & Returns Schema
-- [ ] A2-T4-1 · `orders` table with full status enum
-- [ ] A2-T4-2 · `order_items` table (includes product snapshot)
-- [ ] A2-T4-3 · `order_status_history` table
-- [ ] A2-T4-4 · `return_requests` table
-- [ ] A2-T4-5 · `return_request_items` table
-- [ ] A2-T4-6 · `refunds` table
-- [ ] A2-T4-7 · `refund_status_history` table
+### A2-T3 · Inventory Schema ✅
 
-### A2-T5 · Reviews & Restock Schema
-- [ ] A2-T5-1 · `product_reviews` table
-- [ ] A2-T5-2 · `review_media` table
-- [ ] A2-T5-3 · `restock_subscriptions` table
-- [ ] A2-T5-4 · `restock_notification_history` table
+- [x] `inventory` table with `available_stock` generated column
+- [x] `inventory_movements` table with deferred FKs to orders and return_requests
 
-### A2-T6 · Content & Config Schema
-- [ ] A2-T6-1 · `homepage_sections` table
-- [ ] A2-T6-2 · `banners` table
-- [ ] A2-T6-3 · `collections` and `collection_products` tables
-- [ ] A2-T6-4 · `site_settings` table
-- [ ] A2-T6-5 · `pages` table
-- [ ] A2-T6-6 · `blog_posts` stub table
-- [ ] A2-T6-7 · `audit_logs` table
+### A2-T4 · Orders & Returns Schema ✅
 
-### A2-T7 · RLS Policies
-Lock down every table so the right people can only access what they're entitled to.
+- [x] All 7 tables: orders, order_items, order_status_history, return_requests, return_request_items, refunds, refund_status_history
 
-- [ ] A2-T7-1 · Public (anon) read policies for storefront data
-- [ ] A2-T7-2 · Admin/staff write policies per table
-- [ ] A2-T7-3 · Orders: anon insert + secure phone+order_number lookup only (no open read by ID)
-- [ ] A2-T7-4 · Reviews: anon insert with duplicate guard; admin full control
-- [ ] A2-T7-5 · Restock subscriptions: anon insert; admin read; no anon list
-- [ ] A2-T7-6 · Profiles: authenticated self-read; admin full control
-- [ ] A2-T7-7 · Audit logs: admin read-only; service-role insert only
+### A2-T5 · Reviews & Restock Schema ✅
 
-### A2-T8 · Storage Buckets
-- [ ] A2-T8-1 · `product-media` bucket — admin write, public read
-- [ ] A2-T8-2 · `review-media` bucket — anon upload (size + type limits), admin read
-- [ ] A2-T8-3 · `brand-assets` bucket — admin write, public read
-- [ ] A2-T8-4 · Signed URL helper for private assets
+- [x] product_reviews, review_media, restock_subscriptions, restock_notification_history
 
-### A2-T9 · Repository / Query Layer
-Typed DB query functions so the rest of the app never writes raw SQL.
+### A2-T6 · Content & Config Schema ✅
 
-- [ ] A2-T9-1 · `lib/db/products.ts` — getProduct, listProducts, listFeatured, search
-- [ ] A2-T9-2 · `lib/db/categories.ts` — getCategory, listCategories, listSubcategories
-- [ ] A2-T9-3 · `lib/db/orders.ts` — createOrder, getOrder, listOrders, updateOrderStatus
-- [ ] A2-T9-4 · `lib/db/inventory.ts` — getStock, reserveStock (transactional), releaseStock, adjustStock
-- [ ] A2-T9-5 · `lib/db/reviews.ts` — listReviews, submitReview, moderateReview
-- [ ] A2-T9-6 · `lib/types/database.ts` — full typed schema (manual or Supabase CLI generated)
-- [ ] A2-T9-7 · Concurrency-safe stock reservation using `SELECT ... FOR UPDATE` in a transaction
+- [x] homepage_sections (11 rows seeded), banners, collections (7 seeded), collection_products, site_settings (12 seeded), pages, blog_posts, audit_logs
+
+### A2-T7 · RLS Policies ✅
+
+- [x] RLS enabled on all 32 tables
+- [x] is_admin_or_staff() and is_admin() helper functions
+- [x] 50+ policies across all tables
+
+### A2-T8 · Storage Buckets ✅
+
+- [x] A2-T8-1 · `product-media` bucket — 50MB limit, images + video, admin write, public read
+- [x] A2-T8-2 · `review-media` bucket — 10MB limit, images only, anon upload, admin read
+- [x] A2-T8-3 · `brand-assets` bucket — 10MB limit, images, admin write, public read
+- [x] A2-T8-4 · `lib/supabase/storage.ts` — uploadFile, deleteFile, getSignedUrl helpers
+
+### A2-T9 · Repository / Query Layer ✅
+
+- [x] lib/db/products.ts — listProducts, listFeatured, listNewArrivals, listBestsellers, getProductBySlug, searchProducts, getCollectionProducts
+- [x] lib/db/categories.ts — listCategories, getCategoryBySlug, listSubcategories, getCategoriesWithSubcategories
+- [x] lib/db/orders.ts — createOrder, getOrderByPhoneAndNumber, listOrders, getOrderById, updateOrderStatus
+- [x] lib/db/inventory.ts — getInventory, reserveStock (atomic), releaseStock, adjustStock
+- [x] lib/db/reviews.ts — listProductReviews, getProductRatingSummary, submitReview, moderateReview
+- [x] lib/types/database.ts — 1,600-line generated types from live schema
+- [x] lib/auth/admin.ts — requireAdmin(), requireStaff(), getCurrentUser()
+- [x] Migration 015: reserve_stock_for_order, release_stock_for_order, adjust_stock_manual PostgreSQL functions
 
 ---
 
 ## A3 — Admin Dashboard
 
 ### A3-T1 · Admin Auth & Route Protection
+
 - [ ] A3-T1-1 · Admin login page at `/admin/login`
 - [ ] A3-T1-2 · `middleware.ts` — protect all `/admin/*`, redirect unauthenticated users
 - [ ] A3-T1-3 · `lib/auth/admin.ts` — `requireAdmin()` and `requireStaff()` server helpers
@@ -208,6 +202,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A3-T1-5 · Session refresh handling
 
 ### A3-T2 · Dashboard Overview
+
 - [ ] A3-T2-1 · Metric cards: total products, categories, orders (total / pending / delivered)
 - [ ] A3-T2-2 · Metric cards: low-stock count, out-of-stock count, restock subscribers
 - [ ] A3-T2-3 · Metric cards: pending cancellations, return requests, pending refunds
@@ -215,6 +210,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A3-T2-5 · Low-stock products list
 
 ### A3-T3 · Product Management
+
 - [ ] A3-T3-1 · Product list — search, filter by category/status/availability, pagination
 - [ ] A3-T3-2 · Product create form with all fields
 - [ ] A3-T3-3 · Product edit form
@@ -228,18 +224,21 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A3-T3-11 · All mutations via Server Actions
 
 ### A3-T4 · Category & Subcategory Management
+
 - [ ] A3-T4-1 · Category list with drag-handle for display order
 - [ ] A3-T4-2 · Category create/edit form (name, slug, description, image, visibility, SEO)
 - [ ] A3-T4-3 · Subcategory list grouped by parent
 - [ ] A3-T4-4 · Subcategory create/edit form
 
 ### A3-T5 · Collections Management
+
 - [ ] A3-T5-1 · Collection list page
 - [ ] A3-T5-2 · Collection create/edit form
 - [ ] A3-T5-3 · Product picker with display-order drag handle
 - [ ] A3-T5-4 · Support all collection types: Signature, Bestsellers, New Arrivals, Featured, Trending, Customized, Special
 
 ### A3-T6 · Homepage Content Management
+
 - [ ] A3-T6-1 · Section list with visibility toggle and drag-reorder
 - [ ] A3-T6-2 · Banner management (create, edit, reorder, activate/deactivate)
 - [ ] A3-T6-3 · Featured categories selector
@@ -247,6 +246,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A3-T6-5 · Brand story content editor
 
 ### A3-T7 · Pages & SEO Management
+
 - [ ] A3-T7-1 · Static pages list (About, Craft, FAQs, Contact, Policies)
 - [ ] A3-T7-2 · Page editor with SEO fields
 - [ ] A3-T7-3 · Global SEO settings (site name, default og image, GA4 ID, GSC verification tag)
@@ -257,22 +257,26 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 ## A4 — Inventory & Restock Notifications
 
 ### A4-T1 · Admin Inventory Dashboard
+
 - [ ] A4-T1-1 · Overview cards: total stock, in-stock, low-stock, out-of-stock, recently restocked
 - [ ] A4-T1-2 · Inventory table with filter by status, category, quantity range
 - [ ] A4-T1-3 · Per-product stock detail panel (total, reserved, available, threshold)
 
 ### A4-T2 · Stock Adjustment
+
 - [ ] A4-T2-1 · Manual adjustment form (product, variant, change qty, reason, notes)
 - [ ] A4-T2-2 · Reason options: new production, restock, damaged, manual correction, return restock
 - [ ] A4-T2-3 · Prevent stock going below zero
 - [ ] A4-T2-4 · Server Action using `SELECT ... FOR UPDATE` transaction
 
 ### A4-T3 · Inventory Movement History
+
 - [ ] A4-T3-1 · Movement table: product, variant, before/after, change, reason, actor, timestamp, linked order
 - [ ] A4-T3-2 · Filter by product, reason type, date range
 - [ ] A4-T3-3 · CSV export
 
 ### A4-T4 · Availability Types
+
 - [ ] A4-T4-1 · Ready to Ship: add-to-cart only when stock > 0
 - [ ] A4-T4-2 · Made to Order: allow order regardless of stock, show preparation time
 - [ ] A4-T4-3 · Out of Stock: disable cart, show restock subscribe form
@@ -280,6 +284,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A4-T4-5 · Automatic status badge update when stock crosses threshold
 
 ### A4-T5 · Restock Subscription (Customer Side)
+
 - [ ] A4-T5-1 · "Notify Me When Available" form on out-of-stock product page
 - [ ] A4-T5-2 · Phone required, email optional, channel selector
 - [ ] A4-T5-3 · Duplicate subscription prevention per product + contact + channel
@@ -287,6 +292,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A4-T5-5 · Unsubscribe mechanism
 
 ### A4-T6 · Admin Restock Notification Management
+
 - [ ] A4-T6-1 · Subscribers list per product (count + details for authorized staff)
 - [ ] A4-T6-2 · Pending notifications queue
 - [ ] A4-T6-3 · Manual WhatsApp Click-to-Chat trigger with prefilled message
@@ -300,6 +306,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 ## A5 — Customer Storefront
 
 ### A5-T1 · Homepage
+
 - [ ] A5-T1-1 · Hero section (banners with image, tagline, CTA from `banners` table)
 - [ ] A5-T1-2 · Brand introduction block
 - [ ] A5-T1-3 · Featured categories grid
@@ -315,12 +322,14 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A5-T1-13 · `generateMetadata` for homepage (OG, title, description)
 
 ### A5-T2 · Category & Subcategory Pages
+
 - [ ] A5-T2-1 · `/category/[slug]` — header, description, subcategory grid, product listing
 - [ ] A5-T2-2 · `/category/[slug]/[sub]` — subcategory header, product listing
 - [ ] A5-T2-3 · `generateMetadata`, canonical URL, breadcrumbs
 - [ ] A5-T2-4 · Schema.org `BreadcrumbList` JSON-LD
 
 ### A5-T3 · Product Listing Pages
+
 - [ ] A5-T3-1 · `/shop` — all products with filter + sort
 - [ ] A5-T3-2 · `ProductCard` — image, name, short desc, price, availability badge, rating, labels
 - [ ] A5-T3-3 · Filter panel: category, subcategory, price range, availability, tags
@@ -330,6 +339,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A5-T3-7 · `generateMetadata` per listing page
 
 ### A5-T4 · Product Detail Page
+
 - [ ] A5-T4-1 · SSR route at `/product/[slug]`
 - [ ] A5-T4-2 · `ProductGallery` — image gallery with zoom
 - [ ] A5-T4-3 · Video embed/player (loads on interaction)
@@ -350,6 +360,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A5-T4-18 · `generateMetadata`: title, description, og image, canonical
 
 ### A5-T5 · Brand Storytelling Pages
+
 - [ ] A5-T5-1 · `/about` — Our Story (content from `pages` table)
 - [ ] A5-T5-2 · `/craft` — The Art of Terracotta, Crafted by Hand
 - [ ] A5-T5-3 · `/custom` — Custom Creations + WhatsApp enquiry CTA
@@ -357,6 +368,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A5-T5-5 · `not-found.tsx` with brand styling
 
 ### A5-T6 · Search
+
 - [ ] A5-T6-1 · Search input in Navbar
 - [ ] A5-T6-2 · `/search?q=` results page with filter
 - [ ] A5-T6-3 · Server-side full-text search via Postgres
@@ -367,12 +379,14 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 ## A6 — Cart, Checkout & Orders
 
 ### A6-T1 · Cart
+
 - [ ] A6-T1-1 · Cart state via Zustand (client-side, localStorage backed)
 - [ ] A6-T1-2 · `CartDrawer` — slide-out, item list, quantities, remove, subtotal
 - [ ] A6-T1-3 · Server-side availability revalidation before checkout opens
 - [ ] A6-T1-4 · Out-of-stock / unavailable warning inside cart
 
 ### A6-T2 · Checkout
+
 - [ ] A6-T2-1 · `/checkout` form (single page or multi-step)
 - [ ] A6-T2-2 · Fields: name, phone (required), email, address, city, state, postal code, notes, customization
 - [ ] A6-T2-3 · Client-side validation (required fields, phone format)
@@ -381,12 +395,14 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A6-T2-6 · Generate unique order number (format: `BA-YYYYMMDD-XXXX`)
 
 ### A6-T3 · Order Confirmation & Tracking
+
 - [ ] A6-T3-1 · `/order/[number]` — confirmation page after checkout
 - [ ] A6-T3-2 · WhatsApp deep-link with pre-filled admin notification message
 - [ ] A6-T3-3 · `/track` — order lookup page (phone + order number, no login)
 - [ ] A6-T3-4 · Order status timeline display
 
 ### A6-T4 · Admin Order Management
+
 - [ ] A6-T4-1 · `/admin/orders` — list with search and filters
 - [ ] A6-T4-2 · Order detail page — customer, items, status history, notes
 - [ ] A6-T4-3 · Status update with valid transition enforcement
@@ -395,6 +411,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A6-T4-6 · Payment status recording (manual)
 
 ### A6-T5 · Returns & Refunds
+
 - [ ] A6-T5-1 · Customer return request form on order page (item selection, reason, images)
 - [ ] A6-T5-2 · `/admin/orders/returns` — list, filter, review evidence
 - [ ] A6-T5-3 · Admin approve/reject with notes
@@ -404,6 +421,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A6-T5-7 · Customer status update via WhatsApp
 
 ### A6-T6 · Policy Settings
+
 - [ ] A6-T6-1 · `/admin/settings/refund-policy` — return window, eligible statuses, non-returnable categories, evidence requirements, partial refund conditions
 - [ ] A6-T6-2 · Policy values stored in `site_settings`
 - [ ] A6-T6-3 · Policy displayed to customers on relevant pages
@@ -413,6 +431,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 ## A7 — Reviews, WhatsApp & Communications
 
 ### A7-T1 · Customer Review System
+
 - [ ] A7-T1-1 · Review form on product detail page (stars, text, optional images)
 - [ ] A7-T1-2 · Submit review Server Action — rate-limit, duplicate check
 - [ ] A7-T1-3 · Verified Purchase badge (only when linked to qualifying order)
@@ -421,12 +440,14 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A7-T1-6 · Aggregate rating on product page and product card
 
 ### A7-T2 · Admin Review Moderation
+
 - [ ] A7-T2-1 · `/admin/reviews` — list filtered by status and product
 - [ ] A7-T2-2 · Approve / reject / hide actions
 - [ ] A7-T2-3 · Reported reviews queue
 - [ ] A7-T2-4 · Optional admin response field
 
 ### A7-T3 · WhatsApp Template System
+
 - [ ] A7-T3-1 · `lib/whatsapp.ts` — Click-to-Chat URL builder utility
 - [ ] A7-T3-2 · Template: new order notification to admin
 - [ ] A7-T3-3 · Template: order acknowledgement to customer
@@ -441,6 +462,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A7-T3-12 · UI clearly distinguishes "Open WhatsApp" from "Message confirmed sent"
 
 ### A7-T4 · Communication Architecture Stubs
+
 - [ ] A7-T4-1 · `lib/communications/index.ts` — provider interface (`sendNotification`, `channels`)
 - [ ] A7-T4-2 · `lib/communications/whatsapp-click.ts` — current implementation
 - [ ] A7-T4-3 · `lib/communications/whatsapp-api-stub.ts` — future Business API placeholder
@@ -452,6 +474,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 ## A8 — SEO, Performance & Deployment Readiness
 
 ### A8-T1 · Technical SEO
+
 - [ ] A8-T1-1 · `app/sitemap.ts` — dynamic, covers products, categories, subcategories, pages
 - [ ] A8-T1-2 · `app/robots.ts` — block `/admin/*`, allow public
 - [ ] A8-T1-3 · Canonical URL logic in all `generateMetadata` calls
@@ -460,6 +483,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A8-T1-6 · `app/error.tsx` and `app/global-error.tsx`
 
 ### A8-T2 · Structured Data Validation
+
 - [ ] A8-T2-1 · Schema.org `Organization` JSON-LD on homepage
 - [ ] A8-T2-2 · Schema.org `WebSite` with `SearchAction`
 - [ ] A8-T2-3 · `BreadcrumbList` on category and product pages
@@ -468,6 +492,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A8-T2-6 · Validate all JSON-LD with Google Rich Results Test
 
 ### A8-T3 · Image & Performance Optimization
+
 - [ ] A8-T3-1 · Audit all `next/image` — correct `sizes`, `priority`, `alt`, `loading`
 - [ ] A8-T3-2 · Product gallery: lazy below fold, priority for first image
 - [ ] A8-T3-3 · Font loading: `display: swap`, correct subset, preload critical weights
@@ -477,6 +502,7 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A8-T3-7 · Pagination verified on large product lists (no huge DOM)
 
 ### A8-T4 · Accessibility Audit
+
 - [ ] A8-T4-1 · ARIA labels on all interactive components
 - [ ] A8-T4-2 · Focus ring visible for keyboard navigation
 - [ ] A8-T4-3 · WCAG AA color contrast check across all brand colors
@@ -487,17 +513,20 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 - [ ] A8-T4-8 · Semantic heading hierarchy verified on every page type
 
 ### A8-T5 · Analytics Integration
+
 - [ ] A8-T5-1 · `lib/analytics.ts` — event definitions (product_view, add_to_cart, checkout_start, order_submit, whatsapp_click, review_submit)
 - [ ] A8-T5-2 · `components/Analytics.tsx` — consent-gated GA4 / GTM script
 - [ ] A8-T5-3 · GSC verification meta tag via `site_settings`
 - [ ] A8-T5-4 · Events fire at correct points in cart, checkout, and product flows
 
 ### A8-T6 · Database Performance
+
 - [ ] A8-T6-1 · Indexes for common filters: `products(status)`, `products(slug)`, `orders(phone)`, `orders(order_number)`, `inventory(product_id)`
 - [ ] A8-T6-2 · N+1 audit on product listing + recommendation queries
 - [ ] A8-T6-3 · Homepage query optimisation (avoid per-section round-trips)
 
 ### A8-T7 · Pre-launch Checklist
+
 - [ ] A8-T7-1 · All admin routes require auth (middleware tested)
 - [ ] A8-T7-2 · No service-role key in any client bundle (bundle analysis)
 - [ ] A8-T7-3 · `.env.local.example` up to date
@@ -510,17 +539,17 @@ Typed DB query functions so the rest of the app never writes raw SQL.
 
 ## Totals
 
-| Agent | Tasks | Subtasks |
-|---|---|---|
-| A1 Foundation | 6 | 30 |
-| A2 Data Layer | 9 | 51 |
-| A3 Admin | 7 | 37 |
-| A4 Inventory | 6 | 29 |
-| A5 Storefront | 6 | 38 |
-| A6 Orders | 6 | 32 |
-| A7 Communications | 4 | 24 |
-| A8 SEO & Deploy | 7 | 36 |
-| **Total** | **51** | **277** |
+| Agent             | Tasks  | Subtasks |
+| ----------------- | ------ | -------- |
+| A1 Foundation     | 6      | 30       |
+| A2 Data Layer     | 9      | 51       |
+| A3 Admin          | 7      | 37       |
+| A4 Inventory      | 6      | 29       |
+| A5 Storefront     | 6      | 38       |
+| A6 Orders         | 6      | 32       |
+| A7 Communications | 4      | 24       |
+| A8 SEO & Deploy   | 7      | 36       |
+| **Total**         | **51** | **277**  |
 
 ---
 
