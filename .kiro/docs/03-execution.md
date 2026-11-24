@@ -80,13 +80,22 @@ Create the two route groups that separate storefront from admin.
 > - `app/(admin)/admin/dashboard/page.tsx` — placeholder for A3-T2
 > - Build: `/` ✓  `/shop` ✓  `/admin/dashboard` ✓
 
-### A1-T5 · Storefront Navigation & Footer
+### A1-T5 · Storefront Navigation & Footer ✅
 The chrome every storefront page shares.
 
-- [ ] A1-T5-1 · `Navbar` — logo, nav links, cart icon, mobile hamburger
-- [ ] A1-T5-2 · `MobileMenu` — slide-out drawer with full nav
-- [ ] A1-T5-3 · `Footer` — contact, social links, nav columns, brand signature, newsletter stub
-- [ ] A1-T5-4 · `BreadcrumbNav` — generic, data-driven
+- [x] A1-T5-1 · `Navbar` — logo, nav links, cart icon, mobile hamburger, scroll-aware elevation, active link highlight
+- [x] A1-T5-2 · `MobileMenu` — slide-out drawer, focus trap, backdrop, Escape key, body scroll lock, WhatsApp CTA
+- [x] A1-T5-3 · `Footer` — brand column, shop links, company links, contact + WhatsApp CTA, bottom bar, brand signature
+- [x] A1-T5-4 · `BreadcrumbNav` — generic, data-driven, Schema.org JSON-LD BreadcrumbList
+
+> Output:
+> - `components/layout/Navbar.tsx`
+> - `components/layout/MobileMenu.tsx`
+> - `components/layout/Footer.tsx`
+> - `components/layout/BreadcrumbNav.tsx`
+> - `components/layout/index.ts`
+> - `app/(storefront)/layout.tsx` — wired with Navbar + Footer
+> - Build: all routes ✓, zero errors
 
 ### A1-T6 · Admin Shell Navigation
 The chrome every admin page shares.

@@ -2,15 +2,13 @@
  * Storefront layout
  *
  * Wraps every public customer-facing page under app/(storefront)/.
- * Currently a passthrough shell — Navbar and Footer will be added in A1-T5
- * once those components are built.
+ * Provides Navbar (sticky top) and Footer.
  *
- * This layout does NOT replace app/layout.tsx (the root layout).
- * It sits beneath it, so it inherits fonts, globals.css, and <html>/<body>.
- *
- * Note: LayoutProps is globally available after `next dev` runs typegen.
- * No import needed — it is injected by the Next.js TypeScript plugin.
+ * ToastProvider will be added here in A6 when cart/order actions need toasts.
  */
+
+import { Footer } from '@/components/layout/Footer'
+import { Navbar }  from '@/components/layout/Navbar'
 
 export default function StorefrontLayout({
   children,
@@ -19,17 +17,9 @@ export default function StorefrontLayout({
 }) {
   return (
     <>
-      {/*
-        Navbar goes here in A1-T5.
-        <Navbar />
-      */}
-
+      <Navbar />
       <main>{children}</main>
-
-      {/*
-        Footer goes here in A1-T5.
-        <Footer />
-      */}
+      <Footer />
     </>
   )
 }
