@@ -50,18 +50,20 @@ Extend the existing `globals.css` into a full design system.
 - [x] A1-T2-4 · Border-radius tokens: sm, md, lg, full
 - [x] A1-T2-5 · Smoke test — build passes, coming-soon page unchanged
 
-### A1-T3 · Base UI Component Library
+### A1-T3 · Base UI Component Library ✅
 Generic primitives used everywhere — storefront and admin alike.
 
-- [ ] A1-T3-1 · `Button` — primary, secondary, ghost, destructive variants; sm/md/lg sizes
-- [ ] A1-T3-2 · `Badge` — default, success, warning, error, info
-- [ ] A1-T3-3 · `Card` — header, body, footer slots
-- [ ] A1-T3-4 · `Spinner` — sm/md/lg, screen-reader label
-- [ ] A1-T3-5 · `EmptyState` — icon, title, description, optional action button
-- [ ] A1-T3-6 · `Modal` — focus-trapped, accessible, keyboard-closable
-- [ ] A1-T3-7 · `Toast` — success, error, info, warning variants
-- [ ] A1-T3-8 · Form primitives: `Input`, `Textarea`, `Select`, `Checkbox`, `Radio`
-- [ ] A1-T3-9 · `ErrorBoundary` client component
+- [x] A1-T3-1 · `Button` — primary, secondary, ghost, destructive variants; sm/md/lg sizes
+- [x] A1-T3-2 · `Badge` — default, success, warning, error, info
+- [x] A1-T3-3 · `Card` — header, body, footer slots
+- [x] A1-T3-4 · `Spinner` — sm/md/lg, screen-reader label
+- [x] A1-T3-5 · `EmptyState` — icon, title, description, optional action button
+- [x] A1-T3-6 · `Modal` — focus-trapped, accessible, keyboard-closable
+- [x] A1-T3-7 · `Toast` — success, error, info, warning variants
+- [x] A1-T3-8 · Form primitives: `Input`, `Textarea`, `Select`, `Checkbox`, `Radio`
+- [x] A1-T3-9 · `ErrorBoundary` client component
+
+> Output: `components/ui/` (9 components + barrel index)
 
 ### A1-T4 · Route Group Shells
 Create the two route groups that separate storefront from admin.
