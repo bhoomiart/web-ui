@@ -149,11 +149,22 @@ export default function Home() {
           </a>
 
           <a
-            href="mailto:ba4bhoomiart@gmail.com"
-            className="text-sm font-medium transition-colors duration-200 hover:underline"
-            style={{ color: "#8b5230" }}
+            href="https://www.instagram.com/ba4bhoomiart"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm tracking-wide transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            style={{
+              background: "linear-gradient(135deg, #e1306c 0%, #c13584 50%, #833ab4 100%)",
+              color: "#fff",
+              boxShadow: "0 4px 20px rgba(193,53,132,0.35)",
+            }}
           >
-            ba4bhoomiart@gmail.com
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+            </svg>
+            Follow Us
           </a>
         </div>
 
