@@ -1,26 +1,79 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-earth-50: #fdf8f3;
+  --color-earth-100: #f5ede0;
+  --color-earth-200: #e8d5be;
+  --color-earth-300: #d4b08a;
+  --color-earth-400: #c08b5c;
+  --color-earth-500: #a8683a;
+  --color-earth-600: #8b5230;
+  --color-earth-700: #6e3f26;
+  --color-earth-800: #522e1c;
+  --color-earth-900: #3a1f12;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-forest-50: #f0f7f2;
+  --color-forest-100: #d6ead9;
+  --color-forest-200: #a8d0ae;
+  --color-forest-300: #72b07b;
+  --color-forest-400: #4a9158;
+  --color-forest-500: #2d7340;
+  --color-forest-600: #1f5a30;
+  --color-forest-700: #164523;
+  --color-forest-800: #0e3018;
+  --color-forest-900: #082010;
+
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-lato);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fdf8f3;
+  color: #3a1f12;
+  font-family: var(--font-lato), "Lato", Arial, sans-serif;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-float-up {
+  animation: float-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 1.2s ease both;
+}
+
+.delay-200  { animation-delay: 0.2s; }
+.delay-400  { animation-delay: 0.4s; }
+.delay-600  { animation-delay: 0.6s; }
+.delay-800  { animation-delay: 0.8s; }
+.delay-1000 { animation-delay: 1.0s; }
+.delay-1200 { animation-delay: 1.2s; }
+
+@keyframes blink-dot {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%       { opacity: 0.25; transform: scale(0.75); }
+}
+
+.animate-blink-dot {
+  animation: blink-dot 1.6s ease-in-out infinite;
 }
