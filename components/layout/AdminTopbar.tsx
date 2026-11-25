@@ -14,6 +14,7 @@
  */
 
 import Link from 'next/link';
+import { signOutAction } from '@/app/(admin)/admin/login/actions';
 
 interface AdminTopbarProps {
   /** Callback to open the mobile sidebar */
@@ -113,8 +114,8 @@ export function AdminTopbar({ onMenuOpen, userName = 'Admin' }: AdminTopbarProps
           </span>
         </div>
 
-        {/* Logout — wired to Supabase signOut in A3-T1 */}
-        <form action="/api/auth/signout" method="POST">
+        {/* Logout */}
+        <form action={signOutAction}>
           <button
             type="submit"
             aria-label="Sign out"

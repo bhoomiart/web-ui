@@ -1,19 +1,19 @@
+export const instant = false;
+
 /**
  * Admin layout — Server Component.
  *
- * Uses AdminShell (a client component) to hold the mobile sidebar state,
- * keeping this layout itself a Server Component so it can eventually read
- * the Supabase session server-side (A3-T1).
- *
- * Route protection (proxy.ts) added in A3-T1.
+ * Reads the Supabase session server-side and passes userName to AdminShell.
+ * Route protection is handled by proxy.ts — users without a session
+ * are redirected before this layout runs.
  */
 
+import { getCurrentUser } from '@/lib/auth/admin';
 import { AdminShell } from '@/components/layout/AdminShell';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  // userName will come from the Supabase session in A3-T1.
-  // Passed as a prop so AdminShell stays a pure client component.
-  const userName = 'Admin';
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+  const userName = user?.full_name ?? user?.email ?? 'Admin';
 
   return <AdminShell userName={userName}>{children}</AdminShell>;
 }
