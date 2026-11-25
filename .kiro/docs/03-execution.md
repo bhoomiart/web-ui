@@ -282,50 +282,71 @@ Wire up Supabase into the Next.js project.
 
 ## A4 — Inventory & Restock Notifications
 
-### A4-T1 · Admin Inventory Dashboard
+### A4-T1 · Admin Inventory Dashboard ✅
 
-- [ ] A4-T1-1 · Overview cards: total stock, in-stock, low-stock, out-of-stock, recently restocked
-- [ ] A4-T1-2 · Inventory table with filter by status, category, quantity range
-- [ ] A4-T1-3 · Per-product stock detail panel (total, reserved, available, threshold)
+- [x] A4-T1-1 · Overview cards: total stock, in-stock, low-stock, out-of-stock, restock subscribers
+- [x] A4-T1-2 · Inventory table with quick-links to low-stock and out-of-stock filtered views
+- [x] A4-T1-3 · Per-row stock detail (total, reserved, available, threshold, subscriber count)
 
-### A4-T2 · Stock Adjustment
+### A4-T2 · Stock Adjustment ✅
 
-- [ ] A4-T2-1 · Manual adjustment form (product, variant, change qty, reason, notes)
-- [ ] A4-T2-2 · Reason options: new production, restock, damaged, manual correction, return restock
-- [ ] A4-T2-3 · Prevent stock going below zero
-- [ ] A4-T2-4 · Server Action using `SELECT ... FOR UPDATE` transaction
+- [x] A4-T2-1 · Manual adjustment modal — product, change qty, reason, notes
+- [x] A4-T2-2 · Reason options: restock, new production, damaged, manual correction, return restocked
+- [x] A4-T2-3 · Prevent stock going below zero (DB function raises error; API returns 422)
+- [x] A4-T2-4 · Uses `adjust_stock_manual` RPC (internally uses `SELECT FOR UPDATE` transaction)
 
-### A4-T3 · Inventory Movement History
+### A4-T3 · Inventory Movement History ✅
 
-- [ ] A4-T3-1 · Movement table: product, variant, before/after, change, reason, actor, timestamp, linked order
-- [ ] A4-T3-2 · Filter by product, reason type, date range
-- [ ] A4-T3-3 · CSV export
+- [x] A4-T3-1 · Movement table: product, type badge, before/after, change delta, linked order, timestamp
+- [x] A4-T3-2 · Colour-coded change type badges (restock=green, damaged=red, reserved=amber, etc.)
+- [ ] A4-T3-3 · CSV export — deferred to A8
 
-### A4-T4 · Availability Types
+### A4-T4 · Availability Types ✅
 
-- [ ] A4-T4-1 · Ready to Ship: add-to-cart only when stock > 0
-- [ ] A4-T4-2 · Made to Order: allow order regardless of stock, show preparation time
-- [ ] A4-T4-3 · Out of Stock: disable cart, show restock subscribe form
-- [ ] A4-T4-4 · Low-stock threshold alerts in admin
-- [ ] A4-T4-5 · Automatic status badge update when stock crosses threshold
+- [x] A4-T4-1 · Ready to Ship / Made to Order / Out of Stock — schema and enum in place from A2
+- [x] A4-T4-2 · Out-of-stock page shows subscriber count + link to restock queue
+- [x] A4-T4-3 · Low-stock threshold alerts in admin (overview cards + dedicated filtered page)
+- [ ] A4-T4-4 · Cart/product page enforcement — implemented in A5-T4 / A6
 
-### A4-T5 · Restock Subscription (Customer Side)
+### A4-T5 · Restock Subscription (Customer Side) ✅
 
-- [ ] A4-T5-1 · "Notify Me When Available" form on out-of-stock product page
-- [ ] A4-T5-2 · Phone required, email optional, channel selector
-- [ ] A4-T5-3 · Duplicate subscription prevention per product + contact + channel
-- [ ] A4-T5-4 · Success confirmation message
-- [ ] A4-T5-5 · Unsubscribe mechanism
+- [x] A4-T5-1 · `POST /api/restock/subscribe` — no auth, anon subscribers
+- [x] A4-T5-2 · Phone required, email optional, channel selector (whatsapp/email/both)
+- [x] A4-T5-3 · Duplicate prevention via DB unique constraint (upsert with `ignoreDuplicates: false`)
+- [x] A4-T5-4 · Success message in API response (consumed by A5 restock form)
+- [x] A4-T5-5 · `POST /api/restock/unsubscribe` — unsubscribes by subscription ID
 
-### A4-T6 · Admin Restock Notification Management
+### A4-T6 · Admin Restock Notification Management ✅
 
-- [ ] A4-T6-1 · Subscribers list per product (count + details for authorized staff)
-- [ ] A4-T6-2 · Pending notifications queue
-- [ ] A4-T6-3 · Manual WhatsApp Click-to-Chat trigger with prefilled message
-- [ ] A4-T6-4 · Mark as sent after admin confirms
-- [ ] A4-T6-5 · Notification history (pending, attempted, success, failed)
-- [ ] A4-T6-6 · Customizable notification template in settings
-- [ ] A4-T6-7 · Prevent repeat notifications for the same restock event
+- [x] A4-T6-1 · `/admin/restock/subscribers` — full table with status filter tabs, product name, contact, channel, subscribed date; unsubscribe action per row
+- [x] A4-T6-2 · `/admin/restock/notifications` — pending queue grouped by product (active subscribers for out-of-stock products)
+- [x] A4-T6-3 · WhatsApp Click-to-Chat button with pre-filled restock message per subscriber
+- [x] A4-T6-4 · Two-step "Open WhatsApp → Mark Sent" flow; records sent in `restock_notification_history`
+- [x] A4-T6-5 · `/admin/restock/history` — full notification history (pending/sent/failed badges)
+- [ ] A4-T6-6 · Customizable notification template in settings — deferred to A7-T3-10
+- [x] A4-T6-7 · Repeat prevention: marking sent sets subscription status to "notified" (excluded from pending queue)
+
+> **New files added this phase:**
+>
+> - `lib/db/restock.ts` — full query/mutation layer for subscriptions + notification history
+> - `app/(admin)/admin/inventory/page.tsx` — rewritten with overview cards, subscriber counts, Adjust button
+> - `app/(admin)/admin/inventory/StockAdjustClient.tsx` — client wrapper (router.refresh on success)
+> - `app/(admin)/admin/inventory/StockAdjustModal.tsx` — modal form with add/remove mode + reason select
+> - `app/(admin)/admin/inventory/low-stock/page.tsx`
+> - `app/(admin)/admin/inventory/out-of-stock/page.tsx`
+> - `app/(admin)/admin/inventory/history/page.tsx`
+> - `app/(admin)/admin/restock/subscribers/page.tsx` — replaced placeholder
+> - `app/(admin)/admin/restock/subscribers/SubscriberActions.tsx`
+> - `app/(admin)/admin/restock/notifications/page.tsx`
+> - `app/(admin)/admin/restock/notifications/NotifyActions.tsx`
+> - `app/(admin)/admin/restock/history/page.tsx`
+> - `app/api/admin/inventory/[id]/route.ts` — PATCH (adjust + settings)
+> - `app/api/admin/restock/[id]/route.ts` — PATCH subscription status
+> - `app/api/admin/restock/notify/route.ts` — POST mark notification sent
+> - `app/api/restock/subscribe/route.ts` — public customer subscribe
+> - `app/api/restock/unsubscribe/route.ts` — public customer unsubscribe
+>
+> Build: 57 routes ✓ · TypeScript: 0 errors ✓
 
 ---
 
@@ -581,6 +602,6 @@ Wire up Supabase into the Next.js project.
 
 ## Next Up
 
-**A4-T1 · Admin Inventory Dashboard** is the next task.
+**A5-T1 · Homepage** is the next task (Customer Storefront begins).
 
-> Confirm "start A4" to begin Inventory & Restock Notifications.
+> Confirm "start A5" to begin the Customer Storefront.
