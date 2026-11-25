@@ -14,7 +14,7 @@
  */
 
 import Link from 'next/link';
-import { signOutAction } from '@/app/(admin)/admin/login/actions';
+import { useRouter } from 'next/navigation';
 
 interface AdminTopbarProps {
   /** Callback to open the mobile sidebar */
@@ -115,38 +115,51 @@ export function AdminTopbar({ onMenuOpen, userName = 'Admin' }: AdminTopbarProps
         </div>
 
         {/* Logout */}
-        <form action={signOutAction}>
-          <button
-            type="submit"
-            aria-label="Sign out"
-            title="Sign out"
-            className={[
-              'flex items-center justify-center',
-              'w-9 h-9 rounded-[var(--radius-sm)]',
-              'text-[var(--color-earth-500)]',
-              'hover:bg-[var(--color-error-light)] hover:text-[var(--color-error)]',
-              'transition-colors duration-[var(--duration-fast)]',
-              'focus-visible:outline-none focus-visible:ring-2',
-              'focus-visible:ring-[var(--color-error)]',
-            ].join(' ')}
-          >
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="1.75"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-          </button>
-        </form>
+        <LogoutButton />
       </div>
     </header>
+  );
+}
+
+function LogoutButton() {
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await fetch('/api/auth/signout', { method: 'POST' });
+    router.push('/admin/login');
+    router.refresh();
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleSignOut}
+      aria-label="Sign out"
+      title="Sign out"
+      className={[
+        'flex items-center justify-center',
+        'w-9 h-9 rounded-[var(--radius-sm)]',
+        'text-[var(--color-earth-500)]',
+        'hover:bg-[var(--color-error-light)] hover:text-[var(--color-error)]',
+        'transition-colors duration-[var(--duration-fast)]',
+        'focus-visible:outline-none focus-visible:ring-2',
+        'focus-visible:ring-[var(--color-error)]',
+      ].join(' ')}
+    >
+      <svg
+        aria-hidden="true"
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth="1.75"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+        />
+      </svg>
+    </button>
   );
 }

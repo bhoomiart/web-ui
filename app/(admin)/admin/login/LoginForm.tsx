@@ -1,12 +1,11 @@
 'use client';
 
 /**
- * LoginForm — client component for the admin login page.
- * Calls the signIn server action and shows errors.
+ * LoginForm — calls POST /api/auth/signin.
+ * No Server Action imports — purely a frontend form that hits a REST endpoint.
  */
 
 import * as React from 'react';
-import { signInAction } from './actions';
 import { useRouter } from 'next/navigation';
 
 export function LoginForm() {
@@ -19,23 +18,29 @@ export function LoginForm() {
     setError(null);
     setPending(true);
 
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const result = await signInAction(data);
+    const fd = new FormData(e.currentTarget);
+    const email = fd.get('email') as string;
+    const password = fd.get('password') as string;
+
+    const res = await fetch('/api/auth/signin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const json = (await res.json()) as { error?: string };
 
     setPending(false);
-
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      router.push('/admin/dashboard');
-      router.refresh();
+    if (!res.ok || json.error) {
+      setError(json.error ?? 'Sign-in failed. Please try again.');
+      return;
     }
+
+    router.push('/admin/dashboard');
+    router.refresh();
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-[var(--spacing-5)]">
-      {/* Email */}
       <div className="flex flex-col gap-[var(--spacing-1-5)]">
         <label
           htmlFor="email"
@@ -50,20 +55,10 @@ export function LoginForm() {
           required
           autoComplete="email"
           placeholder="admin@example.com"
-          className={[
-            'w-full px-[var(--spacing-3)] py-[var(--spacing-2-5)]',
-            'rounded-[var(--radius-input)]',
-            'border border-[var(--color-earth-200)]',
-            'text-[var(--font-size-sm)] text-[var(--color-earth-900)]',
-            'placeholder:text-[var(--color-earth-300)]',
-            'bg-white',
-            'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)] focus:border-transparent',
-            'transition-shadow duration-[var(--duration-fast)]',
-          ].join(' ')}
+          className="w-full px-[var(--spacing-3)] py-[var(--spacing-2-5)] rounded-[var(--radius-input)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] text-[var(--color-earth-900)] placeholder:text-[var(--color-earth-300)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)] focus:border-transparent transition-shadow"
         />
       </div>
 
-      {/* Password */}
       <div className="flex flex-col gap-[var(--spacing-1-5)]">
         <label
           htmlFor="password"
@@ -78,20 +73,10 @@ export function LoginForm() {
           required
           autoComplete="current-password"
           placeholder="••••••••"
-          className={[
-            'w-full px-[var(--spacing-3)] py-[var(--spacing-2-5)]',
-            'rounded-[var(--radius-input)]',
-            'border border-[var(--color-earth-200)]',
-            'text-[var(--font-size-sm)] text-[var(--color-earth-900)]',
-            'placeholder:text-[var(--color-earth-300)]',
-            'bg-white',
-            'focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)] focus:border-transparent',
-            'transition-shadow duration-[var(--duration-fast)]',
-          ].join(' ')}
+          className="w-full px-[var(--spacing-3)] py-[var(--spacing-2-5)] rounded-[var(--radius-input)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] text-[var(--color-earth-900)] placeholder:text-[var(--color-earth-300)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary)] focus:border-transparent transition-shadow"
         />
       </div>
 
-      {/* Error message */}
       {error && (
         <div
           role="alert"
@@ -101,22 +86,11 @@ export function LoginForm() {
         </div>
       )}
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={pending}
         aria-busy={pending}
-        className={[
-          'w-full flex items-center justify-center gap-[var(--spacing-2)]',
-          'px-[var(--spacing-4)] py-[var(--spacing-3)]',
-          'rounded-[var(--radius-button)]',
-          'bg-[var(--color-brand-primary)] text-white',
-          'text-[var(--font-size-sm)] font-semibold',
-          'transition-opacity duration-[var(--duration-fast)]',
-          'hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed',
-          'focus-visible:outline-none focus-visible:ring-2',
-          'focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2',
-        ].join(' ')}
+        className="w-full flex items-center justify-center gap-[var(--spacing-2)] px-[var(--spacing-4)] py-[var(--spacing-3)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2"
       >
         {pending ? (
           <>
