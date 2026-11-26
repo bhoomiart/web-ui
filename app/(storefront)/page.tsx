@@ -98,54 +98,99 @@ export default async function Homepage() {
   const show = (key: string) =>
     sections == null || visibility[key] === undefined ? true : visibility[key];
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
+
+  // Schema.org Organization + WebSite JSON-LD (A8-T2-1, A8-T2-2)
+  const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Bhoomi Art',
+    url: siteUrl,
+    logo: `${siteUrl}/logo-icon.png`,
+    description:
+      'Handcrafted terracotta pottery and earthenware — rooted in earth, shaped by hand.',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      telephone: '+917019400775',
+      availableLanguage: ['English', 'Hindi'],
+    },
+    sameAs: [
+      'https://www.instagram.com/ba4bhoomiart',
+      `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '917019400775'}`,
+    ],
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Bhoomi Art',
+    url: siteUrl,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${siteUrl}/search?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
-    <div className="flex flex-col">
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      {show('hero') && <HeroSection banners={banners ?? []} />}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <div className="flex flex-col">
+        {/* ── Hero ─────────────────────────────────────────────── */}
+        {show('hero') && <HeroSection banners={banners ?? []} />}
 
-      {/* ── Brand Intro ──────────────────────────────────────── */}
-      {show('brand_intro') && <BrandIntroSection />}
+        {/* ── Brand Intro ──────────────────────────────────────── */}
+        {show('brand_intro') && <BrandIntroSection />}
 
-      {/* ── Featured Categories ───────────────────────────────── */}
-      {show('featured_categories') && (
-        <Suspense fallback={<SectionSkeleton />}>
-          <FeaturedCategoriesSection />
-        </Suspense>
-      )}
+        {/* ── Featured Categories ───────────────────────────────── */}
+        {show('featured_categories') && (
+          <Suspense fallback={<SectionSkeleton />}>
+            <FeaturedCategoriesSection />
+          </Suspense>
+        )}
 
-      {/* ── Featured Products ────────────────────────────────── */}
-      {show('featured_products') && (
-        <Suspense fallback={<SectionSkeleton />}>
-          <FeaturedProductsSection />
-        </Suspense>
-      )}
+        {/* ── Featured Products ────────────────────────────────── */}
+        {show('featured_products') && (
+          <Suspense fallback={<SectionSkeleton />}>
+            <FeaturedProductsSection />
+          </Suspense>
+        )}
 
-      {/* ── Signature Collection ─────────────────────────────── */}
-      {show('signature') && <SignatureSection />}
+        {/* ── Signature Collection ─────────────────────────────── */}
+        {show('signature') && <SignatureSection />}
 
-      {/* ── Bestsellers ──────────────────────────────────────── */}
-      {show('bestsellers') && (
-        <Suspense fallback={<SectionSkeleton />}>
-          <BestsellersSection />
-        </Suspense>
-      )}
+        {/* ── Bestsellers ──────────────────────────────────────── */}
+        {show('bestsellers') && (
+          <Suspense fallback={<SectionSkeleton />}>
+            <BestsellersSection />
+          </Suspense>
+        )}
 
-      {/* ── New Arrivals ─────────────────────────────────────── */}
-      {show('new_arrivals') && (
-        <Suspense fallback={<SectionSkeleton />}>
-          <NewArrivalsSection />
-        </Suspense>
-      )}
+        {/* ── New Arrivals ─────────────────────────────────────── */}
+        {show('new_arrivals') && (
+          <Suspense fallback={<SectionSkeleton />}>
+            <NewArrivalsSection />
+          </Suspense>
+        )}
 
-      {/* ── Custom Creations CTA ─────────────────────────────── */}
-      {show('customized') && <CustomizedSection />}
+        {/* ── Custom Creations CTA ─────────────────────────────── */}
+        {show('customized') && <CustomizedSection />}
 
-      {/* ── Craftsmanship Story ───────────────────────────────── */}
-      {show('craftsmanship') && <CraftsmanshipSection />}
+        {/* ── Craftsmanship Story ───────────────────────────────── */}
+        {show('craftsmanship') && <CraftsmanshipSection />}
 
-      {/* ── WhatsApp CTA ─────────────────────────────────────── */}
-      {show('whatsapp_cta') && <WhatsAppCtaSection />}
-    </div>
+        {/* ── WhatsApp CTA ─────────────────────────────────────── */}
+        {show('whatsapp_cta') && <WhatsAppCtaSection />}
+      </div>
+    </>
   );
 }
 
