@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { listAllReviews } from '@/lib/db/reviews';
+import { ReviewModerationActions } from '@/components/admin/ReviewModerationActions';
 
 type TabKey = 'all' | 'pending' | 'approved' | 'rejected';
 
@@ -142,6 +143,9 @@ export default async function ReviewsPage({
                 <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
                   Customer
                 </th>
+                <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)] hidden lg:table-cell">
+                  Review
+                </th>
                 <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
                   Rating
                 </th>
@@ -154,6 +158,7 @@ export default async function ReviewsPage({
                 <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)] hidden xl:table-cell">
                   Date
                 </th>
+                <th className="px-[var(--spacing-4)] py-[var(--spacing-3)]" aria-label="Actions" />
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-earth-100)]">
@@ -175,6 +180,14 @@ export default async function ReviewsPage({
                     </td>
                     <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-[var(--color-earth-700)]">
                       {review.customer_name}
+                    </td>
+                    <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-[var(--color-earth-500)] hidden lg:table-cell max-w-[200px]">
+                      <p className="truncate text-[var(--font-size-xs)]">{review.body ?? '—'}</p>
+                      {review.admin_response && (
+                        <p className="truncate text-[var(--font-size-2xs)] text-[var(--color-info)] mt-0.5">
+                          ↳ {review.admin_response}
+                        </p>
+                      )}
                     </td>
                     <td className="px-[var(--spacing-4)] py-[var(--spacing-3)]">
                       <StarRating rating={review.rating} />
@@ -212,6 +225,13 @@ export default async function ReviewsPage({
                         month: 'short',
                         year: 'numeric',
                       })}
+                    </td>
+                    <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right">
+                      <ReviewModerationActions
+                        reviewId={review.id}
+                        currentStatus={review.status}
+                        existingResponse={review.admin_response}
+                      />
                     </td>
                   </tr>
                 );

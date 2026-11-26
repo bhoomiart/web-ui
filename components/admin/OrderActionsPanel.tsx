@@ -12,6 +12,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { OrderStatusBadge } from './OrderStatusBadge';
+import { templates, customerWhatsAppUrl } from '@/lib/whatsapp';
 
 interface OrderActionsPanelProps {
   orderId: string;
@@ -52,19 +53,14 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const WA_TEMPLATES: Record<string, (name: string, orderNum: string) => string> = {
-  confirmed: (n, o) =>
-    `Hi ${n}! Your Bhoomi Art order #${o} has been confirmed. We'll start preparing it shortly.`,
-  processing: (n, o) => `Hi ${n}! Your Bhoomi Art order #${o} is now being processed.`,
+  confirmed: (n, o) => templates.orderConfirmation(n, o),
+  processing: (n, o) => templates.processingUpdate(n, o),
   ready_for_dispatch: (n, o) =>
-    `Hi ${n}! Your Bhoomi Art order #${o} is packed and ready to be shipped.`,
-  shipped: (n, o) =>
-    `Hi ${n}! Your Bhoomi Art order #${o} has been shipped and is on its way to you.`,
-  delivered: (n, o) =>
-    `Hi ${n}! Your Bhoomi Art order #${o} has been delivered. We hope you love it! 🏺`,
-  cancelled: (n, o) =>
-    `Hi ${n}! Your Bhoomi Art order #${o} has been cancelled as requested. Please reach out if you have any questions.`,
-  return_approved: (n, o) =>
-    `Hi ${n}! Your return request for order #${o} has been approved. Please ship the item(s) back to us.`,
+    templates.processingUpdate(n, o, 'Your order is packed and ready to ship!'),
+  shipped: (n, o) => templates.dispatchUpdate(n, o),
+  delivered: (n, o) => templates.deliveryConfirmation(n, o),
+  cancelled: (n, o) => templates.cancellationUpdate(n, o),
+  return_approved: (n, o) => templates.returnRefundUpdate(n, o, 'return_approved'),
 };
 
 export function OrderActionsPanel({
@@ -144,16 +140,9 @@ export function OrderActionsPanel({
 
   function openWhatsApp(template?: string) {
     const msg = template
-      ? (WA_TEMPLATES[template]?.(customerName, orderNumber) ??
-        `Hi ${customerName}! Regarding your order #${orderNumber}.`)
+      ? (WA_TEMPLATES[template]?.(customerName, orderNumber) ?? templates.generalEnquiry())
       : `Hi ${customerName}! Regarding your Bhoomi Art order #${orderNumber}.`;
-    const digits = phone.replace(/\D/g, '');
-    const formatted = digits.startsWith('91') ? digits : `91${digits}`;
-    window.open(
-      `https://wa.me/${formatted}?text=${encodeURIComponent(msg)}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
+    window.open(customerWhatsAppUrl(phone, msg), '_blank', 'noopener,noreferrer');
   }
 
   const inputClass =

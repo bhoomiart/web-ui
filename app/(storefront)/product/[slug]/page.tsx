@@ -19,6 +19,7 @@ import { ProductCard } from '@/components/storefront/ProductCard';
 import { ProductGallery } from './ProductGallery';
 import { AddToCartSection } from './AddToCartSection';
 import { RestockSubscribeForm } from './RestockSubscribeForm';
+import { ReviewForm } from './ReviewForm';
 import type { Metadata } from 'next';
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -420,6 +421,17 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     )}
                   </div>
                   {r.body && <p className="body-base text-[var(--color-earth-700)]">{r.body}</p>}
+                  {/* Admin response */}
+                  {r.admin_response && (
+                    <div className="mt-[var(--spacing-3)] pl-[var(--spacing-4)] border-l-2 border-[var(--color-earth-200)]">
+                      <p className="text-[var(--font-size-xs)] font-semibold text-[var(--color-earth-500)] mb-1">
+                        Response from Bhoomi Art
+                      </p>
+                      <p className="text-[var(--font-size-sm)] text-[var(--color-earth-700)]">
+                        {r.admin_response}
+                      </p>
+                    </div>
+                  )}
                   <p className="caption mt-[var(--spacing-2)]">
                     {new Date(r.created_at).toLocaleDateString('en-IN', {
                       day: '2-digit',
@@ -431,6 +443,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               ))}
             </div>
           )}
+
+          {/* Write a review form */}
+          <div className="mt-[var(--spacing-10)]">
+            <ReviewForm productId={product.id} productName={product.name} />
+          </div>
         </section>
 
         {/* Related products */}
