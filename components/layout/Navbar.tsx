@@ -3,10 +3,10 @@
 /**
  * Navbar — Bhoomi Art storefront navigation.
  *
- * Server-renderable shell with client interactivity for:
+ * Client interactivity:
  * - Mobile menu toggle
  * - Active link highlighting via usePathname
- * - Cart item count (wired to cart store in A6-T1)
+ * - Cart item count + CartDrawer (wired A6-T1)
  */
 
 import Image from 'next/image';
@@ -14,6 +14,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { MobileMenu } from './MobileMenu';
+import { CartDrawer } from '@/components/storefront/CartDrawer';
+import { useCartStore } from '@/lib/store/cartStore';
 
 // ─── Nav links ───────────────────────────────────────────────────────────────
 
@@ -31,6 +33,7 @@ export const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [cartOpen, setCartOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
 
   // Elevate navbar on scroll
@@ -146,8 +149,8 @@ export function Navbar() {
                 <SearchIcon />
               </Link>
 
-              {/* Cart — badge count wired in A6-T1 */}
-              <CartButton />
+              {/* Cart — opens CartDrawer */}
+              <CartButton onOpen={() => setCartOpen(true)} />
 
               {/* WhatsApp enquiry */}
               <a
@@ -202,21 +205,22 @@ export function Navbar() {
         onClose={() => setMenuOpen(false)}
         currentPath={pathname}
       />
+
+      {/* Cart drawer */}
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
 }
 
 // ─── Cart button ─────────────────────────────────────────────────────────────
-// Extracted so it can later import the cart store (A6-T1) in isolation.
 
-function CartButton() {
-  // itemCount will come from useCartStore() in A6-T1.
-  // For now it always reads 0.
-  const itemCount = 0;
+function CartButton({ onOpen }: { onOpen: () => void }) {
+  const itemCount = useCartStore((s) => s.itemCount());
 
   return (
-    <Link
-      href="/cart"
+    <button
+      type="button"
+      onClick={onOpen}
       aria-label={itemCount > 0 ? `Cart — ${itemCount} items` : 'Cart — empty'}
       className={[
         'relative flex items-center justify-center',
@@ -243,7 +247,7 @@ function CartButton() {
           {itemCount > 99 ? '99+' : itemCount}
         </span>
       )}
-    </Link>
+    </button>
   );
 }
 

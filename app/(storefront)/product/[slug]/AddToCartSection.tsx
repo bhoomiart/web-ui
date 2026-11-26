@@ -1,18 +1,14 @@
 'use client';
 
 /**
- * AddToCartSection (A5-T4-5, A5-T4-6, A5-T4-7)
+ * AddToCartSection (A5-T4-5, A5-T4-6, A5-T4-7 — wired in A6-T1)
  *
- * Client component that renders:
- *   - Variant selector (if variants exist)
- *   - Quantity selector
- *   - Add to Cart button
- *
- * Cart store integration wired in A6-T1. For now the button is fully
- * functional in terms of UI state but cart persistence is a no-op stub.
+ * Variant selector + quantity stepper + Add to Cart button.
+ * Calls useCartStore().addItem() so changes persist to localStorage.
  */
 
 import React from 'react';
+import { useCartStore } from '@/lib/store/cartStore';
 
 interface Variant {
   id: string;
@@ -37,7 +33,16 @@ interface AddToCartSectionProps {
   variants: Variant[];
 }
 
+const fmt = (n: number) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(n);
+
 export function AddToCartSection({ product, variants }: AddToCartSectionProps) {
+  const addItem = useCartStore((s) => s.addItem);
+
   const activeVariants = variants.filter((v) => v.status === 'active' || v.status === 'available');
   const [selectedVariantId, setSelectedVariantId] = React.useState<string | null>(
     activeVariants[0]?.id ?? null
@@ -49,11 +54,21 @@ export function AddToCartSection({ product, variants }: AddToCartSectionProps) {
   const effectivePrice =
     product.price != null ? product.price + (selectedVariant?.price_modifier ?? 0) : null;
 
-  const isOutOfStock = product.availability_type === 'out_of_stock';
-
   function handleAddToCart() {
-    // TODO: wire to useCartStore().addItem() in A6-T1
-    // For now, show a brief visual confirmation
+    if (effectivePrice == null) return;
+
+    addItem({
+      productId: product.id,
+      variantId: selectedVariant?.id ?? null,
+      name: product.name,
+      variantName: selectedVariant?.name ?? null,
+      price: effectivePrice,
+      image: product.image,
+      slug: product.slug,
+      availabilityType: product.availability_type,
+      quantity,
+    });
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   }
@@ -83,12 +98,7 @@ export function AddToCartSection({ product, variants }: AddToCartSectionProps) {
                 {v.price_modifier !== 0 && (
                   <span className="ml-1 opacity-70">
                     ({v.price_modifier > 0 ? '+' : ''}
-                    {new Intl.NumberFormat('en-IN', {
-                      style: 'currency',
-                      currency: 'INR',
-                      maximumFractionDigits: 0,
-                    }).format(v.price_modifier)}
-                    )
+                    {fmt(v.price_modifier)})
                   </span>
                 )}
               </button>
@@ -97,21 +107,17 @@ export function AddToCartSection({ product, variants }: AddToCartSectionProps) {
         </div>
       )}
 
-      {/* Price update with variant */}
+      {/* Effective price when variant changes it */}
       {selectedVariant && selectedVariant.price_modifier !== 0 && effectivePrice != null && (
         <p
           className="text-[var(--font-size-2xl)] font-bold"
           style={{ color: 'var(--color-brand-primary)' }}
         >
-          {new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 0,
-          }).format(effectivePrice)}
+          {fmt(effectivePrice)}
         </p>
       )}
 
-      {/* Quantity selector */}
+      {/* Quantity */}
       <div>
         <p className="text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] mb-[var(--spacing-2)]">
           Quantity
@@ -162,16 +168,15 @@ export function AddToCartSection({ product, variants }: AddToCartSectionProps) {
         </div>
       </div>
 
-      {/* Add to Cart button */}
+      {/* Add to Cart */}
       <button
         type="button"
         onClick={handleAddToCart}
-        disabled={isOutOfStock}
-        aria-disabled={isOutOfStock}
+        disabled={effectivePrice == null}
         className={`w-full flex items-center justify-center gap-[var(--spacing-3)] h-12 rounded-[var(--radius-button)] font-bold text-[var(--font-size-base)] transition-all duration-[var(--duration-normal)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2 ${
           added
             ? 'bg-[var(--color-success)] text-white'
-            : isOutOfStock
+            : effectivePrice == null
               ? 'bg-[var(--color-earth-200)] text-[var(--color-earth-500)] cursor-not-allowed'
               : 'bg-[var(--color-brand-primary)] text-white hover:bg-[var(--color-earth-700)] shadow-[var(--shadow-button)]'
         }`}

@@ -234,3 +234,241 @@ export async function updateOrderStatus({
     notes: notes ?? null,
   });
 }
+
+// ─── Payment status ───────────────────────────────────────────────────────────
+
+export async function updatePaymentStatus({
+  orderId,
+  paymentStatus,
+  paymentNotes,
+  actorId,
+}: {
+  orderId: string;
+  paymentStatus: 'pending' | 'received' | 'failed';
+  paymentNotes?: string;
+  actorId: string;
+}) {
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from('orders')
+    .update({
+      payment_status: paymentStatus,
+      payment_notes: paymentNotes ?? null,
+    })
+    .eq('id', orderId);
+
+  if (error) throw new Error(`updatePaymentStatus: ${error.message}`);
+
+  await admin.from('audit_logs').insert({
+    actor_id: actorId,
+    action: 'order.payment_status',
+    table_name: 'orders',
+    record_id: orderId,
+    diff: { payment_status: paymentStatus } as never,
+  });
+}
+
+// ─── Return requests ──────────────────────────────────────────────────────────
+
+export async function listReturnRequests({
+  status,
+  limit = 30,
+  offset = 0,
+}: {
+  status?: string;
+  limit?: number;
+  offset?: number;
+} = {}) {
+  const admin = createAdminClient();
+  let query = admin
+    .from('return_requests')
+    .select(
+      `*, orders(id, order_number, customer_name, phone),
+       return_request_items(id, quantity, image_urls, order_items(id, snapshot))`,
+      { count: 'exact' }
+    )
+    .order('created_at', { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (status) query = query.eq('status', status as never);
+
+  const { data, error, count } = await query;
+  if (error) throw new Error(`listReturnRequests: ${error.message}`);
+  return { returns: data ?? [], total: count ?? 0 };
+}
+
+export async function getReturnRequestById(id: string) {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from('return_requests')
+    .select(
+      `*, orders(*, order_items(id, quantity, unit_price, item_total, snapshot)),
+       return_request_items(id, quantity, image_urls, order_items(id, snapshot))`
+    )
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') return null;
+    throw new Error(`getReturnRequestById: ${error.message}`);
+  }
+  return data;
+}
+
+export async function createReturnRequest({
+  orderId,
+  reason,
+  description,
+  items,
+}: {
+  orderId: string;
+  reason: 'damaged' | 'wrong_item' | 'changed_mind' | 'quality_issue' | 'other';
+  description?: string;
+  items: Array<{ orderItemId: string; quantity: number; imageUrls?: string[] }>;
+}) {
+  const admin = createAdminClient();
+
+  const { data: returnReq, error: reqError } = await admin
+    .from('return_requests')
+    .insert({ order_id: orderId, reason, description: description ?? null })
+    .select()
+    .single();
+
+  if (reqError) throw new Error(`createReturnRequest: ${reqError.message}`);
+
+  if (items.length > 0) {
+    const { error: itemsError } = await admin.from('return_request_items').insert(
+      items.map((i) => ({
+        return_request_id: returnReq.id,
+        order_item_id: i.orderItemId,
+        quantity: i.quantity,
+        image_urls: i.imageUrls ?? [],
+      }))
+    );
+    if (itemsError) throw new Error(`createReturnRequest items: ${itemsError.message}`);
+  }
+
+  // Update order status
+  await admin.from('orders').update({ status: 'return_requested' }).eq('id', orderId);
+
+  return returnReq;
+}
+
+export async function updateReturnStatus({
+  returnId,
+  status,
+  adminNotes,
+  actorId,
+}: {
+  returnId: string;
+  status: 'approved' | 'rejected' | 'in_transit' | 'completed';
+  adminNotes?: string;
+  actorId: string;
+}) {
+  const admin = createAdminClient();
+
+  const { data: returnReq, error: fetchErr } = await admin
+    .from('return_requests')
+    .select('order_id')
+    .eq('id', returnId)
+    .single();
+
+  if (fetchErr) throw new Error(`updateReturnStatus fetch: ${fetchErr.message}`);
+
+  const { error } = await admin
+    .from('return_requests')
+    .update({ status, admin_notes: adminNotes ?? null })
+    .eq('id', returnId);
+
+  if (error) throw new Error(`updateReturnStatus: ${error.message}`);
+
+  // Mirror to order status
+  const orderStatusMap: Record<string, string> = {
+    approved: 'return_approved',
+    rejected: 'return_rejected',
+    in_transit: 'return_in_transit',
+    completed: 'returned',
+  };
+
+  if (orderStatusMap[status]) {
+    await updateOrderStatus({
+      orderId: returnReq.order_id,
+      newStatus: orderStatusMap[status],
+      actorId,
+      notes: adminNotes,
+    });
+  }
+}
+
+// ─── Refunds ──────────────────────────────────────────────────────────────────
+
+export async function listRefunds({ limit = 30, offset = 0 } = {}) {
+  const admin = createAdminClient();
+  const { data, error, count } = await admin
+    .from('refunds')
+    .select(
+      `*, orders(id, order_number, customer_name, phone),
+       refund_status_history(id, previous_status, new_status, notes, created_at)`,
+      { count: 'exact' }
+    )
+    .order('processed_at', { ascending: false, nullsFirst: true })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw new Error(`listRefunds: ${error.message}`);
+  return { refunds: data ?? [], total: count ?? 0 };
+}
+
+export async function createRefund({
+  orderId,
+  returnRequestId,
+  amount,
+  refundType,
+  method,
+  referenceId,
+  processedAt,
+  notes,
+  actorId,
+}: {
+  orderId: string;
+  returnRequestId?: string;
+  amount: number;
+  refundType: 'full' | 'partial';
+  method: string;
+  referenceId?: string;
+  processedAt?: string;
+  notes?: string;
+  actorId: string;
+}) {
+  const admin = createAdminClient();
+
+  const { data: refund, error } = await admin
+    .from('refunds')
+    .insert({
+      order_id: orderId,
+      return_request_id: returnRequestId ?? null,
+      amount,
+      refund_type: refundType,
+      method,
+      reference_id: referenceId ?? null,
+      processed_at: processedAt ?? null,
+      notes: notes ?? null,
+      actor_id: actorId,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(`createRefund: ${error.message}`);
+
+  // Record initial status history
+  await admin.from('refund_status_history').insert({
+    refund_id: refund.id,
+    new_status: processedAt ? 'processed' : 'pending',
+    actor_id: actorId,
+  });
+
+  // Update order status
+  const newOrderStatus = refundType === 'full' ? 'refunded' : 'partially_refunded';
+  await updateOrderStatus({ orderId, newStatus: newOrderStatus, actorId, notes });
+
+  return refund;
+}

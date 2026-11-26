@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
+import { OrderActionsPanel } from '@/components/admin/OrderActionsPanel';
 import { getOrderById } from '@/lib/db/orders';
 import type { Json } from '@/lib/types/database';
 
@@ -283,30 +284,15 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
 
         {/* ── Right column: customer info + actions ── */}
         <div className="flex flex-col gap-[var(--spacing-6)]">
-          {/* Status + payment */}
-          <div className="bg-white rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-[var(--spacing-5)]">
-            <h3 className="heading-6 mb-[var(--spacing-4)]">Order Status</h3>
-            <div className="flex flex-col gap-[var(--spacing-3)]">
-              <div className="flex items-center justify-between">
-                <span className="text-[var(--font-size-sm)] text-[var(--color-earth-500)]">
-                  Status
-                </span>
-                <OrderStatusBadge status={order.status} />
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[var(--font-size-sm)] text-[var(--color-earth-500)]">
-                  Payment
-                </span>
-                {paymentBadge(order.payment_status)}
-              </div>
-            </div>
-            {/* Placeholder for status update action */}
-            <div className="mt-[var(--spacing-4)] pt-[var(--spacing-4)] border-t border-[var(--color-earth-100)]">
-              <p className="text-[var(--font-size-xs)] text-[var(--color-earth-400)] italic">
-                Status update actions — implementation coming in next sprint.
-              </p>
-            </div>
-          </div>
+          {/* Status + payment — actions panel */}
+          <OrderActionsPanel
+            orderId={order.id}
+            currentStatus={order.status}
+            currentPaymentStatus={order.payment_status}
+            customerName={order.customer_name}
+            phone={order.phone}
+            orderNumber={order.order_number}
+          />
 
           {/* Customer info */}
           <div className="bg-white rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-[var(--spacing-5)]">
