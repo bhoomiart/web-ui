@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { trackEvent } from '@/lib/analytics';
 
 interface RestockSubscribeFormProps {
   productId: string;
@@ -59,6 +60,7 @@ export function RestockSubscribeForm({
         return;
       }
 
+      trackEvent('restock_subscribe', { product_id: productId });
       setState('success');
       setMessage(data.message ?? "You're subscribed! We'll notify you when back in stock.");
     } catch {

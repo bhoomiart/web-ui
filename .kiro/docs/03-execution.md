@@ -299,7 +299,7 @@ Wire up Supabase into the Next.js project.
 
 - [x] A4-T3-1 · Movement table: product, type badge, before/after, change delta, linked order, timestamp
 - [x] A4-T3-2 · Colour-coded change type badges (restock=green, damaged=red, reserved=amber, etc.)
-- [ ] A4-T3-3 · CSV export — deferred to A8
+- [x] A4-T3-3 · CSV export — `GET /api/admin/inventory/history/export` + Export CSV button on history page
 
 ### A4-T4 · Availability Types ✅
 
@@ -494,8 +494,8 @@ Wire up Supabase into the Next.js project.
 
 ### A6-T6 · Policy Settings
 
-- [ ] A6-T6-1 · `/admin/settings/refund-policy` — deferred to A8 settings work
-- [ ] A6-T6-2 · Policy values in `site_settings` — table exists, UI deferred
+- [x] A6-T6-1 · `/admin/settings/refund-policy` — return window, refund processing days, policy note
+- [x] A6-T6-2 · Policy values in `site_settings` (`return_window_days`, `refund_processing_days`, `return_policy_note`); window enforced in `POST /api/returns`; `lib/policy-settings.ts`
 - [ ] A6-T6-3 · Policy displayed to customers — `/policies/returns` page deferred to A8
 
 > **New files added this phase:**
@@ -630,7 +630,7 @@ Wire up Supabase into the Next.js project.
 - [x] A8-T5-1 · `lib/analytics.ts` — 8 typed event definitions with `trackEvent()` dispatcher
 - [x] A8-T5-2 · `components/Analytics.tsx` — GA4 + GTM scripts loaded `afterInteractive`; GA4 skipped if GTM is configured to avoid double-counting
 - [x] A8-T5-3 · GSC verification meta tag via `gsc_verification` key in `site_settings`, emitted by root `generateMetadata`
-- [ ] A8-T5-4 · `trackEvent` calls at cart/checkout/product — wired at call sites as a follow-up; event types defined and ready
+- [x] A8-T5-4 · `trackEvent` wired: product_view, add_to_cart, remove_from_cart, checkout_start, order_submit, review_submit, restock_subscribe (whatsapp_click and search not yet wired)
 
 ### A8-T6 · Database Performance ✅
 
@@ -645,7 +645,7 @@ Wire up Supabase into the Next.js project.
 - [x] A8-T7-3 · `.env.local.example` updated with all required keys + comments
 - [ ] A8-T7-4 · Lighthouse mobile audit — run after real product images are added
 - [ ] A8-T7-5 · HTTPS — confirmed at Vercel/host deployment time
-- [ ] A8-T7-6 · Coming-soon page removal — replace `app/page.tsx` with the storefront homepage when going live
+- [x] A8-T7-6 · Coming-soon page removed — `/` is served by `app/(storefront)/page.tsx`
 - [ ] A8-T7-7 · Real brand product photography — integrate when assets are available
 
 > **New files added this phase:**

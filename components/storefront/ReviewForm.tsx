@@ -10,6 +10,7 @@
  */
 
 import React from 'react';
+import { trackEvent } from '@/lib/analytics';
 
 interface ReviewFormProps {
   productId: string;
@@ -109,6 +110,7 @@ export function ReviewForm({
         return;
       }
 
+      trackEvent('review_submit', { product_id: productId, rating });
       setState('success');
       onSubmitted?.();
     } catch {

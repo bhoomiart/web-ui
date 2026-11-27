@@ -13,6 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrderByPhoneAndNumber, createReturnRequest } from '@/lib/db/orders';
+import { getPolicySettings } from '@/lib/policy-settings';
 
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as Record<string, unknown>;
@@ -48,6 +49,20 @@ export async function POST(request: NextRequest) {
   if (order.status !== 'delivered') {
     return NextResponse.json(
       { error: 'Returns can only be requested for delivered orders.' },
+      { status: 422 }
+    );
+  }
+
+  // Enforce the return window configured in admin settings
+  const { returnWindowDays } = await getPolicySettings();
+  const deliveredAt = (order.order_status_history ?? [])
+    .filter((h: { new_status: string }) => h.new_status === 'delivered')
+    .map((h: { created_at: string }) => new Date(h.created_at).getTime())
+    .sort((a: number, b: number) => b - a)[0];
+  const baseline = deliveredAt ?? new Date(order.updated_at).getTime();
+  if (Date.now() - baseline > returnWindowDays * 24 * 60 * 60 * 1000) {
+    return NextResponse.json(
+      { error: `The ${returnWindowDays}-day return window for this order has ended.` },
       { status: 422 }
     );
   }

@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { useCartStore } from '@/lib/store/cartStore';
+import { trackEvent } from '@/lib/analytics';
 
 interface Variant {
   id: string;
@@ -69,6 +70,14 @@ export function AddToCartSection({ product, variants }: AddToCartSectionProps) {
       quantity,
     });
 
+    trackEvent('add_to_cart', {
+      product_id: product.id,
+      product_name: product.name,
+      variant_id: selectedVariant?.id,
+      quantity,
+      value: effectivePrice * quantity,
+      currency: 'INR',
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   }

@@ -8,6 +8,7 @@ export const instant = false;
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ContentPage } from '@/components/storefront/ContentPage';
+import { getPolicySettings } from '@/lib/policy-settings';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
 
@@ -75,6 +76,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params;
   const policy = POLICIES[slug];
   if (!policy) notFound();
+  const settings = slug === 'returns' ? await getPolicySettings() : null;
 
   return (
     <ContentPage
@@ -85,6 +87,19 @@ export default async function PolicyPage({ params }: { params: Promise<{ slug: s
           {policy.paragraphs.map((p) => (
             <p key={p}>{p}</p>
           ))}
+          {settings && (
+            <>
+              <p>
+                {settings.returnWindowDays > 0
+                  ? `Return requests must be raised within ${settings.returnWindowDays} days of delivery.`
+                  : 'We are not accepting return requests at this time.'}{' '}
+                Approved refunds are processed within {settings.refundProcessingDays} days.
+              </p>
+              {settings.returnPolicyNote && (
+                <p className="whitespace-pre-wrap">{settings.returnPolicyNote}</p>
+              )}
+            </>
+          )}
         </>
       }
     />

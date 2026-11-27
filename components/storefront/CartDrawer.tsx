@@ -8,6 +8,7 @@
  * Availability revalidation happens at checkout open (A6-T1-3).
  */
 
+import { trackEvent } from '@/lib/analytics';
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -228,7 +229,13 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                       </div>
                       <button
                         type="button"
-                        onClick={() => removeItem(item.key)}
+                        onClick={() => {
+                          trackEvent('remove_from_cart', {
+                            product_id: item.productId,
+                            product_name: item.name,
+                          });
+                          removeItem(item.key);
+                        }}
                         aria-label={`Remove ${item.name} from cart`}
                         className="text-[var(--font-size-xs)] text-[var(--color-earth-400)] hover:text-[var(--color-error)] transition-colors focus-visible:outline-none focus-visible:underline"
                       >

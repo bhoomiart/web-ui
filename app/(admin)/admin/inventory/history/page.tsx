@@ -65,6 +65,14 @@ export default async function InventoryHistoryPage() {
       <AdminPageHeader
         title="Inventory History"
         description="All stock movements — restocks, adjustments, order reservations and releases."
+        action={
+          <Link
+            href="/api/admin/inventory/history/export"
+            className="inline-flex items-center px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)] transition-colors"
+          >
+            Export CSV
+          </Link>
+        }
         breadcrumbs={[
           { label: 'Dashboard', href: '/admin/dashboard' },
           { label: 'Inventory', href: '/admin/inventory' },

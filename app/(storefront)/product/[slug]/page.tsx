@@ -9,17 +9,15 @@ export const instant = false;
  */
 
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
-import { Suspense } from 'react';
 import { getProductBySlug, getProductRecommendations } from '@/lib/db/products';
 import { listProductReviews, getProductRatingSummary } from '@/lib/db/reviews';
 import { BreadcrumbNav } from '@/components/layout/BreadcrumbNav';
 import { ProductCard } from '@/components/storefront/ProductCard';
 import { ProductGallery } from './ProductGallery';
 import { AddToCartSection } from './AddToCartSection';
+import { ProductViewTracker } from './ProductViewTracker';
 import { RestockSubscribeForm } from './RestockSubscribeForm';
-import { ReviewForm } from '../../../../components/storefront/ReviewForm';
 import type { Metadata } from 'next';
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -254,6 +252,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <p className="body-base text-[var(--color-earth-700)]">{product.short_description}</p>
             )}
 
+            <ProductViewTracker
+              productId={product.id}
+              productName={product.name}
+              value={product.price ?? undefined}
+            />
             {/* Add to cart or restock subscribe */}
             {isOutOfStock ? (
               <RestockSubscribeForm productId={product.id} productName={product.name} />

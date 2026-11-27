@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cartStore';
+import { trackEvent } from '@/lib/analytics';
 
 const fmt = (n: number) =>
   new Intl.NumberFormat('en-IN', {
@@ -106,6 +107,12 @@ export function CheckoutPageClient() {
   const router = useRouter();
   const { items, subtotal, clearCart } = useCartStore();
   const total = subtotal();
+  const startTracked = React.useRef(false);
+  React.useEffect(() => {
+    if (startTracked.current || items.length === 0) return;
+    startTracked.current = true;
+    trackEvent('checkout_start', { item_count: items.length, value: total, currency: 'INR' });
+  }, [items.length, total]);
 
   const [form, setForm] = React.useState({
     customerName: '',
@@ -175,6 +182,12 @@ export function CheckoutPageClient() {
         return;
       }
 
+      trackEvent('order_submit', {
+        order_number: data.orderNumber ?? '',
+        item_count: items.length,
+        value: total,
+        currency: 'INR',
+      });
       clearCart();
       router.push(`/order/${data.orderNumber}`);
     } catch {
