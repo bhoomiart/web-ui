@@ -180,13 +180,13 @@ This replaces the earlier "localStorage only" assumption and adds work to T1, T2
 
 ### A10-T1 · Security & Data Foundation
 
-- [~] A10-T1-1 · Migrations 018 + 019 written, **not yet applied**: add `customer` to `user_role`; default new profiles to `customer`; `handle_new_user` sets role explicitly; add `profiles.phone`
-- [~] A10-T1-2 · Code audit done: every admin guard (`lib/auth/admin.ts`, `lib/api/auth.ts`, two admin API routes) uses an `admin`/`staff` allowlist, so `customer` is rejected. Runtime check after apply is still open
-- [~] A10-T1-3 · In migration 019, not applied: `orders.user_id`, price-breakdown columns, owner-read RLS, **drops the live `orders: anon insert` and `order_items: anon insert` policies** (anyone could insert orders directly through the API). `/track` uses the service role and keeps working
-- [~] A10-T1-4 · Migration 020, not applied: `create_order_with_stock` function (insert order, items, reserve stock in one transaction); collision-safe order number
-- [~] A10-T1-5 · Migration 021, not applied: `carts`, `cart_items` with RLS (owner only)
-- [~] A10-T1-6 · Migration 022, not applied: `shipping_rates` table, fallback row `*` and all 36 states seeded at ₹120 / free above ₹2,000 (placeholders). Order price columns are in 019
-- [ ] A10-T1-7 · Regenerate `lib/types/database.ts`
+- [x] A10-T1-1 · Migrations 018 + 019 **applied Nov 27**: add `customer` to `user_role`; default new profiles to `customer`; `handle_new_user` sets role explicitly; add `profiles.phone`
+- [x] A10-T1-2 · Code audit done: every admin guard (`lib/auth/admin.ts`, `lib/api/auth.ts`, two admin API routes) uses an `admin`/`staff` allowlist, so `customer` is rejected. Live DB confirmed: default role `customer`, anon order policies removed, existing staff row untouched. A real customer-session-against-admin test happens in T7
+- [x] A10-T1-3 · Migration 019 applied: `orders.user_id`, price-breakdown columns, owner-read RLS, **drops the live `orders: anon insert` and `order_items: anon insert` policies** (anyone could insert orders directly through the API). `/track` uses the service role and keeps working
+- [x] A10-T1-4 · Migration 020 applied. Tested in a rolled-back transaction (happy path reserves 0→1, oversell, total mismatch, missing user all behave; nothing persisted): `create_order_with_stock` function (insert order, items, reserve stock in one transaction); collision-safe order number
+- [x] A10-T1-5 · Migration 021 applied: `carts`, `cart_items` with RLS (owner only)
+- [x] A10-T1-6 · Migration 022 applied: `shipping_rates` table, fallback row `*` and all 36 states seeded at ₹120 / free above ₹2,000 (placeholders). Order price columns are in 019
+- [x] A10-T1-7 · Regenerated `lib/types/database.ts` (+139 lines, `tsc` clean)
 
 ### A10-T2 · Server Validation Service
 
@@ -299,3 +299,5 @@ Nothing gives free WhatsApp OTP in production. If cost is a concern, launch with
 - **Migration drift.** The live database tracks migrations 001-017 under different names than `supabase/migrations/` (live has `016_security_hardening`, `017_storage_buckets`; the repo has `016_performance_indexes`). New files start at 018 to avoid a clash. Apply them with the Supabase migration tool so live history stays consistent.
 - **Only one profile exists live, with role `staff` (no `admin`).** Left unchanged. Confirm this is intended before relying on admin-only pages.
 - **Order numbers** keep the `BA-YYYYMMDD-NNNN` format (4 random digits, collision-checked in the DB function). At more than a few hundred orders per day, widen it to 5 digits.
+- **Applied out of order.** 021 and 022 were applied just before 020, so live migration history lists them in that order. No dependency between them; files stay numbered 018-022.
+- **Security advisor (pre-existing, not from A10):** `handle_new_user` and `rls_auto_enable` are executable via the REST API by anon/authenticated. `is_admin` / `is_admin_or_staff` must stay executable because RLS policies call them. Leaked-password protection is off; enable it in Supabase Auth settings before email/password sign-up goes live (A10-T5-1).

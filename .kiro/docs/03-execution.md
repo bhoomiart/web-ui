@@ -682,7 +682,7 @@ Wire up Supabase into the Next.js project.
 
 Full plan, audit, design and open questions: [04-cart-auth-flow-plan.md](./04-cart-auth-flow-plan.md). Supersedes "guest checkout only" once approved. Closes A4-T4-4.
 
-- [~] A10-T1 · Security & data foundation (migrations 018-022 written, awaiting review before apply) — `customer` role (fixes default-`staff` profile trigger), `orders.user_id` + RLS, atomic `create_order_with_stock`
+- [x] A10-T1 · Security & data foundation (migrations 018-022 applied and verified) — `customer` role (fixes default-`staff` profile trigger), `orders.user_id` + RLS, atomic `create_order_with_stock`
 - [ ] A10-T2 · Server validation service — `validateCart`, `lib/pricing.ts`, `POST /api/cart/validate`, shipping settings, checkout refactor
 - [ ] A10-T3 · Cart store & stock-aware product UI — stock caps, "Only N left", out-of-stock state, listing quick-add
 - [ ] A10-T4 · Cart experience — per-line status, sync triggers, price-change notices, blocked checkout when invalid

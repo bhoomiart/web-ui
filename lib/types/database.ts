@@ -112,6 +112,82 @@ export type Database = {
         };
         Relationships: [];
       };
+      cart_items: {
+        Row: {
+          cart_id: string;
+          created_at: string;
+          id: string;
+          product_id: string;
+          quantity: number;
+          updated_at: string;
+          variant_id: string | null;
+          variant_key: string | null;
+        };
+        Insert: {
+          cart_id: string;
+          created_at?: string;
+          id?: string;
+          product_id: string;
+          quantity: number;
+          updated_at?: string;
+          variant_id?: string | null;
+          variant_key?: string | null;
+        };
+        Update: {
+          cart_id?: string;
+          created_at?: string;
+          id?: string;
+          product_id?: string;
+          quantity?: number;
+          updated_at?: string;
+          variant_id?: string | null;
+          variant_key?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'cart_items_cart_id_fkey';
+            columns: ['cart_id'];
+            isOneToOne: false;
+            referencedRelation: 'carts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cart_items_product_id_fkey';
+            columns: ['product_id'];
+            isOneToOne: false;
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'cart_items_variant_id_fkey';
+            columns: ['variant_id'];
+            isOneToOne: false;
+            referencedRelation: 'product_variants';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      carts: {
+        Row: {
+          created_at: string;
+          id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       categories: {
         Row: {
           created_at: string;
@@ -472,6 +548,7 @@ export type Database = {
           created_at: string;
           customer_name: string;
           customization: string | null;
+          discount_amount: number;
           email: string | null;
           id: string;
           notes: string | null;
@@ -480,9 +557,13 @@ export type Database = {
           payment_status: Database['public']['Enums']['payment_status'];
           phone: string;
           postal_code: string | null;
+          shipping_fee: number;
           state: string | null;
           status: Database['public']['Enums']['order_status'];
+          subtotal_amount: number | null;
+          total_amount: number | null;
           updated_at: string;
+          user_id: string | null;
         };
         Insert: {
           address_line1?: string | null;
@@ -492,6 +573,7 @@ export type Database = {
           created_at?: string;
           customer_name: string;
           customization?: string | null;
+          discount_amount?: number;
           email?: string | null;
           id?: string;
           notes?: string | null;
@@ -500,9 +582,13 @@ export type Database = {
           payment_status?: Database['public']['Enums']['payment_status'];
           phone: string;
           postal_code?: string | null;
+          shipping_fee?: number;
           state?: string | null;
           status?: Database['public']['Enums']['order_status'];
+          subtotal_amount?: number | null;
+          total_amount?: number | null;
           updated_at?: string;
+          user_id?: string | null;
         };
         Update: {
           address_line1?: string | null;
@@ -512,6 +598,7 @@ export type Database = {
           created_at?: string;
           customer_name?: string;
           customization?: string | null;
+          discount_amount?: number;
           email?: string | null;
           id?: string;
           notes?: string | null;
@@ -520,9 +607,13 @@ export type Database = {
           payment_status?: Database['public']['Enums']['payment_status'];
           phone?: string;
           postal_code?: string | null;
+          shipping_fee?: number;
           state?: string | null;
           status?: Database['public']['Enums']['order_status'];
+          subtotal_amount?: number | null;
+          total_amount?: number | null;
           updated_at?: string;
+          user_id?: string | null;
         };
         Relationships: [];
       };
@@ -926,6 +1017,7 @@ export type Database = {
           email: string | null;
           full_name: string | null;
           id: string;
+          phone: string | null;
           role: Database['public']['Enums']['user_role'];
         };
         Insert: {
@@ -933,6 +1025,7 @@ export type Database = {
           email?: string | null;
           full_name?: string | null;
           id: string;
+          phone?: string | null;
           role?: Database['public']['Enums']['user_role'];
         };
         Update: {
@@ -940,6 +1033,7 @@ export type Database = {
           email?: string | null;
           full_name?: string | null;
           id?: string;
+          phone?: string | null;
           role?: Database['public']['Enums']['user_role'];
         };
         Relationships: [];
@@ -1249,6 +1343,30 @@ export type Database = {
           },
         ];
       };
+      shipping_rates: {
+        Row: {
+          fee: number;
+          free_above: number | null;
+          is_active: boolean;
+          state: string;
+          updated_at: string;
+        };
+        Insert: {
+          fee: number;
+          free_above?: number | null;
+          is_active?: boolean;
+          state: string;
+          updated_at?: string;
+        };
+        Update: {
+          fee?: number;
+          free_above?: number | null;
+          is_active?: boolean;
+          state?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       site_settings: {
         Row: {
           description: string | null;
@@ -1328,8 +1446,27 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      adjust_stock_manual: {
+        Args: {
+          p_actor_id: string;
+          p_change_qty: number;
+          p_change_type: Database['public']['Enums']['change_type'];
+          p_inventory_id: string;
+          p_reason: string;
+        };
+        Returns: undefined;
+      };
+      create_order_with_stock: {
+        Args: { p_items: Json; p_order: Json };
+        Returns: Json;
+      };
       is_admin: { Args: never; Returns: boolean };
       is_admin_or_staff: { Args: never; Returns: boolean };
+      release_stock_for_order: {
+        Args: { p_order_id: string; p_reason?: string };
+        Returns: undefined;
+      };
+      reserve_stock_for_order: { Args: { p_items: Json }; Returns: undefined };
       show_limit: { Args: never; Returns: number };
       show_trgm: { Args: { '': string }; Returns: string[] };
     };
@@ -1384,7 +1521,7 @@ export type Database = {
       return_status: 'pending' | 'approved' | 'rejected' | 'in_transit' | 'completed';
       review_status: 'pending' | 'approved' | 'rejected' | 'hidden';
       subscription_status: 'active' | 'notified' | 'unsubscribed';
-      user_role: 'admin' | 'staff';
+      user_role: 'admin' | 'staff' | 'customer';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1559,7 +1696,7 @@ export const Constants = {
       return_status: ['pending', 'approved', 'rejected', 'in_transit', 'completed'],
       review_status: ['pending', 'approved', 'rejected', 'hidden'],
       subscription_status: ['active', 'notified', 'unsubscribed'],
-      user_role: ['admin', 'staff'],
+      user_role: ['admin', 'staff', 'customer'],
     },
   },
 } as const;

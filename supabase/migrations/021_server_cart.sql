@@ -32,6 +32,7 @@ CREATE TABLE cart_items (
 
 CREATE INDEX idx_cart_items_cart    ON cart_items (cart_id);
 CREATE INDEX idx_cart_items_product ON cart_items (product_id);
+CREATE INDEX idx_cart_items_variant ON cart_items (variant_id) WHERE variant_id IS NOT NULL;
 
 CREATE TRIGGER set_carts_updated_at      BEFORE UPDATE ON carts      FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 CREATE TRIGGER set_cart_items_updated_at BEFORE UPDATE ON cart_items FOR EACH ROW EXECUTE FUNCTION set_updated_at();
