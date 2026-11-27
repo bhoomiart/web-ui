@@ -21,11 +21,12 @@ Two interfaces: a customer storefront and a secure admin dashboard.
 
 ## Document Index
 
-| Doc                                        | Purpose                                                        |
-| ------------------------------------------ | -------------------------------------------------------------- |
-| [01-requirements.md](./01-requirements.md) | What the product must do — features, rules, constraints        |
-| [02-design.md](./02-design.md)             | How we're building it — architecture, schema, tech decisions   |
-| [03-execution.md](./03-execution.md)       | Who does what, in what order — agents, tasks, subtasks, status |
+| Doc                                                      | Purpose                                                                                               |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [01-requirements.md](./01-requirements.md)               | What the product must do — features, rules, constraints                                               |
+| [02-design.md](./02-design.md)                           | How we're building it — architecture, schema, tech decisions                                          |
+| [03-execution.md](./03-execution.md)                     | Who does what, in what order — agents, tasks, subtasks, status                                        |
+| [04-cart-auth-flow-plan.md](./04-cart-auth-flow-plan.md) | A10 proposal: stock-validated cart, customer auth (OTP + email), checkout gate. **Pending approval.** |
 
 ---
 
@@ -50,6 +51,7 @@ Two interfaces: a customer storefront and a secure admin dashboard.
 - No online payment gateway in this release — orders are taken, payment handled offline
 - WhatsApp is the primary communication channel — Click-to-Chat only for now (no Business API)
 - No customer accounts in this release — guest checkout only
+  - **Superseded by A10** ([04-cart-auth-flow-plan.md](./04-cart-auth-flow-plan.md)): customer accounts are in scope, login is required at checkout, the cart is stored server-side for signed-in users, login is email OTP + email/password (WhatsApp OTP deferred), shipping is per-state. Task approval is still required before each A10 task starts.
 - Every agent must read `node_modules/next/dist/docs/` before writing Next.js code
 - No service-role Supabase key in any client bundle — all privileged calls via Server Actions
 - RLS must be enabled on every Supabase table
