@@ -12,7 +12,7 @@ import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { listOrders } from '@/lib/db/orders';
 
-type TabKey = 'all' | 'pending' | 'processing' | 'shipped' | 'delivered';
+type TabKey = 'all' | 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 const STATUS_TABS: { key: TabKey; label: string; value?: string }[] = [
   { key: 'all', label: 'All' },
@@ -20,6 +20,7 @@ const STATUS_TABS: { key: TabKey; label: string; value?: string }[] = [
   { key: 'processing', label: 'Processing', value: 'processing' },
   { key: 'shipped', label: 'Shipped', value: 'shipped' },
   { key: 'delivered', label: 'Delivered', value: 'delivered' },
+  { key: 'cancelled', label: 'Cancelled', value: 'cancelled' },
 ];
 
 function paymentBadge(status: string) {

@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
+import { ReviewForm } from '@/components/storefront/ReviewForm';
 
 type OrderData = {
   order_number: string;
@@ -19,6 +20,7 @@ type OrderData = {
   updated_at: string;
   order_items: Array<{
     id: string;
+    products: { id: string; name: string; slug: string } | null;
     quantity: number;
     unit_price: number;
     item_total: number;
@@ -82,6 +84,8 @@ export function TrackOrderClient({
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [order, setOrder] = React.useState<OrderData | null>(null);
+  const [reviewed, setReviewed] = React.useState<Set<string>>(new Set());
+  const [lookupPhone, setLookupPhone] = React.useState('');
 
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault();
@@ -103,6 +107,8 @@ export function TrackOrderClient({
         return;
       }
       setOrder(data.order as OrderData);
+      setReviewed(new Set((data.reviewedProductIds as string[] | undefined) ?? []));
+      setLookupPhone(phone.trim());
     } catch {
       setError('Network error — please try again.');
     } finally {
@@ -264,6 +270,42 @@ export function TrackOrderClient({
               </tfoot>
             </table>
           </div>
+
+          {/* Reviews — only once the order is delivered */}
+          {order.status === 'delivered' && (
+            <div>
+              <h2 className="heading-5 mb-[var(--spacing-2)]">Review your purchase</h2>
+              <p className="body-small text-[var(--color-earth-500)] mb-[var(--spacing-4)]">
+                Your order has been delivered. Tell others what you think.
+              </p>
+              <div className="flex flex-col gap-[var(--spacing-4)]">
+                {order.order_items.flatMap((item) => {
+                  const product = item.products;
+                  if (!product) return [];
+                  if (reviewed.has(product.id)) {
+                    return [
+                      <p
+                        key={item.id}
+                        className="text-[var(--font-size-sm)] text-[var(--color-earth-600)]"
+                      >
+                        ✓ You reviewed <strong>{product.name}</strong>. Thank you!
+                      </p>,
+                    ];
+                  }
+                  return [
+                    <ReviewForm
+                      key={item.id}
+                      productId={product.id}
+                      productName={product.name}
+                      orderNumber={order.order_number}
+                      phone={lookupPhone}
+                      defaultName={order.customer_name}
+                    />,
+                  ];
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Timeline */}
           <div>

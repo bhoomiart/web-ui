@@ -666,6 +666,18 @@ Wire up Supabase into the Next.js project.
 
 ---
 
+### A9 · 404 Fixes (post-audit) ✅
+
+- [x] `/faqs` and `/policies/{shipping,returns,privacy,terms}` — `components/storefront/ContentPage.tsx`; content overridable via `pages` slugs `faqs`, `shipping-policy`, `returns-policy`, `privacy-policy`, `terms-and-conditions`. Fallback text is generic and needs review before launch.
+- [x] `/admin/orders/{pending,completed,cancellations}` — redirect to `/admin/orders?status=…`; Cancelled tab added
+- [x] `/admin/collections/new` and `/admin/collections/[id]/edit` — `CollectionForm`
+- [x] A6-T6-3 · customer-facing returns policy page (admin settings UI A6-T6-1/2 still open)
+
+- [x] `/collections` is a real listing page (was a redirect to `/shop`)
+- [x] Reviews: product page only lists approved reviews; the review form moved to the order details (`/track`) and only appears for delivered orders. `POST /api/reviews` verifies order number + phone, delivered status and product membership, and allows one review per product per order. (`components/storefront/ReviewForm.tsx`)
+
+---
+
 ## Totals
 
 | Agent             | Tasks  | Subtasks |

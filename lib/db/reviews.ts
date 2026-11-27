@@ -75,13 +75,16 @@ export interface SubmitReviewInput {
 export async function submitReview(input: SubmitReviewInput) {
   const admin = createAdminClient();
 
-  // Check for duplicate pending/approved review from same person for same product
-  const { count } = await admin
+  // Duplicate check: per order when the review is tied to an order, else per name
+  let dupQuery = admin
     .from('product_reviews')
     .select('id', { count: 'exact', head: true })
     .eq('product_id', input.productId)
-    .eq('customer_name', input.customerName)
     .in('status', ['pending', 'approved']);
+  dupQuery = input.orderId
+    ? dupQuery.eq('order_id', input.orderId)
+    : dupQuery.eq('customer_name', input.customerName);
+  const { count } = await dupQuery;
 
   if ((count ?? 0) > 0) {
     throw new Error('A review from this customer already exists for this product.');

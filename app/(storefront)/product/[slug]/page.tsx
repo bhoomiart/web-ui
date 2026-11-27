@@ -19,7 +19,7 @@ import { ProductCard } from '@/components/storefront/ProductCard';
 import { ProductGallery } from './ProductGallery';
 import { AddToCartSection } from './AddToCartSection';
 import { RestockSubscribeForm } from './RestockSubscribeForm';
-import { ReviewForm } from './ReviewForm';
+import { ReviewForm } from '../../../../components/storefront/ReviewForm';
 import type { Metadata } from 'next';
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -388,7 +388,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </h2>
 
           {ratingSummary.count === 0 ? (
-            <p className="body-base text-[var(--color-earth-500)]">No reviews yet. Be the first!</p>
+            <p className="body-base text-[var(--color-earth-500)]">No reviews yet.</p>
           ) : (
             <div className="space-y-[var(--spacing-6)]">
               {reviews.reviews.map((r) => (
@@ -445,10 +445,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {/* Write a review form */}
-          <div className="mt-[var(--spacing-10)]">
-            <ReviewForm productId={product.id} productName={product.name} />
-          </div>
+          <p className="mt-[var(--spacing-8)] text-[var(--font-size-sm)] text-[var(--color-earth-500)]">
+            Bought this piece? Once it is delivered you can review it from{' '}
+            <Link
+              href="/track"
+              className="text-[var(--color-brand-primary)] font-semibold hover:underline"
+            >
+              your order details
+            </Link>
+            .
+          </p>
         </section>
 
         {/* Related products */}

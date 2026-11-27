@@ -3,8 +3,9 @@
 /**
  * ReviewForm (A7-T1-1, A7-T1-2)
  *
- * Star-rating picker + name + review text form.
- * Calls POST /api/reviews. Shows a success message on completion.
+ * Star-rating picker + name + review text form. Shown only for delivered orders
+ * (order details / track page). Calls POST /api/reviews with order number + phone,
+ * which the server verifies. Shows a success message on completion.
  * Rate-limit enforced server-side (one review per name per product).
  */
 
@@ -13,6 +14,13 @@ import React from 'react';
 interface ReviewFormProps {
   productId: string;
   productName: string;
+  /** Order the product was bought in. The server verifies it is delivered. */
+  orderNumber: string;
+  /** Phone used on the order (second factor for the order lookup). */
+  phone: string;
+  /** Pre-filled display name, normally the order's customer name. */
+  defaultName?: string;
+  onSubmitted?: () => void;
 }
 
 type State = 'idle' | 'loading' | 'success' | 'error';
@@ -48,9 +56,16 @@ function StarPicker({ value, onChange }: { value: number; onChange: (n: number) 
   );
 }
 
-export function ReviewForm({ productId, productName }: ReviewFormProps) {
+export function ReviewForm({
+  productId,
+  productName,
+  orderNumber,
+  phone,
+  defaultName = '',
+  onSubmitted,
+}: ReviewFormProps) {
   const [rating, setRating] = React.useState(0);
-  const [name, setName] = React.useState('');
+  const [name, setName] = React.useState(defaultName);
   const [body, setBody] = React.useState('');
   const [state, setState] = React.useState<State>('idle');
   const [errorMsg, setErrorMsg] = React.useState('');
@@ -78,6 +93,8 @@ export function ReviewForm({ productId, productName }: ReviewFormProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           product_id: productId,
+          order_number: orderNumber,
+          phone,
           customer_name: name.trim(),
           rating,
           body: body.trim() || undefined,
@@ -93,6 +110,7 @@ export function ReviewForm({ productId, productName }: ReviewFormProps) {
       }
 
       setState('success');
+      onSubmitted?.();
     } catch {
       setErrorMsg('Network error — please try again.');
       setState('error');
@@ -126,7 +144,7 @@ export function ReviewForm({ productId, productName }: ReviewFormProps) {
       className="rounded-[var(--radius-xl)] border border-[var(--color-earth-200)] p-[var(--spacing-6)]"
       style={{ background: 'var(--color-earth-50)' }}
     >
-      <h3 className="heading-5 mb-[var(--spacing-5)]">Write a Review</h3>
+      <h3 className="heading-5 mb-[var(--spacing-5)]">Review {productName}</h3>
 
       <form onSubmit={handleSubmit} noValidate>
         {/* Star picker */}
@@ -143,7 +161,7 @@ export function ReviewForm({ productId, productName }: ReviewFormProps) {
         {/* Name */}
         <div className="mb-[var(--spacing-4)]">
           <label
-            htmlFor="review-name"
+            htmlFor={`review-name-${productId}`}
             className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] mb-[var(--spacing-1-5)]"
           >
             Your Name{' '}
@@ -152,7 +170,7 @@ export function ReviewForm({ productId, productName }: ReviewFormProps) {
             </span>
           </label>
           <input
-            id="review-name"
+            id={`review-name-${productId}`}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -165,14 +183,14 @@ export function ReviewForm({ productId, productName }: ReviewFormProps) {
         {/* Review text */}
         <div className="mb-[var(--spacing-5)]">
           <label
-            htmlFor="review-body"
+            htmlFor={`review-body-${productId}`}
             className="block text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] mb-[var(--spacing-1-5)]"
           >
             Your Review{' '}
             <span className="font-normal text-[var(--color-earth-400)]">(optional)</span>
           </label>
           <textarea
-            id="review-body"
+            id={`review-body-${productId}`}
             value={body}
             onChange={(e) => setBody(e.target.value)}
             rows={4}
