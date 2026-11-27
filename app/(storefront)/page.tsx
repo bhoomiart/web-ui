@@ -26,6 +26,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
+import { getPublicSiteSettings } from '@/lib/db/site-settings';
 import { listFeaturedProducts, listNewArrivals, listBestsellers } from '@/lib/db/products';
 import { getCategoriesWithSubcategories } from '@/lib/db/categories';
 import { ProductCard } from '@/components/storefront/ProductCard';
@@ -34,14 +35,12 @@ import type { Metadata } from 'next';
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export async function generateMetadata(): Promise<Metadata> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('site_settings')
-    .select('key, value')
-    .in('key', ['site_name', 'site_description', 'og_image_url', 'site_url']);
-
-  const settings: Record<string, string> = {};
-  for (const row of data ?? []) settings[row.key] = row.value;
+  const settings = await getPublicSiteSettings([
+    'site_name',
+    'site_description',
+    'og_image_url',
+    'site_url',
+  ]);
 
   const title = settings.site_name ?? 'Bhoomi Art — Handcrafted Terracotta';
   const description =
@@ -51,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImage = settings.og_image_url || null;
 
   return {
-    title,
+    title: { absolute: title },
     description,
     openGraph: {
       title,

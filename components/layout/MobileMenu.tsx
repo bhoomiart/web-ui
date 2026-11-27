@@ -89,10 +89,11 @@ export function MobileMenu({ id, open, onClose, currentPath }: MobileMenuProps) 
   return createPortal(
     <div
       aria-hidden={!open}
+      inert={!open}
       className={[
         'fixed inset-0 z-[var(--z-index-modal)]',
         'transition-all duration-[var(--duration-slow)] ease-[var(--ease-out)]',
-        open ? 'pointer-events-auto' : 'pointer-events-none',
+        open ? 'visible pointer-events-auto' : 'invisible pointer-events-none',
       ].join(' ')}
     >
       {/* Backdrop */}

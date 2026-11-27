@@ -34,15 +34,12 @@ export const viewport: Viewport = {
 // ─── Default metadata ─────────────────────────────────────────────────────────
 // Individual pages override these via their own generateMetadata.
 
-export async function generateMetadata(): Promise<Metadata> {
-  // Fetch GSC verification code from site_settings
-  const supabase = await (await import('@/lib/supabase/server')).createClient();
-  const { data } = await supabase
-    .from('site_settings')
-    .select('key, value')
-    .in('key', ['gsc_verification']);
+import { getPublicSiteSettings } from '@/lib/db/site-settings';
 
-  const gscVerification = data?.find((r) => r.key === 'gsc_verification')?.value ?? null;
+export async function generateMetadata(): Promise<Metadata> {
+  // Fetch GSC verification code from public site_settings (cached, cookie-less)
+  const settings = await getPublicSiteSettings(['gsc_verification']);
+  const gscVerification = settings.gsc_verification || null;
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com'),

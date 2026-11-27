@@ -10,7 +10,12 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "qa": "playwright test",
+    "qa:ui": "playwright test --ui",
+    "qa:report": "playwright show-report qa/reports/html",
+    "qa:storefront": "playwright test qa/storefront.spec.ts",
+    "qa:admin": "playwright test qa/admin.spec.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs}": [
@@ -30,6 +35,7 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",

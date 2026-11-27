@@ -31,7 +31,8 @@ export async function generateMetadata({
   if (!category) return {};
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
-  const title = `${category.seo_title ?? category.name} — Bhoomi Art`;
+  const title = category.seo_title ?? category.name;
+  const ogTitle = `${title} — Bhoomi Art`;
   const description =
     category.seo_description ??
     `Shop ${category.name} — handcrafted terracotta pottery by Bhoomi Art.`;
@@ -40,7 +41,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    openGraph: { title, description, url: canonical },
+    openGraph: { title: ogTitle, description, url: canonical },
     alternates: { canonical },
   };
 }

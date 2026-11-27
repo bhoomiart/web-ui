@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
 
 export const metadata: Metadata = {
-  title: 'The Art of Terracotta — Bhoomi Art',
+  title: 'The Art of Terracotta',
   description:
     'Discover how Bhoomi Art creates handcrafted terracotta pottery — from sourcing natural clay to kiln-firing and hand-finishing each piece.',
   openGraph: { title: 'The Art of Terracotta — Bhoomi Art', url: `${siteUrl}/craft` },

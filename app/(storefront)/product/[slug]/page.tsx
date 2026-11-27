@@ -31,10 +31,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return { title: 'Product Not Found — Bhoomi Art' };
+  if (!product) return { title: 'Product Not Found' };
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
-  const title = `${product.seo_title ?? product.name} — Bhoomi Art`;
+  const title = product.seo_title ?? product.name;
+  const ogTitle = `${title} — Bhoomi Art`;
   const description =
     product.seo_description ??
     product.short_description ??
@@ -50,7 +51,7 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title,
+      title: ogTitle,
       description,
       url: canonical,
       type: 'website',
@@ -58,7 +59,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: ogTitle,
       description,
       ...(ogImage ? { images: [ogImage] } : {}),
     },

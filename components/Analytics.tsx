@@ -15,7 +15,7 @@
  */
 
 import Script from 'next/script';
-import { createClient } from '@/lib/supabase/server';
+import { getPublicSiteSettings } from '@/lib/db/site-settings';
 
 interface AnalyticsProps {
   /** Pre-loaded GA4 ID — overrides site_settings when provided */
@@ -29,21 +29,14 @@ export async function Analytics({ ga4Id, gtmId }: AnalyticsProps = {}) {
   const resolvedGa4 = ga4Id ?? process.env.NEXT_PUBLIC_GA4_ID ?? null;
   const resolvedGtm = gtmId ?? process.env.NEXT_PUBLIC_GTM_ID ?? null;
 
-  // Fetch from site_settings only if env vars are empty
+  // Fetch from site_settings only if env vars are empty (cached, cookie-less)
   let settingsGa4: string | null = null;
   let settingsGtm: string | null = null;
 
   if (!resolvedGa4 || !resolvedGtm) {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from('site_settings')
-      .select('key, value')
-      .in('key', ['ga4_id', 'gtm_id']);
-
-    for (const row of data ?? []) {
-      if (row.key === 'ga4_id') settingsGa4 = row.value || null;
-      if (row.key === 'gtm_id') settingsGtm = row.value || null;
-    }
+    const settings = await getPublicSiteSettings(['ga4_id', 'gtm_id']);
+    settingsGa4 = settings.ga4_id || null;
+    settingsGtm = settings.gtm_id || null;
   }
 
   const finalGa4 = resolvedGa4 || settingsGa4;

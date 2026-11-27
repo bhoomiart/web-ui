@@ -12,10 +12,10 @@ import type { Metadata } from 'next';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
 
 export const metadata: Metadata = {
-  title: 'Our Story — Bhoomi Art',
+  title: 'About Us — Our Story',
   description:
     'Learn about Bhoomi Art — where terracotta meets tradition. Handcrafted pottery born from the earth, shaped by skilled artisans.',
-  openGraph: { title: 'Our Story — Bhoomi Art', url: `${siteUrl}/about` },
+  openGraph: { title: 'About Us — Our Story — Bhoomi Art', url: `${siteUrl}/about` },
   alternates: { canonical: `${siteUrl}/about` },
 };
 

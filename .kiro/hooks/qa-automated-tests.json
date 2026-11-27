@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "QA: Automated Browser Tests",
+      "trigger": "Stop",
+      "description": "Runs the full Playwright QA suite (storefront + admin) on Desktop Chrome and Mobile Safari after every agent session. Checks functionality, responsiveness, SEO, and accessibility. Reports pass/fail and writes HTML report to qa/reports/html/.",
+      "action": {
+        "type": "command",
+        "command": "cd /Users/rittokj/Documents/work/bhoomi-art && zsh qa/run-qa.sh 2>&1",
+        "timeout": 120
+      }
+    }
+  ]
+}

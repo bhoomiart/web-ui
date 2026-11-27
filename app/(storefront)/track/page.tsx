@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
 import { TrackOrderClient } from './TrackOrderClient';
 
 export const metadata: Metadata = {
-  title: 'Track Your Order — Bhoomi Art',
+  title: 'Track Your Order',
   robots: { index: false },
 };
 

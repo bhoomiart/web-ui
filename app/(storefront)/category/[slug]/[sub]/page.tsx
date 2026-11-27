@@ -31,7 +31,8 @@ export async function generateMetadata({
   if (!category || !subcategory) return {};
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
-  const title = `${subcategory.seo_title ?? subcategory.name} — ${category.name} — Bhoomi Art`;
+  const title = `${subcategory.seo_title ?? subcategory.name} — ${category.name}`;
+  const ogTitle = `${title} — Bhoomi Art`;
   const description =
     subcategory.seo_description ??
     `Shop ${subcategory.name} from our ${category.name} collection — handcrafted terracotta by Bhoomi Art.`;
@@ -40,7 +41,7 @@ export async function generateMetadata({
   return {
     title,
     description,
-    openGraph: { title, description, url: canonical },
+    openGraph: { title: ogTitle, description, url: canonical },
     alternates: { canonical },
   };
 }

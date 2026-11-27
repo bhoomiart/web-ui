@@ -22,7 +22,7 @@ export async function generateMetadata({
   const params = await searchParams;
   const q = typeof params.q === 'string' ? params.q : '';
   return {
-    title: q ? `"${q}" — Search — Bhoomi Art` : 'Search — Bhoomi Art',
+    title: q ? `"${q}" — Search` : 'Search',
     robots: { index: false }, // Don't index search pages
   };
 }

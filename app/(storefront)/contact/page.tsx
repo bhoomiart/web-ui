@@ -10,7 +10,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
 const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '917019400775';
 
 export const metadata: Metadata = {
-  title: 'Contact Us — Bhoomi Art',
+  title: 'Contact Us',
   description:
     'Get in touch with Bhoomi Art. WhatsApp, email, or Instagram — we love hearing from you.',
   openGraph: { title: 'Contact Us — Bhoomi Art', url: `${siteUrl}/contact` },

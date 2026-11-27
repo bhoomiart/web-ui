@@ -57,16 +57,15 @@ export async function generateMetadata({
     signature: 'Signature Collection',
   };
 
-  const title = collection
-    ? `${collectionTitles[collection] ?? 'Collection'} — Bhoomi Art`
-    : 'Shop All — Bhoomi Art';
+  const title = collection ? (collectionTitles[collection] ?? 'Collection') : 'Shop All';
+  const ogTitle = `${title} — Bhoomi Art`;
   const description =
     'Browse our complete range of handcrafted terracotta pottery and earthenware.';
 
   return {
     title,
     description,
-    openGraph: { title, description, url: `${siteUrl}/shop` },
+    openGraph: { title: ogTitle, description, url: `${siteUrl}/shop` },
     alternates: { canonical: `${siteUrl}/shop` },
   };
 }

@@ -10,7 +10,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bhoomiart.com';
 const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '917019400775';
 
 export const metadata: Metadata = {
-  title: 'Custom Creations — Bhoomi Art',
+  title: 'Custom Creations',
   description:
     'Commission a bespoke handcrafted terracotta piece from Bhoomi Art. Personal gifts, home décor, corporate gifts — crafted to your vision.',
   openGraph: { title: 'Custom Creations — Bhoomi Art', url: `${siteUrl}/custom` },

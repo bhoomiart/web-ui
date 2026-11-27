@@ -1,0 +1,1116 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - navigation [ref=e7]:
+      - link "All99" [ref=e8] [cursor=pointer]:
+        - /url: "#?"
+      - link "Passed32" [ref=e9] [cursor=pointer]:
+        - /url: "#?q=s%3Apassed"
+      - link "Failed67" [ref=e12] [cursor=pointer]:
+        - /url: "#?q=s%3Afailed"
+      - link "Flaky0" [ref=e15] [cursor=pointer]:
+        - /url: "#?q=s%3Aflaky"
+      - link "Skipped147" [ref=e16] [cursor=pointer]:
+        - /url: "#?q=s%3Askipped"
+      - link "Speedboard" [ref=e19] [cursor=pointer]:
+        - /url: "#?speedboard"
+      - button "Settings" [ref=e22] [cursor=pointer]
+    - textbox "Search tests" [ref=e26]
+  - generic [ref=e28]:
+    - generic [ref=e30]: 26/11/2026, 11:03:34
+    - generic [ref=e31]: "Total time: 1.1m"
+  - generic [ref=e32]:
+    - button "admin.spec.ts" [expanded] [ref=e33] [cursor=pointer]
+    - region [ref=e36]:
+      - list [ref=e37]:
+        - listitem [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e44]:
+              - link "Admin login page (/admin/login) › no console errors on load" [ref=e45] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-549929b19d8529eda142"
+              - generic [ref=e46]: Desktop Chrome
+            - generic [ref=e49]: 3.5s
+          - generic [ref=e51]:
+            - link "admin.spec.ts:99" [ref=e52] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-549929b19d8529eda142"
+            - link "View Trace" [ref=e54] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/ff03402c8a55c0fdfa390df48bc9abb248335b44.zip
+        - listitem [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e64]:
+              - link "Admin auth gate › /admin/dashboard → redirects to login when unauthenticated" [ref=e65] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-d9406a9bfba4b309e039"
+              - generic [ref=e66]: Mobile Safari
+            - generic [ref=e69]: 0ms
+          - generic [ref=e71]:
+            - link "admin.spec.ts:76" [ref=e72] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-d9406a9bfba4b309e039"
+            - link "View Trace" [ref=e74] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/e60f48917c24bc752a881d6e3894fc488a66e545.zip
+        - listitem [ref=e78]:
+          - generic [ref=e79]:
+            - generic [ref=e84]:
+              - link "Admin auth gate › /admin/products → redirects to login when unauthenticated" [ref=e85] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-39abb2c3805e6edd1568"
+              - generic [ref=e86]: Mobile Safari
+            - generic [ref=e89]: 0ms
+          - generic [ref=e91]:
+            - link "admin.spec.ts:76" [ref=e92] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-39abb2c3805e6edd1568"
+            - link "View Trace" [ref=e94] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/20b8976de91b30b263eaf66a3144992d0ee4e4a5.zip
+        - listitem [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e104]:
+              - link "Admin auth gate › /admin/products/new → redirects to login when unauthenticated" [ref=e105] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-b5c076bb98f5950dae78"
+              - generic [ref=e106]: Mobile Safari
+            - generic [ref=e109]: 1ms
+          - generic [ref=e111]:
+            - link "admin.spec.ts:76" [ref=e112] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-b5c076bb98f5950dae78"
+            - link "View Trace" [ref=e114] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/0981e015959a426d5019f2be503e722c6f95c343.zip
+        - listitem [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e124]:
+              - link "Admin auth gate › /admin/categories → redirects to login when unauthenticated" [ref=e125] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-bee16db97114f5992ae5"
+              - generic [ref=e126]: Mobile Safari
+            - generic [ref=e129]: 0ms
+          - generic [ref=e131]:
+            - link "admin.spec.ts:76" [ref=e132] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-bee16db97114f5992ae5"
+            - link "View Trace" [ref=e134] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/2a94f6f2db86dcb652c3b2fbb2ee42e151cfbebe.zip
+        - listitem [ref=e138]:
+          - generic [ref=e139]:
+            - generic [ref=e144]:
+              - link "Admin auth gate › /admin/categories/subcategories → redirects to login when unauthenticated" [ref=e145] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-7f448ea02fc5cc9247d3"
+              - generic [ref=e146]: Mobile Safari
+            - generic [ref=e149]: 0ms
+          - generic [ref=e151]:
+            - link "admin.spec.ts:76" [ref=e152] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-7f448ea02fc5cc9247d3"
+            - link "View Trace" [ref=e154] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/481949bdcc3366eceb01d0f30eca72b9e0cd57e2.zip
+        - listitem [ref=e158]:
+          - generic [ref=e159]:
+            - generic [ref=e164]:
+              - link "Admin auth gate › /admin/collections → redirects to login when unauthenticated" [ref=e165] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-702eab817ea4f929011f"
+              - generic [ref=e166]: Mobile Safari
+            - generic [ref=e169]: 0ms
+          - generic [ref=e171]:
+            - link "admin.spec.ts:76" [ref=e172] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-702eab817ea4f929011f"
+            - link "View Trace" [ref=e174] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/f7ce941ebbad8fce0c7bc84dfcd3851c06b48c87.zip
+        - listitem [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e184]:
+              - link "Admin auth gate › /admin/inventory → redirects to login when unauthenticated" [ref=e185] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-2272faedb5c694941a69"
+              - generic [ref=e186]: Mobile Safari
+            - generic [ref=e189]: 0ms
+          - generic [ref=e191]:
+            - link "admin.spec.ts:76" [ref=e192] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-2272faedb5c694941a69"
+            - link "View Trace" [ref=e194] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/c13adcc23a88f4c6e0f1e3223330676e1b814812.zip
+        - listitem [ref=e198]:
+          - generic [ref=e199]:
+            - generic [ref=e204]:
+              - link "Admin auth gate › /admin/inventory/low-stock → redirects to login when unauthenticated" [ref=e205] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-cb4e649c51bc4c947ddb"
+              - generic [ref=e206]: Mobile Safari
+            - generic [ref=e209]: 0ms
+          - generic [ref=e211]:
+            - link "admin.spec.ts:76" [ref=e212] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-cb4e649c51bc4c947ddb"
+            - link "View Trace" [ref=e214] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/bdece078fb6ef6aaf39388243f07e73c18448a0a.zip
+        - listitem [ref=e218]:
+          - generic [ref=e219]:
+            - generic [ref=e224]:
+              - link "Admin auth gate › /admin/inventory/out-of-stock → redirects to login when unauthenticated" [ref=e225] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-6215abc4d6dafa048503"
+              - generic [ref=e226]: Mobile Safari
+            - generic [ref=e229]: 0ms
+          - generic [ref=e231]:
+            - link "admin.spec.ts:76" [ref=e232] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-6215abc4d6dafa048503"
+            - link "View Trace" [ref=e234] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/e354bc1ea92fb0c5088de47f7dfa3e5ad92a2396.zip
+        - listitem [ref=e238]:
+          - generic [ref=e239]:
+            - generic [ref=e244]:
+              - link "Admin auth gate › /admin/inventory/history → redirects to login when unauthenticated" [ref=e245] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-3f41570d6ebb7b9298af"
+              - generic [ref=e246]: Mobile Safari
+            - generic [ref=e249]: 0ms
+          - generic [ref=e251]:
+            - link "admin.spec.ts:76" [ref=e252] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-3f41570d6ebb7b9298af"
+            - link "View Trace" [ref=e254] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/3fa1beaed5e8c100d7d6bce7b7bbca52e8df521f.zip
+        - listitem [ref=e258]:
+          - generic [ref=e259]:
+            - generic [ref=e264]:
+              - link "Admin auth gate › /admin/restock/subscribers → redirects to login when unauthenticated" [ref=e265] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-cd34cfd2b29af8d4a7f9"
+              - generic [ref=e266]: Mobile Safari
+            - generic [ref=e269]: 0ms
+          - generic [ref=e271]:
+            - link "admin.spec.ts:76" [ref=e272] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-cd34cfd2b29af8d4a7f9"
+            - link "View Trace" [ref=e274] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/377ebcad0aa94795c55afa301b28db87b28f9afb.zip
+        - listitem [ref=e278]:
+          - generic [ref=e279]:
+            - generic [ref=e284]:
+              - link "Admin auth gate › /admin/restock/notifications → redirects to login when unauthenticated" [ref=e285] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-caae816272b6283870e7"
+              - generic [ref=e286]: Mobile Safari
+            - generic [ref=e289]: 0ms
+          - generic [ref=e291]:
+            - link "admin.spec.ts:76" [ref=e292] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-caae816272b6283870e7"
+            - link "View Trace" [ref=e294] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/21593d11d347ea0a1f5fb958a499495975224c5d.zip
+        - listitem [ref=e298]:
+          - generic [ref=e299]:
+            - generic [ref=e304]:
+              - link "Admin auth gate › /admin/restock/history → redirects to login when unauthenticated" [ref=e305] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-b8dea1b82973393a754e"
+              - generic [ref=e306]: Mobile Safari
+            - generic [ref=e309]: 0ms
+          - generic [ref=e311]:
+            - link "admin.spec.ts:76" [ref=e312] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-b8dea1b82973393a754e"
+            - link "View Trace" [ref=e314] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/81b0a8a64452973813e6ad0b3cb0a77474be4e47.zip
+        - listitem [ref=e318]:
+          - generic [ref=e319]:
+            - generic [ref=e324]:
+              - link "Admin auth gate › /admin/orders → redirects to login when unauthenticated" [ref=e325] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-4223dfc2883ccaf56ed1"
+              - generic [ref=e326]: Mobile Safari
+            - generic [ref=e329]: 0ms
+          - generic [ref=e331]:
+            - link "admin.spec.ts:76" [ref=e332] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-4223dfc2883ccaf56ed1"
+            - link "View Trace" [ref=e334] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/bb2c14ffc207d4c8907208c9a7ef51e0f9f49f49.zip
+        - listitem [ref=e338]:
+          - generic [ref=e339]:
+            - generic [ref=e344]:
+              - link "Admin auth gate › /admin/orders/returns → redirects to login when unauthenticated" [ref=e345] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-be26ec02ff3632f4c5ef"
+              - generic [ref=e346]: Mobile Safari
+            - generic [ref=e349]: 1ms
+          - generic [ref=e351]:
+            - link "admin.spec.ts:76" [ref=e352] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-be26ec02ff3632f4c5ef"
+            - link "View Trace" [ref=e354] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/dfe1ea3db10ffa71d0b21c64da45cf1abb0f4a40.zip
+        - listitem [ref=e358]:
+          - generic [ref=e359]:
+            - generic [ref=e364]:
+              - link "Admin auth gate › /admin/orders/refunds → redirects to login when unauthenticated" [ref=e365] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-1b98d64a97c941d926c5"
+              - generic [ref=e366]: Mobile Safari
+            - generic [ref=e369]: 0ms
+          - generic [ref=e371]:
+            - link "admin.spec.ts:76" [ref=e372] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-1b98d64a97c941d926c5"
+            - link "View Trace" [ref=e374] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/ba71cf984a440e8fff10c717cddb5af813823e89.zip
+        - listitem [ref=e378]:
+          - generic [ref=e379]:
+            - generic [ref=e384]:
+              - link "Admin auth gate › /admin/reviews → redirects to login when unauthenticated" [ref=e385] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-3d3abc064738c168fea6"
+              - generic [ref=e386]: Mobile Safari
+            - generic [ref=e389]: 0ms
+          - generic [ref=e391]:
+            - link "admin.spec.ts:76" [ref=e392] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-3d3abc064738c168fea6"
+            - link "View Trace" [ref=e394] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/8da3ca0519f055b90b1ed6ae7b2b8143780e7bfd.zip
+        - listitem [ref=e398]:
+          - generic [ref=e399]:
+            - generic [ref=e404]:
+              - link "Admin auth gate › /admin/homepage → redirects to login when unauthenticated" [ref=e405] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-21323a95b9c299e6b05c"
+              - generic [ref=e406]: Mobile Safari
+            - generic [ref=e409]: 0ms
+          - generic [ref=e411]:
+            - link "admin.spec.ts:76" [ref=e412] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-21323a95b9c299e6b05c"
+            - link "View Trace" [ref=e414] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/5abe5d66e1c9ab7051d467e352f760470e73aabe.zip
+        - listitem [ref=e418]:
+          - generic [ref=e419]:
+            - generic [ref=e424]:
+              - link "Admin auth gate › /admin/pages → redirects to login when unauthenticated" [ref=e425] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-62e862ad7c0deb5b3e0c"
+              - generic [ref=e426]: Mobile Safari
+            - generic [ref=e429]: 0ms
+          - generic [ref=e431]:
+            - link "admin.spec.ts:76" [ref=e432] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-62e862ad7c0deb5b3e0c"
+            - link "View Trace" [ref=e434] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/5b9d5d437eac9af6e3ad573b22d9ba1214a4082b.zip
+        - listitem [ref=e438]:
+          - generic [ref=e439]:
+            - generic [ref=e444]:
+              - link "Admin auth gate › /admin/seo → redirects to login when unauthenticated" [ref=e445] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-3ce6807020f44f00f807"
+              - generic [ref=e446]: Mobile Safari
+            - generic [ref=e449]: 0ms
+          - generic [ref=e451]:
+            - link "admin.spec.ts:76" [ref=e452] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-3ce6807020f44f00f807"
+            - link "View Trace" [ref=e454] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/0530c825c0e26a5ad77c4d7da9a30a0a5d4c2031.zip
+        - listitem [ref=e458]:
+          - generic [ref=e459]:
+            - generic [ref=e464]:
+              - link "Admin auth gate › /admin/customers → redirects to login when unauthenticated" [ref=e465] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-c2b6514da5a9f80fe0b6"
+              - generic [ref=e466]: Mobile Safari
+            - generic [ref=e469]: 0ms
+          - generic [ref=e471]:
+            - link "admin.spec.ts:76" [ref=e472] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-c2b6514da5a9f80fe0b6"
+            - link "View Trace" [ref=e474] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/850f7e35bf0a83af722c926e525aa30b8ec71f5d.zip
+        - listitem [ref=e478]:
+          - generic [ref=e479]:
+            - generic [ref=e484]:
+              - link "Admin auth gate › /admin/analytics → redirects to login when unauthenticated" [ref=e485] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-d4f8aa9d5d85c522b07b"
+              - generic [ref=e486]: Mobile Safari
+            - generic [ref=e489]: 0ms
+          - generic [ref=e491]:
+            - link "admin.spec.ts:76" [ref=e492] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-d4f8aa9d5d85c522b07b"
+            - link "View Trace" [ref=e494] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/aa06130d8b31dfea25e907f1cf5ae4c990b1361f.zip
+        - listitem [ref=e498]:
+          - generic [ref=e499]:
+            - generic [ref=e504]:
+              - link "Admin auth gate › /admin/settings → redirects to login when unauthenticated" [ref=e505] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ecef9e757871fb2d0fd4"
+              - generic [ref=e506]: Mobile Safari
+            - generic [ref=e509]: 0ms
+          - generic [ref=e511]:
+            - link "admin.spec.ts:76" [ref=e512] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-ecef9e757871fb2d0fd4"
+            - link "View Trace" [ref=e514] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/a978544359e529660ed7c5ceb6803491ccd3cf0b.zip
+        - listitem [ref=e518]:
+          - generic [ref=e519]:
+            - generic [ref=e524]:
+              - link "Admin auth gate › /admin/settings/whatsapp → redirects to login when unauthenticated" [ref=e525] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-6fbafe232517ea8fd456"
+              - generic [ref=e526]: Mobile Safari
+            - generic [ref=e529]: 0ms
+          - generic [ref=e531]:
+            - link "admin.spec.ts:76" [ref=e532] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-6fbafe232517ea8fd456"
+            - link "View Trace" [ref=e534] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/3f806b715c1837c6f9f7e289bffc37fab2f72a9d.zip
+        - listitem [ref=e538]:
+          - generic [ref=e539]:
+            - generic [ref=e544]:
+              - link "Admin login page (/admin/login) › no console errors on load" [ref=e545] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-4c52a171160bfde61b71"
+              - generic [ref=e546]: Mobile Safari
+            - generic [ref=e549]: 0ms
+          - generic [ref=e551]:
+            - link "admin.spec.ts:99" [ref=e552] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-4c52a171160bfde61b71"
+            - link "View Trace" [ref=e554] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/abdb858874abd4584a431f32424b956593179f79.zip
+        - listitem [ref=e558]:
+          - generic [ref=e559]:
+            - generic [ref=e564]:
+              - link "Admin login page (/admin/login) › email input is present" [ref=e565] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-b3535c5925c54e7652cc"
+              - generic [ref=e566]: Mobile Safari
+            - generic [ref=e569]: 0ms
+          - generic [ref=e571]:
+            - link "admin.spec.ts:107" [ref=e572] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-b3535c5925c54e7652cc"
+            - link "View Trace" [ref=e574] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/2d755c2392c531698c110d66b39b67dab7406fe4.zip
+        - listitem [ref=e578]:
+          - generic [ref=e579]:
+            - generic [ref=e584]:
+              - link "Admin login page (/admin/login) › password input is present" [ref=e585] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-b58f1bbe9ae25177d964"
+              - generic [ref=e586]: Mobile Safari
+            - generic [ref=e589]: 0ms
+          - generic [ref=e591]:
+            - link "admin.spec.ts:113" [ref=e592] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-b58f1bbe9ae25177d964"
+            - link "View Trace" [ref=e594] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/06e15073d68834f04e0d8f439014be849d50b061.zip
+        - listitem [ref=e598]:
+          - generic [ref=e599]:
+            - generic [ref=e604]:
+              - link "Admin login page (/admin/login) › submit button is present and enabled" [ref=e605] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-3d5a24bf3db2eb9f112e"
+              - generic [ref=e606]: Mobile Safari
+            - generic [ref=e609]: 0ms
+          - generic [ref=e611]:
+            - link "admin.spec.ts:117" [ref=e612] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-3d5a24bf3db2eb9f112e"
+            - link "View Trace" [ref=e614] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/478b175573aa61572a332d39dd3ef01f85a0f613.zip
+        - listitem [ref=e618]:
+          - generic [ref=e619]:
+            - generic [ref=e624]:
+              - link "Admin login page (/admin/login) › empty email submission shows validation" [ref=e625] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-534b9767cb3384863514"
+              - generic [ref=e626]: Mobile Safari
+            - generic [ref=e629]: 0ms
+          - generic [ref=e631]:
+            - link "admin.spec.ts:123" [ref=e632] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-534b9767cb3384863514"
+            - link "View Trace" [ref=e634] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/b694a3e99dddb45fb5a118f6cc304ca302069719.zip
+        - listitem [ref=e638]:
+          - generic [ref=e639]:
+            - generic [ref=e644]:
+              - link "Admin login page (/admin/login) › wrong credentials shows error message" [ref=e645] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-28e3b57908b1cec36a7c"
+              - generic [ref=e646]: Mobile Safari
+            - generic [ref=e649]: 0ms
+          - generic [ref=e651]:
+            - link "admin.spec.ts:134" [ref=e652] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-28e3b57908b1cec36a7c"
+            - link "View Trace" [ref=e654] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/2578a12b6b6960cd423d3efca8b9e04e70a4d61e.zip
+        - listitem [ref=e658]:
+          - generic [ref=e659]:
+            - generic [ref=e664]:
+              - link "Admin login page (/admin/login) › no horizontal overflow — mobile" [ref=e665] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-35bae95c1339064eb19c"
+              - generic [ref=e666]: Mobile Safari
+            - generic [ref=e669]: 0ms
+          - generic [ref=e671]:
+            - link "admin.spec.ts:146" [ref=e672] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-35bae95c1339064eb19c"
+            - link "View Trace" [ref=e674] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/5f351e6f7f11a1e84a9c4aa43ff322630b51b013.zip
+        - listitem [ref=e678]:
+          - generic [ref=e679]:
+            - generic [ref=e684]:
+              - link "Admin login page (/admin/login) › no horizontal overflow — desktop" [ref=e685] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-e70b6f50b9fd095da1dd"
+              - generic [ref=e686]: Mobile Safari
+            - generic [ref=e689]: 0ms
+          - generic [ref=e691]:
+            - link "admin.spec.ts:152" [ref=e692] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-e70b6f50b9fd095da1dd"
+            - link "View Trace" [ref=e694] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/cc3f9bec93f57db0484a1591cc9ad5cd06f05863.zip
+        - listitem [ref=e698]:
+          - generic [ref=e699]:
+            - generic [ref=e704]:
+              - link "Admin login page (/admin/login) › password input type is password (not plain text)" [ref=e705] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ed6d3fba40c16db74eba"
+              - generic [ref=e706]: Mobile Safari
+            - generic [ref=e709]: 0ms
+          - generic [ref=e711]:
+            - link "admin.spec.ts:157" [ref=e712] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-ed6d3fba40c16db74eba"
+            - link "View Trace" [ref=e714] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/a9ea4056aaed3315563117736a4d46a8809d7562.zip
+        - listitem [ref=e718]:
+          - generic [ref=e719]:
+            - generic [ref=e724]:
+              - link "Admin auth gate › /admin/dashboard → redirects to login when unauthenticated" [ref=e725] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-261479219785e4053382"
+              - generic [ref=e726]: Tablet
+            - generic [ref=e729]: 0ms
+          - generic [ref=e731]:
+            - link "admin.spec.ts:76" [ref=e732] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-261479219785e4053382"
+            - link "View Trace" [ref=e734] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/5c6c6578afc0f3091d5f339f686caf820fd16ab2.zip
+        - listitem [ref=e738]:
+          - generic [ref=e739]:
+            - generic [ref=e744]:
+              - link "Admin auth gate › /admin/products → redirects to login when unauthenticated" [ref=e745] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-63bbcf47131faf2c5e88"
+              - generic [ref=e746]: Tablet
+            - generic [ref=e749]: 0ms
+          - generic [ref=e751]:
+            - link "admin.spec.ts:76" [ref=e752] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-63bbcf47131faf2c5e88"
+            - link "View Trace" [ref=e754] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/7fa82ab579d8e6f5914d25bc1cfd852ec0741291.zip
+        - listitem [ref=e758]:
+          - generic [ref=e759]:
+            - generic [ref=e764]:
+              - link "Admin auth gate › /admin/products/new → redirects to login when unauthenticated" [ref=e765] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-fada57a34e043ba009a5"
+              - generic [ref=e766]: Tablet
+            - generic [ref=e769]: 0ms
+          - generic [ref=e771]:
+            - link "admin.spec.ts:76" [ref=e772] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-fada57a34e043ba009a5"
+            - link "View Trace" [ref=e774] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/76facefeb0d84cbe74d2875e0ed991931bc50b3c.zip
+        - listitem [ref=e778]:
+          - generic [ref=e779]:
+            - generic [ref=e784]:
+              - link "Admin auth gate › /admin/categories → redirects to login when unauthenticated" [ref=e785] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-9534ce00a1bf629e9f62"
+              - generic [ref=e786]: Tablet
+            - generic [ref=e789]: 0ms
+          - generic [ref=e791]:
+            - link "admin.spec.ts:76" [ref=e792] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-9534ce00a1bf629e9f62"
+            - link "View Trace" [ref=e794] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/c5b2063e77bc8897da29b39e5b39e83fb8b98be1.zip
+        - listitem [ref=e798]:
+          - generic [ref=e799]:
+            - generic [ref=e804]:
+              - link "Admin auth gate › /admin/categories/subcategories → redirects to login when unauthenticated" [ref=e805] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-daead933b14c01304d1a"
+              - generic [ref=e806]: Tablet
+            - generic [ref=e809]: 0ms
+          - generic [ref=e811]:
+            - link "admin.spec.ts:76" [ref=e812] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-daead933b14c01304d1a"
+            - link "View Trace" [ref=e814] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/01cff055fe4a325545e73ffff004575fcca99ea2.zip
+        - listitem [ref=e818]:
+          - generic [ref=e819]:
+            - generic [ref=e824]:
+              - link "Admin auth gate › /admin/collections → redirects to login when unauthenticated" [ref=e825] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-46f162d6a020052093c4"
+              - generic [ref=e826]: Tablet
+            - generic [ref=e829]: 0ms
+          - generic [ref=e831]:
+            - link "admin.spec.ts:76" [ref=e832] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-46f162d6a020052093c4"
+            - link "View Trace" [ref=e834] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/b4d21688debf9e54f49cd3ad4fe544d30296e7dc.zip
+        - listitem [ref=e838]:
+          - generic [ref=e839]:
+            - generic [ref=e844]:
+              - link "Admin auth gate › /admin/inventory → redirects to login when unauthenticated" [ref=e845] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-94216380ffb080d13608"
+              - generic [ref=e846]: Tablet
+            - generic [ref=e849]: 0ms
+          - generic [ref=e851]:
+            - link "admin.spec.ts:76" [ref=e852] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-94216380ffb080d13608"
+            - link "View Trace" [ref=e854] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/16a7bdb3f0121777f344ab21dbe396865016a9b9.zip
+        - listitem [ref=e858]:
+          - generic [ref=e859]:
+            - generic [ref=e864]:
+              - link "Admin auth gate › /admin/inventory/low-stock → redirects to login when unauthenticated" [ref=e865] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-5c6a139a07c3626b1b56"
+              - generic [ref=e866]: Tablet
+            - generic [ref=e869]: 0ms
+          - generic [ref=e871]:
+            - link "admin.spec.ts:76" [ref=e872] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-5c6a139a07c3626b1b56"
+            - link "View Trace" [ref=e874] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/2a65ec71f897953035ac24724caf4b54be1ac68e.zip
+        - listitem [ref=e878]:
+          - generic [ref=e879]:
+            - generic [ref=e884]:
+              - link "Admin auth gate › /admin/inventory/out-of-stock → redirects to login when unauthenticated" [ref=e885] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-431f10069c6b5c04ddb9"
+              - generic [ref=e886]: Tablet
+            - generic [ref=e889]: 0ms
+          - generic [ref=e891]:
+            - link "admin.spec.ts:76" [ref=e892] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-431f10069c6b5c04ddb9"
+            - link "View Trace" [ref=e894] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/53579761ce9b4b2ea3eb5222eac29dcc62627502.zip
+        - listitem [ref=e898]:
+          - generic [ref=e899]:
+            - generic [ref=e904]:
+              - link "Admin auth gate › /admin/inventory/history → redirects to login when unauthenticated" [ref=e905] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-f4d3a69cebe50024b685"
+              - generic [ref=e906]: Tablet
+            - generic [ref=e909]: 0ms
+          - generic [ref=e911]:
+            - link "admin.spec.ts:76" [ref=e912] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-f4d3a69cebe50024b685"
+            - link "View Trace" [ref=e914] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/a10b153b8e22b58c59c0b512c0aaa75cacd1b492.zip
+        - listitem [ref=e918]:
+          - generic [ref=e919]:
+            - generic [ref=e924]:
+              - link "Admin auth gate › /admin/restock/subscribers → redirects to login when unauthenticated" [ref=e925] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-03bc671f865cf0efc0e6"
+              - generic [ref=e926]: Tablet
+            - generic [ref=e929]: 0ms
+          - generic [ref=e931]:
+            - link "admin.spec.ts:76" [ref=e932] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-03bc671f865cf0efc0e6"
+            - link "View Trace" [ref=e934] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/ae64d49cd756419340515bbea3ca0634a1331976.zip
+        - listitem [ref=e938]:
+          - generic [ref=e939]:
+            - generic [ref=e944]:
+              - link "Admin auth gate › /admin/restock/notifications → redirects to login when unauthenticated" [ref=e945] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-13d5cbe7b5ea03fff36a"
+              - generic [ref=e946]: Tablet
+            - generic [ref=e949]: 0ms
+          - generic [ref=e951]:
+            - link "admin.spec.ts:76" [ref=e952] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-13d5cbe7b5ea03fff36a"
+            - link "View Trace" [ref=e954] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/50b84e4953068e110f478855618c6802a2e0adf5.zip
+        - listitem [ref=e958]:
+          - generic [ref=e959]:
+            - generic [ref=e964]:
+              - link "Admin auth gate › /admin/restock/history → redirects to login when unauthenticated" [ref=e965] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-0d0779ae6b77e8fe60a5"
+              - generic [ref=e966]: Tablet
+            - generic [ref=e969]: 0ms
+          - generic [ref=e971]:
+            - link "admin.spec.ts:76" [ref=e972] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-0d0779ae6b77e8fe60a5"
+            - link "View Trace" [ref=e974] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/95ff19fe6ca4f7cbfa3c626c848e695627e39661.zip
+        - listitem [ref=e978]:
+          - generic [ref=e979]:
+            - generic [ref=e984]:
+              - link "Admin auth gate › /admin/orders → redirects to login when unauthenticated" [ref=e985] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-5d0ecfae47d855f702fc"
+              - generic [ref=e986]: Tablet
+            - generic [ref=e989]: 0ms
+          - generic [ref=e991]:
+            - link "admin.spec.ts:76" [ref=e992] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-5d0ecfae47d855f702fc"
+            - link "View Trace" [ref=e994] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/d97f025da19a2449cc339e522eb9accb73180785.zip
+        - listitem [ref=e998]:
+          - generic [ref=e999]:
+            - generic [ref=e1004]:
+              - link "Admin auth gate › /admin/orders/returns → redirects to login when unauthenticated" [ref=e1005] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-266ddee5fb473c840c85"
+              - generic [ref=e1006]: Tablet
+            - generic [ref=e1009]: 0ms
+          - generic [ref=e1011]:
+            - link "admin.spec.ts:76" [ref=e1012] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-266ddee5fb473c840c85"
+            - link "View Trace" [ref=e1014] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/11d9ab9c806221ec65cde8cdf222e602f243757e.zip
+        - listitem [ref=e1018]:
+          - generic [ref=e1019]:
+            - generic [ref=e1024]:
+              - link "Admin auth gate › /admin/orders/refunds → redirects to login when unauthenticated" [ref=e1025] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-51bb18ef558c8cbf37c1"
+              - generic [ref=e1026]: Tablet
+            - generic [ref=e1029]: 0ms
+          - generic [ref=e1031]:
+            - link "admin.spec.ts:76" [ref=e1032] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-51bb18ef558c8cbf37c1"
+            - link "View Trace" [ref=e1034] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/890ac851224c2fc1ae5616c27980819381992df5.zip
+        - listitem [ref=e1038]:
+          - generic [ref=e1039]:
+            - generic [ref=e1044]:
+              - link "Admin auth gate › /admin/reviews → redirects to login when unauthenticated" [ref=e1045] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-aef449da08dbec2339c4"
+              - generic [ref=e1046]: Tablet
+            - generic [ref=e1049]: 0ms
+          - generic [ref=e1051]:
+            - link "admin.spec.ts:76" [ref=e1052] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-aef449da08dbec2339c4"
+            - link "View Trace" [ref=e1054] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/923851e0391da35ef8af60c86804fcaaf75c8927.zip
+        - listitem [ref=e1058]:
+          - generic [ref=e1059]:
+            - generic [ref=e1064]:
+              - link "Admin auth gate › /admin/homepage → redirects to login when unauthenticated" [ref=e1065] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-65c103e30d6e7427152c"
+              - generic [ref=e1066]: Tablet
+            - generic [ref=e1069]: 0ms
+          - generic [ref=e1071]:
+            - link "admin.spec.ts:76" [ref=e1072] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-65c103e30d6e7427152c"
+            - link "View Trace" [ref=e1074] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/00bfe9884fce2990a64927da281156a3a7d5859c.zip
+        - listitem [ref=e1078]:
+          - generic [ref=e1079]:
+            - generic [ref=e1084]:
+              - link "Admin auth gate › /admin/pages → redirects to login when unauthenticated" [ref=e1085] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-9994308b911ce752c768"
+              - generic [ref=e1086]: Tablet
+            - generic [ref=e1089]: 0ms
+          - generic [ref=e1091]:
+            - link "admin.spec.ts:76" [ref=e1092] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-9994308b911ce752c768"
+            - link "View Trace" [ref=e1094] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/69cee2fc54ee4cebb0d48920881f9cfa7a11de9a.zip
+        - listitem [ref=e1098]:
+          - generic [ref=e1099]:
+            - generic [ref=e1104]:
+              - link "Admin auth gate › /admin/seo → redirects to login when unauthenticated" [ref=e1105] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-37acffff7ab951712233"
+              - generic [ref=e1106]: Tablet
+            - generic [ref=e1109]: 0ms
+          - generic [ref=e1111]:
+            - link "admin.spec.ts:76" [ref=e1112] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-37acffff7ab951712233"
+            - link "View Trace" [ref=e1114] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/3c7c948d524e4653d27c9bc1ad181458b0aa0457.zip
+        - listitem [ref=e1118]:
+          - generic [ref=e1119]:
+            - generic [ref=e1124]:
+              - link "Admin auth gate › /admin/customers → redirects to login when unauthenticated" [ref=e1125] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-c849cecdcfb1276b5ff4"
+              - generic [ref=e1126]: Tablet
+            - generic [ref=e1129]: 0ms
+          - generic [ref=e1131]:
+            - link "admin.spec.ts:76" [ref=e1132] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-c849cecdcfb1276b5ff4"
+            - link "View Trace" [ref=e1134] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/392f92d4a871512ce110610475d0924a8e034d76.zip
+        - listitem [ref=e1138]:
+          - generic [ref=e1139]:
+            - generic [ref=e1144]:
+              - link "Admin auth gate › /admin/analytics → redirects to login when unauthenticated" [ref=e1145] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-fc25762afc9de296b037"
+              - generic [ref=e1146]: Tablet
+            - generic [ref=e1149]: 0ms
+          - generic [ref=e1151]:
+            - link "admin.spec.ts:76" [ref=e1152] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-fc25762afc9de296b037"
+            - link "View Trace" [ref=e1154] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/7e60ca08258d4c517db2dd2653c52c23dce92a08.zip
+        - listitem [ref=e1158]:
+          - generic [ref=e1159]:
+            - generic [ref=e1164]:
+              - link "Admin auth gate › /admin/settings → redirects to login when unauthenticated" [ref=e1165] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-c60141c180eee0738aa8"
+              - generic [ref=e1166]: Tablet
+            - generic [ref=e1169]: 0ms
+          - generic [ref=e1171]:
+            - link "admin.spec.ts:76" [ref=e1172] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-c60141c180eee0738aa8"
+            - link "View Trace" [ref=e1174] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/c7b9d5a0fef363f60bb36f16266b5de636950e53.zip
+        - listitem [ref=e1178]:
+          - generic [ref=e1179]:
+            - generic [ref=e1184]:
+              - link "Admin auth gate › /admin/settings/whatsapp → redirects to login when unauthenticated" [ref=e1185] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-1da4f26524326920a49a"
+              - generic [ref=e1186]: Tablet
+            - generic [ref=e1189]: 0ms
+          - generic [ref=e1191]:
+            - link "admin.spec.ts:76" [ref=e1192] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-1da4f26524326920a49a"
+            - link "View Trace" [ref=e1194] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/627b95cf5bf51e2fb6f83f906a0ec7ca5b506ef0.zip
+        - listitem [ref=e1198]:
+          - generic [ref=e1199]:
+            - generic [ref=e1204]:
+              - link "Admin login page (/admin/login) › no console errors on load" [ref=e1205] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-5e634f7363c47c531715"
+              - generic [ref=e1206]: Tablet
+            - generic [ref=e1209]: 0ms
+          - generic [ref=e1211]:
+            - link "admin.spec.ts:99" [ref=e1212] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-5e634f7363c47c531715"
+            - link "View Trace" [ref=e1214] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/737c331538cd3b7ea6f21a928c41a2a997b4c8f7.zip
+        - listitem [ref=e1218]:
+          - generic [ref=e1219]:
+            - generic [ref=e1224]:
+              - link "Admin login page (/admin/login) › email input is present" [ref=e1225] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-f880b0a14396c7b67d1e"
+              - generic [ref=e1226]: Tablet
+            - generic [ref=e1229]: 0ms
+          - generic [ref=e1231]:
+            - link "admin.spec.ts:107" [ref=e1232] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-f880b0a14396c7b67d1e"
+            - link "View Trace" [ref=e1234] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/8f7518244bb98d3df7707ecaa84a26d97c6ce3b0.zip
+        - listitem [ref=e1238]:
+          - generic [ref=e1239]:
+            - generic [ref=e1244]:
+              - link "Admin login page (/admin/login) › password input is present" [ref=e1245] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-2c4022e8bd44ea1fe946"
+              - generic [ref=e1246]: Tablet
+            - generic [ref=e1249]: 0ms
+          - generic [ref=e1251]:
+            - link "admin.spec.ts:113" [ref=e1252] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-2c4022e8bd44ea1fe946"
+            - link "View Trace" [ref=e1254] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/5f2075e1a2b6f153c3bd9775ab3f890b47150bc1.zip
+        - listitem [ref=e1258]:
+          - generic [ref=e1259]:
+            - generic [ref=e1264]:
+              - link "Admin login page (/admin/login) › submit button is present and enabled" [ref=e1265] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-c664c6476c8471f0bf24"
+              - generic [ref=e1266]: Tablet
+            - generic [ref=e1269]: 0ms
+          - generic [ref=e1271]:
+            - link "admin.spec.ts:117" [ref=e1272] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-c664c6476c8471f0bf24"
+            - link "View Trace" [ref=e1274] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/b91a9ab702a6b21edb08897efa4b7cae88479bf3.zip
+        - listitem [ref=e1278]:
+          - generic [ref=e1279]:
+            - generic [ref=e1284]:
+              - link "Admin login page (/admin/login) › empty email submission shows validation" [ref=e1285] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-1a32436148651fe935c7"
+              - generic [ref=e1286]: Tablet
+            - generic [ref=e1289]: 0ms
+          - generic [ref=e1291]:
+            - link "admin.spec.ts:123" [ref=e1292] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-1a32436148651fe935c7"
+            - link "View Trace" [ref=e1294] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/2da6b8c3d081ce7fd2ce707b94997595ece57e9d.zip
+        - listitem [ref=e1298]:
+          - generic [ref=e1299]:
+            - generic [ref=e1304]:
+              - link "Admin login page (/admin/login) › wrong credentials shows error message" [ref=e1305] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ca3bb83ca6ba69033d19"
+              - generic [ref=e1306]: Tablet
+            - generic [ref=e1309]: 1ms
+          - generic [ref=e1311]:
+            - link "admin.spec.ts:134" [ref=e1312] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-ca3bb83ca6ba69033d19"
+            - link "View Trace" [ref=e1314] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/3f15509ee2b9fe286c265eee2b5ed91e64206d6f.zip
+        - listitem [ref=e1318]:
+          - generic [ref=e1319]:
+            - generic [ref=e1324]:
+              - link "Admin login page (/admin/login) › no horizontal overflow — mobile" [ref=e1325] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ec5eb8ff50ca31626e11"
+              - generic [ref=e1326]: Tablet
+            - generic [ref=e1329]: 0ms
+          - generic [ref=e1331]:
+            - link "admin.spec.ts:146" [ref=e1332] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-ec5eb8ff50ca31626e11"
+            - link "View Trace" [ref=e1334] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/07e289818d1b432aebf12634689f5f8c5a7999fc.zip
+        - listitem [ref=e1338]:
+          - generic [ref=e1339]:
+            - generic [ref=e1344]:
+              - link "Admin login page (/admin/login) › no horizontal overflow — desktop" [ref=e1345] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-b83c04b675408a0af314"
+              - generic [ref=e1346]: Tablet
+            - generic [ref=e1349]: 0ms
+          - generic [ref=e1351]:
+            - link "admin.spec.ts:152" [ref=e1352] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-b83c04b675408a0af314"
+            - link "View Trace" [ref=e1354] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/c97e4cc94b579a66dcd617bf9bb85a4a10622a72.zip
+        - listitem [ref=e1358]:
+          - generic [ref=e1359]:
+            - generic [ref=e1364]:
+              - link "Admin login page (/admin/login) › password input type is password (not plain text)" [ref=e1365] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ca5ef424408e04e1ccbd"
+              - generic [ref=e1366]: Tablet
+            - generic [ref=e1369]: 0ms
+          - generic [ref=e1371]:
+            - link "admin.spec.ts:157" [ref=e1372] [cursor=pointer]:
+              - /url: "#?testId=d4043a9dd1ab94463227-ca5ef424408e04e1ccbd"
+            - link "View Trace" [ref=e1374] [cursor=pointer]:
+              - /url: http://localhost:9323/trace/index.html?trace=http://localhost:9323/data/76b6f95bde9d8704e0a1b51004d4d1488da26734.zip
+        - listitem [ref=e1378]:
+          - generic [ref=e1379]:
+            - generic [ref=e1384]:
+              - link "Admin auth gate › /admin/dashboard → redirects to login when unauthenticated" [ref=e1385] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-81d61119459b83a11757"
+              - generic [ref=e1386]: Desktop Chrome
+            - generic [ref=e1389]: 915ms
+          - link "admin.spec.ts:76" [ref=e1392] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-81d61119459b83a11757"
+        - listitem [ref=e1394]:
+          - generic [ref=e1395]:
+            - generic [ref=e1400]:
+              - link "Admin auth gate › /admin/products → redirects to login when unauthenticated" [ref=e1401] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-12cb57c01653ed36588d"
+              - generic [ref=e1402]: Desktop Chrome
+            - generic [ref=e1405]: 851ms
+          - link "admin.spec.ts:76" [ref=e1408] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-12cb57c01653ed36588d"
+        - listitem [ref=e1410]:
+          - generic [ref=e1411]:
+            - generic [ref=e1416]:
+              - link "Admin auth gate › /admin/products/new → redirects to login when unauthenticated" [ref=e1417] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-4135bc912b5b6bfa16df"
+              - generic [ref=e1418]: Desktop Chrome
+            - generic [ref=e1421]: 888ms
+          - link "admin.spec.ts:76" [ref=e1424] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-4135bc912b5b6bfa16df"
+        - listitem [ref=e1426]:
+          - generic [ref=e1427]:
+            - generic [ref=e1432]:
+              - link "Admin auth gate › /admin/categories → redirects to login when unauthenticated" [ref=e1433] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-548633dbbcbc211199d1"
+              - generic [ref=e1434]: Desktop Chrome
+            - generic [ref=e1437]: 889ms
+          - link "admin.spec.ts:76" [ref=e1440] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-548633dbbcbc211199d1"
+        - listitem [ref=e1442]:
+          - generic [ref=e1443]:
+            - generic [ref=e1448]:
+              - link "Admin auth gate › /admin/categories/subcategories → redirects to login when unauthenticated" [ref=e1449] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-e26efb42239aa930c941"
+              - generic [ref=e1450]: Desktop Chrome
+            - generic [ref=e1453]: 871ms
+          - link "admin.spec.ts:76" [ref=e1456] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-e26efb42239aa930c941"
+        - listitem [ref=e1458]:
+          - generic [ref=e1459]:
+            - generic [ref=e1464]:
+              - link "Admin auth gate › /admin/collections → redirects to login when unauthenticated" [ref=e1465] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-85390e2cc188008c1286"
+              - generic [ref=e1466]: Desktop Chrome
+            - generic [ref=e1469]: 836ms
+          - link "admin.spec.ts:76" [ref=e1472] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-85390e2cc188008c1286"
+        - listitem [ref=e1474]:
+          - generic [ref=e1475]:
+            - generic [ref=e1480]:
+              - link "Admin auth gate › /admin/inventory → redirects to login when unauthenticated" [ref=e1481] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-4acac14418c112820899"
+              - generic [ref=e1482]: Desktop Chrome
+            - generic [ref=e1485]: 888ms
+          - link "admin.spec.ts:76" [ref=e1488] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-4acac14418c112820899"
+        - listitem [ref=e1490]:
+          - generic [ref=e1491]:
+            - generic [ref=e1496]:
+              - link "Admin auth gate › /admin/inventory/low-stock → redirects to login when unauthenticated" [ref=e1497] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-732af050d00a6ad0182c"
+              - generic [ref=e1498]: Desktop Chrome
+            - generic [ref=e1501]: 855ms
+          - link "admin.spec.ts:76" [ref=e1504] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-732af050d00a6ad0182c"
+        - listitem [ref=e1506]:
+          - generic [ref=e1507]:
+            - generic [ref=e1512]:
+              - link "Admin auth gate › /admin/inventory/out-of-stock → redirects to login when unauthenticated" [ref=e1513] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ca811393a7abf949fdbd"
+              - generic [ref=e1514]: Desktop Chrome
+            - generic [ref=e1517]: 861ms
+          - link "admin.spec.ts:76" [ref=e1520] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-ca811393a7abf949fdbd"
+        - listitem [ref=e1522]:
+          - generic [ref=e1523]:
+            - generic [ref=e1528]:
+              - link "Admin auth gate › /admin/inventory/history → redirects to login when unauthenticated" [ref=e1529] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-d24040771dba5d9ff2b4"
+              - generic [ref=e1530]: Desktop Chrome
+            - generic [ref=e1533]: 868ms
+          - link "admin.spec.ts:76" [ref=e1536] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-d24040771dba5d9ff2b4"
+        - listitem [ref=e1538]:
+          - generic [ref=e1539]:
+            - generic [ref=e1544]:
+              - link "Admin auth gate › /admin/restock/subscribers → redirects to login when unauthenticated" [ref=e1545] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-969fc940c2e75c7bf3d3"
+              - generic [ref=e1546]: Desktop Chrome
+            - generic [ref=e1549]: 880ms
+          - link "admin.spec.ts:76" [ref=e1552] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-969fc940c2e75c7bf3d3"
+        - listitem [ref=e1554]:
+          - generic [ref=e1555]:
+            - generic [ref=e1560]:
+              - link "Admin auth gate › /admin/restock/notifications → redirects to login when unauthenticated" [ref=e1561] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-422dcddcb1a1e5d8db50"
+              - generic [ref=e1562]: Desktop Chrome
+            - generic [ref=e1565]: 853ms
+          - link "admin.spec.ts:76" [ref=e1568] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-422dcddcb1a1e5d8db50"
+        - listitem [ref=e1570]:
+          - generic [ref=e1571]:
+            - generic [ref=e1576]:
+              - link "Admin auth gate › /admin/restock/history → redirects to login when unauthenticated" [ref=e1577] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-2a1049da2612e9f33c19"
+              - generic [ref=e1578]: Desktop Chrome
+            - generic [ref=e1581]: 871ms
+          - link "admin.spec.ts:76" [ref=e1584] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-2a1049da2612e9f33c19"
+        - listitem [ref=e1586]:
+          - generic [ref=e1587]:
+            - generic [ref=e1592]:
+              - link "Admin auth gate › /admin/orders → redirects to login when unauthenticated" [ref=e1593] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ee4317b06483d49dd26f"
+              - generic [ref=e1594]: Desktop Chrome
+            - generic [ref=e1597]: 874ms
+          - link "admin.spec.ts:76" [ref=e1600] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-ee4317b06483d49dd26f"
+        - listitem [ref=e1602]:
+          - generic [ref=e1603]:
+            - generic [ref=e1608]:
+              - link "Admin auth gate › /admin/orders/returns → redirects to login when unauthenticated" [ref=e1609] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-d379265139e8d01355cf"
+              - generic [ref=e1610]: Desktop Chrome
+            - generic [ref=e1613]: 1.1s
+          - link "admin.spec.ts:76" [ref=e1616] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-d379265139e8d01355cf"
+        - listitem [ref=e1618]:
+          - generic [ref=e1619]:
+            - generic [ref=e1624]:
+              - link "Admin auth gate › /admin/orders/refunds → redirects to login when unauthenticated" [ref=e1625] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-ce161e2b5298ef24a91a"
+              - generic [ref=e1626]: Desktop Chrome
+            - generic [ref=e1629]: 854ms
+          - link "admin.spec.ts:76" [ref=e1632] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-ce161e2b5298ef24a91a"
+        - listitem [ref=e1634]:
+          - generic [ref=e1635]:
+            - generic [ref=e1640]:
+              - link "Admin auth gate › /admin/reviews → redirects to login when unauthenticated" [ref=e1641] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-44d6cfc2a7b04b34b502"
+              - generic [ref=e1642]: Desktop Chrome
+            - generic [ref=e1645]: 883ms
+          - link "admin.spec.ts:76" [ref=e1648] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-44d6cfc2a7b04b34b502"
+        - listitem [ref=e1650]:
+          - generic [ref=e1651]:
+            - generic [ref=e1656]:
+              - link "Admin auth gate › /admin/homepage → redirects to login when unauthenticated" [ref=e1657] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-33a74b20d88d8ee05b3f"
+              - generic [ref=e1658]: Desktop Chrome
+            - generic [ref=e1661]: 835ms
+          - link "admin.spec.ts:76" [ref=e1664] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-33a74b20d88d8ee05b3f"
+        - listitem [ref=e1666]:
+          - generic [ref=e1667]:
+            - generic [ref=e1672]:
+              - link "Admin auth gate › /admin/pages → redirects to login when unauthenticated" [ref=e1673] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-8db4809a451b182a4508"
+              - generic [ref=e1674]: Desktop Chrome
+            - generic [ref=e1677]: 840ms
+          - link "admin.spec.ts:76" [ref=e1680] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-8db4809a451b182a4508"
+        - listitem [ref=e1682]:
+          - generic [ref=e1683]:
+            - generic [ref=e1688]:
+              - link "Admin auth gate › /admin/seo → redirects to login when unauthenticated" [ref=e1689] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-d49588fddabcf42a6580"
+              - generic [ref=e1690]: Desktop Chrome
+            - generic [ref=e1693]: 849ms
+          - link "admin.spec.ts:76" [ref=e1696] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-d49588fddabcf42a6580"
+        - listitem [ref=e1698]:
+          - generic [ref=e1699]:
+            - generic [ref=e1704]:
+              - link "Admin auth gate › /admin/customers → redirects to login when unauthenticated" [ref=e1705] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-f4ae6cf78eef90f9afe9"
+              - generic [ref=e1706]: Desktop Chrome
+            - generic [ref=e1709]: 859ms
+          - link "admin.spec.ts:76" [ref=e1712] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-f4ae6cf78eef90f9afe9"
+        - listitem [ref=e1714]:
+          - generic [ref=e1715]:
+            - generic [ref=e1720]:
+              - link "Admin auth gate › /admin/analytics → redirects to login when unauthenticated" [ref=e1721] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-9e17a9da73de4a616315"
+              - generic [ref=e1722]: Desktop Chrome
+            - generic [ref=e1725]: 847ms
+          - link "admin.spec.ts:76" [ref=e1728] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-9e17a9da73de4a616315"
+        - listitem [ref=e1730]:
+          - generic [ref=e1731]:
+            - generic [ref=e1736]:
+              - link "Admin auth gate › /admin/settings → redirects to login when unauthenticated" [ref=e1737] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-e631285405a4990079ed"
+              - generic [ref=e1738]: Desktop Chrome
+            - generic [ref=e1741]: 866ms
+          - link "admin.spec.ts:76" [ref=e1744] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-e631285405a4990079ed"
+        - listitem [ref=e1746]:
+          - generic [ref=e1747]:
+            - generic [ref=e1752]:
+              - link "Admin auth gate › /admin/settings/whatsapp → redirects to login when unauthenticated" [ref=e1753] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-5c19d9911acdd1423dea"
+              - generic [ref=e1754]: Desktop Chrome
+            - generic [ref=e1757]: 845ms
+          - link "admin.spec.ts:76" [ref=e1760] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-5c19d9911acdd1423dea"
+        - listitem [ref=e1762]:
+          - generic [ref=e1763]:
+            - generic [ref=e1768]:
+              - link "Admin login page (/admin/login) › email input is present" [ref=e1769] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-20ddb973aa098df7d717"
+              - generic [ref=e1770]: Desktop Chrome
+            - generic [ref=e1773]: 871ms
+          - link "admin.spec.ts:107" [ref=e1776] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-20ddb973aa098df7d717"
+        - listitem [ref=e1778]:
+          - generic [ref=e1779]:
+            - generic [ref=e1784]:
+              - link "Admin login page (/admin/login) › password input is present" [ref=e1785] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-aa7b4f994c05065ede77"
+              - generic [ref=e1786]: Desktop Chrome
+            - generic [ref=e1789]: 874ms
+          - link "admin.spec.ts:113" [ref=e1792] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-aa7b4f994c05065ede77"
+        - listitem [ref=e1794]:
+          - generic [ref=e1795]:
+            - generic [ref=e1800]:
+              - link "Admin login page (/admin/login) › submit button is present and enabled" [ref=e1801] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-7a72114f978478bde6b4"
+              - generic [ref=e1802]: Desktop Chrome
+            - generic [ref=e1805]: 884ms
+          - link "admin.spec.ts:117" [ref=e1808] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-7a72114f978478bde6b4"
+        - listitem [ref=e1810]:
+          - generic [ref=e1811]:
+            - generic [ref=e1816]:
+              - link "Admin login page (/admin/login) › empty email submission shows validation" [ref=e1817] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-c94f40837eb61e99b4ba"
+              - generic [ref=e1818]: Desktop Chrome
+            - generic [ref=e1821]: 928ms
+          - link "admin.spec.ts:123" [ref=e1824] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-c94f40837eb61e99b4ba"
+        - listitem [ref=e1826]:
+          - generic [ref=e1827]:
+            - generic [ref=e1832]:
+              - link "Admin login page (/admin/login) › wrong credentials shows error message" [ref=e1833] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-cef739edadaffe2a50fd"
+              - generic [ref=e1834]: Desktop Chrome
+            - generic [ref=e1837]: 3.5s
+          - link "admin.spec.ts:134" [ref=e1840] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-cef739edadaffe2a50fd"
+        - listitem [ref=e1842]:
+          - generic [ref=e1843]:
+            - generic [ref=e1848]:
+              - link "Admin login page (/admin/login) › no horizontal overflow — mobile" [ref=e1849] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-2afa14b345128928668b"
+              - generic [ref=e1850]: Desktop Chrome
+            - generic [ref=e1853]: 1.1s
+          - link "admin.spec.ts:146" [ref=e1856] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-2afa14b345128928668b"
+        - listitem [ref=e1858]:
+          - generic [ref=e1859]:
+            - generic [ref=e1864]:
+              - link "Admin login page (/admin/login) › no horizontal overflow — desktop" [ref=e1865] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-046c262d6dfc9f158387"
+              - generic [ref=e1866]: Desktop Chrome
+            - generic [ref=e1869]: 843ms
+          - link "admin.spec.ts:152" [ref=e1872] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-046c262d6dfc9f158387"
+        - listitem [ref=e1874]:
+          - generic [ref=e1875]:
+            - generic [ref=e1880]:
+              - link "Admin login page (/admin/login) › password input type is password (not plain text)" [ref=e1881] [cursor=pointer]:
+                - /url: "#?testId=d4043a9dd1ab94463227-645f346f64844c22fa28"
+              - generic [ref=e1882]: Desktop Chrome
+            - generic [ref=e1885]: 889ms
+          - link "admin.spec.ts:157" [ref=e1888] [cursor=pointer]:
+            - /url: "#?testId=d4043a9dd1ab94463227-645f346f64844c22fa28"

@@ -14,9 +14,11 @@ export function SearchInput({ initialQuery }: { initialQuery: string }) {
   const router = useRouter();
   const [value, setValue] = React.useState(initialQuery);
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const q = value.trim();
+    const formData = new FormData(e.currentTarget);
+    const formQ = formData.get('q');
+    const q = (typeof formQ === 'string' && formQ ? formQ : value).trim();
     if (q) {
       router.push(`/search?q=${encodeURIComponent(q)}`);
     } else {
@@ -25,12 +27,19 @@ export function SearchInput({ initialQuery }: { initialQuery: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} role="search" className="flex gap-[var(--spacing-2)]">
+    <form
+      action="/search"
+      method="GET"
+      onSubmit={handleSubmit}
+      role="search"
+      className="flex gap-[var(--spacing-2)]"
+    >
       <label htmlFor="search-input" className="sr-only">
         Search products
       </label>
       <input
         id="search-input"
+        name="q"
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
