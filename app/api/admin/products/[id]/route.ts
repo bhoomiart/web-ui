@@ -1,16 +1,16 @@
 /**
- * PATCH /api/admin/products/[id] — Update a product. Admin only.
- * DELETE /api/admin/products/[id] — Archive a product. Admin only.
+ * PATCH /api/admin/products/[id] — Update a product. Admin and staff.
+ * DELETE /api/admin/products/[id] — Archive a product (soft delete). Admin and staff.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdminApi } from '@/lib/api/auth';
+import { requireStaffApi } from '@/lib/api/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, { params }: Params) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireStaffApi(request);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;
@@ -57,7 +57,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Params) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireStaffApi(request);
   if (auth instanceof NextResponse) return auth;
 
   const { id } = await params;

@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import { requireStaff } from '@/lib/auth/admin';
 import { getDashboardMetrics, getRecentOrders, getLowStockProducts } from '@/lib/db/dashboard';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
+import { AdminOnly } from '@/components/layout/AdminRole';
 import { MetricCard } from '@/components/admin/MetricCard';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { Spinner } from '@/components/ui/Spinner';
@@ -104,13 +105,15 @@ async function DashboardContent() {
             variant={metrics.orders.returnRequested > 0 ? 'warning' : 'default'}
             icon={<ReturnIcon />}
           />
-          <MetricCard
-            label="Pending Refunds"
-            value={metrics.orders.refundPending}
-            href="/admin/orders/refunds"
-            variant={metrics.orders.refundPending > 0 ? 'warning' : 'default'}
-            icon={<RefundIcon />}
-          />
+          <AdminOnly>
+            <MetricCard
+              label="Pending Refunds"
+              value={metrics.orders.refundPending}
+              href="/admin/orders/refunds"
+              variant={metrics.orders.refundPending > 0 ? 'warning' : 'default'}
+              icon={<RefundIcon />}
+            />
+          </AdminOnly>
           <MetricCard
             label="Pending Reviews"
             value={metrics.reviews.pending}

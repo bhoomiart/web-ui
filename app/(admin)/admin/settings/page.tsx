@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/Spinner';
 
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
+import { AdminOnly } from '@/components/layout/AdminRole';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 type SettingRow = {
@@ -97,26 +98,28 @@ async function SettingsPageContent() {
         title="Settings"
         description="View and manage site-wide configuration."
         action={
-          <div className="flex gap-[var(--spacing-2)]">
-            <Link
-              href="/admin/settings/whatsapp"
-              className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
-            >
-              WhatsApp templates
-            </Link>
-            <Link
-              href="/admin/settings/refund-policy"
-              className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
-            >
-              Return &amp; refund policy
-            </Link>
-            <Link
-              href="/admin/settings/shipping"
-              className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
-            >
-              Shipping rates
-            </Link>
-          </div>
+          <AdminOnly>
+            <div className="flex gap-[var(--spacing-2)]">
+              <Link
+                href="/admin/settings/whatsapp"
+                className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
+              >
+                WhatsApp templates
+              </Link>
+              <Link
+                href="/admin/settings/refund-policy"
+                className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
+              >
+                Return &amp; refund policy
+              </Link>
+              <Link
+                href="/admin/settings/shipping"
+                className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
+              >
+                Shipping rates
+              </Link>
+            </div>
+          </AdminOnly>
         }
         breadcrumbs={[{ label: 'Dashboard', href: '/admin/dashboard' }, { label: 'Settings' }]}
       />

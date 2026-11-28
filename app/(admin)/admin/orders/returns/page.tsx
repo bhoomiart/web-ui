@@ -8,6 +8,7 @@ import { ReturnActions } from '@/components/admin/ReturnActions';
 import { Suspense } from 'react';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
+import { AdminOnly } from '@/components/layout/AdminRole';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { Spinner } from '@/components/ui/Spinner';
 import { listReturnRequests } from '@/lib/db/orders';
@@ -65,12 +66,14 @@ export default async function ReturnsPage({
           { label: 'Returns' },
         ]}
         action={
-          <Link
-            href="/admin/orders/refunds"
-            className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-5)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-brand-primary)] text-[var(--color-brand-primary)] text-[var(--font-size-sm)] font-semibold hover:bg-[var(--color-earth-50)] transition-colors"
-          >
-            View Refunds
-          </Link>
+          <AdminOnly>
+            <Link
+              href="/admin/orders/refunds"
+              className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-5)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-brand-primary)] text-[var(--color-brand-primary)] text-[var(--font-size-sm)] font-semibold hover:bg-[var(--color-earth-50)] transition-colors"
+            >
+              View Refunds
+            </Link>
+          </AdminOnly>
         }
       />
 

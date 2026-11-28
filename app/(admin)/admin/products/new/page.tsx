@@ -4,13 +4,13 @@ export const instant = false;
  * /admin/products/new — Create a new product.
  */
 
-import { requireAdmin } from '@/lib/auth/admin';
+import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ProductForm } from '../ProductForm';
 
 export default async function NewProductPage() {
-  await requireAdmin();
+  await requireStaff();
 
   const admin = createAdminClient();
   const { data: categories } = await admin

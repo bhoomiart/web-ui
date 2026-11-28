@@ -9,6 +9,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import Link from 'next/link';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
+import { AdminOnly } from '@/components/layout/AdminRole';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function SubcategoriesPagePage() {
@@ -76,12 +77,14 @@ async function SubcategoriesPageContent() {
           { label: 'Subcategories' },
         ]}
         action={
-          <Link
-            href="/admin/categories/subcategories/new"
-            className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-5)] py-[var(--spacing-2)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold shadow-[var(--shadow-button)] hover:bg-[var(--color-earth-700)] transition-colors"
-          >
-            + Add Subcategory
-          </Link>
+          <AdminOnly>
+            <Link
+              href="/admin/categories/subcategories/new"
+              className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-5)] py-[var(--spacing-2)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold shadow-[var(--shadow-button)] hover:bg-[var(--color-earth-700)] transition-colors"
+            >
+              + Add Subcategory
+            </Link>
+          </AdminOnly>
         }
       />
 
@@ -154,12 +157,14 @@ async function SubcategoriesPageContent() {
                           {sub.display_order}
                         </td>
                         <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right">
-                          <Link
-                            href={`/admin/categories/subcategories/${sub.id}/edit`}
-                            className="text-[var(--color-brand-primary)] hover:underline font-medium text-[var(--font-size-xs)]"
-                          >
-                            Edit
-                          </Link>
+                          <AdminOnly>
+                            <Link
+                              href={`/admin/categories/subcategories/${sub.id}/edit`}
+                              className="text-[var(--color-brand-primary)] hover:underline font-medium text-[var(--font-size-xs)]"
+                            >
+                              Edit
+                            </Link>
+                          </AdminOnly>
                         </td>
                       </tr>
                     ))}

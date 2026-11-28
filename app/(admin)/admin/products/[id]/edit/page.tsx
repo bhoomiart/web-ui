@@ -5,14 +5,14 @@ export const instant = false;
  */
 
 import { notFound } from 'next/navigation';
-import { requireAdmin } from '@/lib/auth/admin';
+import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { ProductForm } from '../../ProductForm';
 import { MediaManager } from '../../MediaManager';
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin();
+  await requireStaff();
   const { id } = await params;
 
   const admin = createAdminClient();

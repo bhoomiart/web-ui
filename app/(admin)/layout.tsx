@@ -10,10 +10,15 @@ export const instant = false;
 
 import { getCurrentUser } from '@/lib/auth/admin';
 import { AdminShell } from '@/components/layout/AdminShell';
+import { AdminRoleProvider } from '@/components/layout/AdminRole';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   const userName = user?.full_name ?? user?.email ?? 'Admin';
 
-  return <AdminShell userName={userName}>{children}</AdminShell>;
+  return (
+    <AdminRoleProvider role={user?.role ?? null}>
+      <AdminShell userName={userName}>{children}</AdminShell>
+    </AdminRoleProvider>
+  );
 }

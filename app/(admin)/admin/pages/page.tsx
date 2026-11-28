@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
+import { AdminOnly } from '@/components/layout/AdminRole';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { Spinner } from '@/components/ui/Spinner';
 
@@ -20,12 +21,14 @@ export default async function PagesAdminPage() {
         description="Manage static content pages and blog posts."
         breadcrumbs={[{ label: 'Dashboard', href: '/admin/dashboard' }, { label: 'Pages & Blog' }]}
         action={
-          <Link
-            href="/admin/pages/new"
-            className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-5)] py-[var(--spacing-2)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold shadow-[var(--shadow-button)] hover:opacity-90 transition-opacity"
-          >
-            + Add Page
-          </Link>
+          <AdminOnly>
+            <Link
+              href="/admin/pages/new"
+              className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-5)] py-[var(--spacing-2)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold shadow-[var(--shadow-button)] hover:opacity-90 transition-opacity"
+            >
+              + Add Page
+            </Link>
+          </AdminOnly>
         }
       />
       <Suspense
@@ -54,12 +57,14 @@ async function PagesContent() {
     return (
       <div className="bg-white rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] flex flex-col items-center justify-center py-16">
         <p className="text-[var(--font-size-sm)] text-[var(--color-earth-400)]">No pages yet.</p>
-        <Link
-          href="/admin/pages/new"
-          className="mt-3 text-[var(--font-size-sm)] font-semibold text-[var(--color-brand-primary)] hover:underline"
-        >
-          Create your first page →
-        </Link>
+        <AdminOnly>
+          <Link
+            href="/admin/pages/new"
+            className="mt-3 text-[var(--font-size-sm)] font-semibold text-[var(--color-brand-primary)] hover:underline"
+          >
+            Create your first page →
+          </Link>
+        </AdminOnly>
       </div>
     );
   }
@@ -114,12 +119,14 @@ async function PagesContent() {
                 })}
               </td>
               <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right">
-                <Link
-                  href={`/admin/pages/${page.id}/edit`}
-                  className="text-[var(--color-brand-primary)] hover:underline font-medium text-[var(--font-size-xs)]"
-                >
-                  Edit
-                </Link>
+                <AdminOnly>
+                  <Link
+                    href={`/admin/pages/${page.id}/edit`}
+                    className="text-[var(--color-brand-primary)] hover:underline font-medium text-[var(--font-size-xs)]"
+                  >
+                    Edit
+                  </Link>
+                </AdminOnly>
               </td>
             </tr>
           ))}

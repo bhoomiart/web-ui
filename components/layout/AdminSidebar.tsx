@@ -15,20 +15,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
+import { useIsAdmin } from './AdminRole';
 
 // ─── Nav tree ────────────────────────────────────────────────────────────────
 
-type NavItem = { label: string; href: string };
+type NavItem = { label: string; href: string; adminOnly?: boolean };
 type NavGroup = {
   label: string;
   icon: React.ReactNode;
   items: NavItem[];
   basePath: string; // used to detect if this group is active
+  adminOnly?: boolean;
 };
 type NavSingle = {
   label: string;
   icon: React.ReactNode;
   href: string;
+  /** Hidden from staff (the page itself also checks on the server) */
+  adminOnly?: boolean;
 };
 type NavEntry = NavGroup | NavSingle;
 
@@ -92,7 +96,7 @@ const NAV: NavEntry[] = [
       { label: 'Completed', href: '/admin/orders/completed' },
       { label: 'Cancellations', href: '/admin/orders/cancellations' },
       { label: 'Returns', href: '/admin/orders/returns' },
-      { label: 'Refunds', href: '/admin/orders/refunds' },
+      { label: 'Refunds', href: '/admin/orders/refunds', adminOnly: true },
     ],
   },
   {
@@ -114,6 +118,7 @@ const NAV: NavEntry[] = [
     label: 'SEO',
     icon: <SeoIcon />,
     href: '/admin/seo',
+    adminOnly: true,
   },
   {
     label: 'Customers',
@@ -144,6 +149,15 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ mobileOpen, onMobileClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const isAdmin = useIsAdmin();
+  // Staff do not see links to admin-only pages
+  const nav = React.useMemo<NavEntry[]>(
+    () =>
+      NAV.filter((e) => isAdmin || !e.adminOnly).map((e) =>
+        isSingle(e) ? e : { ...e, items: e.items.filter((i) => isAdmin || !i.adminOnly) }
+      ),
+    [isAdmin]
+  );
 
   // Collapsed state — persisted in localStorage
   const [collapsed, setCollapsed] = React.useState(() => {
@@ -153,13 +167,13 @@ export function AdminSidebar({ mobileOpen, onMobileClose }: AdminSidebarProps) {
 
   // Open groups (by basePath / href) — auto-open the active group on mount
   const activeGroupKey = React.useMemo(() => {
-    for (const entry of NAV) {
+    for (const entry of nav) {
       if (!isSingle(entry) && pathname.startsWith(entry.basePath)) {
         return entry.basePath;
       }
     }
     return null;
-  }, [pathname]);
+  }, [pathname, nav]);
 
   const [openGroups, setOpenGroups] = React.useState<Set<string>>(() => {
     return activeGroupKey ? new Set([activeGroupKey]) : new Set();
@@ -247,7 +261,7 @@ export function AdminSidebar({ mobileOpen, onMobileClose }: AdminSidebarProps) {
         className="flex-1 overflow-y-auto py-[var(--spacing-3)] px-[var(--spacing-2)]"
       >
         <ul className="list-none m-0 p-0 flex flex-col gap-0.5" role="list">
-          {NAV.map((entry) => {
+          {nav.map((entry) => {
             if (isSingle(entry)) {
               const active = pathname === entry.href || pathname.startsWith(entry.href + '/');
               return (

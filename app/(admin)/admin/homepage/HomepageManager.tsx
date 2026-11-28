@@ -10,6 +10,7 @@
 
 import * as React from 'react';
 import { FormField, Input, Checkbox } from '@/components/ui/Form';
+import { useIsAdmin } from '@/components/layout/AdminRole';
 
 type Section = {
   id: string;
@@ -55,6 +56,9 @@ export function HomepageManager({
   const [showBannerForm, setShowBannerForm] = React.useState(false);
   const [bannerPending, setBannerPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  // Staff can view this page; changing it needs an admin (the API checks too)
+  const isAdmin = useIsAdmin();
 
   async function handleToggle(sectionId: string, currentlyVisible: boolean) {
     // Optimistic update
@@ -144,27 +148,33 @@ export function HomepageManager({
                   {section.section_key}
                 </p>
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={section.is_visible}
-                onClick={() => handleToggle(section.id, section.is_visible)}
-                className={[
-                  'relative inline-flex h-6 w-11 items-center rounded-full',
-                  'transition-colors duration-[var(--duration-normal)]',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2',
-                  section.is_visible
-                    ? 'bg-[var(--color-brand-primary)]'
-                    : 'bg-[var(--color-earth-200)]',
-                ].join(' ')}
-              >
-                <span
+              {isAdmin ? (
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={section.is_visible}
+                  onClick={() => handleToggle(section.id, section.is_visible)}
                   className={[
-                    'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-[var(--duration-normal)]',
-                    section.is_visible ? 'translate-x-6' : 'translate-x-1',
+                    'relative inline-flex h-6 w-11 items-center rounded-full',
+                    'transition-colors duration-[var(--duration-normal)]',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2',
+                    section.is_visible
+                      ? 'bg-[var(--color-brand-primary)]'
+                      : 'bg-[var(--color-earth-200)]',
                   ].join(' ')}
-                />
-              </button>
+                >
+                  <span
+                    className={[
+                      'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-[var(--duration-normal)]',
+                      section.is_visible ? 'translate-x-6' : 'translate-x-1',
+                    ].join(' ')}
+                  />
+                </button>
+              ) : (
+                <span className="text-[var(--font-size-xs)] font-semibold text-[var(--color-earth-600)]">
+                  {section.is_visible ? 'Visible' : 'Hidden'}
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -174,13 +184,15 @@ export function HomepageManager({
       <section>
         <div className="flex items-center justify-between mb-[var(--spacing-4)]">
           <h2 className="heading-5">Banners</h2>
-          <button
-            type="button"
-            onClick={() => setShowBannerForm((v) => !v)}
-            className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold hover:opacity-90 transition-opacity"
-          >
-            {showBannerForm ? 'Cancel' : '+ Add Banner'}
-          </button>
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => setShowBannerForm((v) => !v)}
+              className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] bg-[var(--color-brand-primary)] text-white text-[var(--font-size-sm)] font-semibold hover:opacity-90 transition-opacity"
+            >
+              {showBannerForm ? 'Cancel' : '+ Add Banner'}
+            </button>
+          )}
         </div>
 
         {showBannerForm && (
@@ -277,14 +289,16 @@ export function HomepageManager({
                 >
                   {banner.is_active ? 'Active' : 'Inactive'}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => handleDeleteBanner(banner.id)}
-                  aria-label={`Delete banner ${banner.title ?? ''}`}
-                  className="shrink-0 text-[var(--color-error)] hover:text-[var(--color-error-dark)] text-[var(--font-size-xs)] font-semibold hover:underline"
-                >
-                  Delete
-                </button>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteBanner(banner.id)}
+                    aria-label={`Delete banner ${banner.title ?? ''}`}
+                    className="shrink-0 text-[var(--color-error)] hover:text-[var(--color-error-dark)] text-[var(--font-size-xs)] font-semibold hover:underline"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
           </div>

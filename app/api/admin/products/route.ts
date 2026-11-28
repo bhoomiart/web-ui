@@ -1,16 +1,16 @@
 /**
  * POST /api/admin/products
- * Create a new product. Admin only.
+ * Create a new product. Admin and staff.
  * Body: JSON product fields
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdminApi } from '@/lib/api/auth';
+import { requireStaffApi } from '@/lib/api/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { slugify } from '@/lib/api/slugify';
 
 export async function POST(request: NextRequest) {
-  const auth = await requireAdminApi(request);
+  const auth = await requireStaffApi(request);
   if (auth instanceof NextResponse) return auth;
 
   const body = (await request.json()) as Record<string, unknown>;
