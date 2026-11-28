@@ -39,6 +39,7 @@ import { getOrCreateCartId, listCartRows } from '@/lib/db/cart';
 import { calcSubtotal, calcTotals } from '@/lib/pricing';
 import { getShippingQuote } from '@/lib/shipping';
 import { isIndiaState } from '@/lib/india-states';
+import { parseAddress } from '@/lib/addresses';
 
 interface CheckoutBody {
   customerName?: unknown;
@@ -52,6 +53,7 @@ interface CheckoutBody {
   notes?: unknown;
   customization?: unknown;
   expectedTotal?: unknown;
+  saveAddress?: unknown;
 }
 
 const str = (v: unknown, max: number): string =>
@@ -102,6 +104,23 @@ export async function POST(request: NextRequest) {
   }
   if (!state || !isIndiaState(state)) {
     return fail(400, 'Select the state we should deliver to.', { field: 'state' });
+  }
+
+  const addressCheck = parseAddress({
+    full_name: name,
+    phone,
+    address_line1: body.addressLine1,
+    address_line2: body.addressLine2,
+    city: body.city,
+    state,
+    postal_code: body.postalCode,
+  });
+  if (!addressCheck.ok) {
+    const map: Record<string, string> = {
+      address_line1: 'addressLine1',
+      postal_code: 'postalCode',
+    };
+    return fail(400, addressCheck.error, { field: map[addressCheck.field] ?? addressCheck.field });
   }
 
   try {
@@ -226,6 +245,37 @@ export async function POST(request: NextRequest) {
       await admin.from('profiles').update({ phone }).eq('id', customer.id).is('phone', null);
     } catch {
       /* non-critical */
+    }
+
+    // Save the delivery address to the customer's address book if they asked.
+    // Best effort and never blocks the order. Skipped when incomplete or already saved.
+    if (body.saveAddress === true) {
+      try {
+        const parsed = parseAddress({
+          full_name: name,
+          phone,
+          address_line1: body.addressLine1,
+          address_line2: body.addressLine2,
+          city: body.city,
+          state,
+          postal_code: body.postalCode,
+        });
+        if (parsed.ok) {
+          const v = parsed.value;
+          const { data: dupe } = await admin
+            .from('customer_addresses')
+            .select('id')
+            .eq('user_id', customer.id)
+            .eq('address_line1', v.address_line1)
+            .eq('postal_code', v.postal_code)
+            .eq('full_name', v.full_name)
+            .limit(1)
+            .maybeSingle();
+          if (!dupe) await admin.from('customer_addresses').insert({ ...v, user_id: customer.id });
+        }
+      } catch {
+        /* non-critical (for example the 10-address limit) */
+      }
     }
 
     return NextResponse.json(

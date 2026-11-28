@@ -53,6 +53,8 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
     inventoryLowStock,
     restockSubscribers,
     reviewCounts,
+    pendingReturns,
+    attentionItems,
   ] = await Promise.all([
     // Products by status
     admin.from('products').select('status'),
@@ -79,6 +81,23 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       .eq('status', 'active'),
     // Reviews by status
     admin.from('product_reviews').select('status'),
+    // Return requests waiting for a decision. Counted from the requests themselves:
+    // an order with one returned item keeps its own status, so order status cannot show this.
+    admin
+      .from('return_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending'),
+    // Order lines that need attention (cancellation asked, refund in progress)
+    admin
+      .from('order_items')
+      .select('order_id, status')
+      .in('status', [
+        'cancellation_requested',
+        'refund_requested',
+        'refund_under_review',
+        'refund_approved',
+        'refund_processing',
+      ]),
   ]);
 
   // Product counts
@@ -101,17 +120,6 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       if (o.status === 'confirmed') acc.confirmed++;
       if (o.status === 'delivered') acc.delivered++;
       if (o.status === 'cancelled') acc.cancelled++;
-      if (o.status === 'cancellation_requested') acc.cancellationRequested++;
-      if (o.status === 'return_requested') acc.returnRequested++;
-      if (
-        [
-          'refund_requested',
-          'refund_under_review',
-          'refund_approved',
-          'refund_processing',
-        ].includes(o.status)
-      )
-        acc.refundPending++;
       return acc;
     },
     {
@@ -121,10 +129,19 @@ export async function getDashboardMetrics(): Promise<DashboardMetrics> {
       delivered: 0,
       cancelled: 0,
       cancellationRequested: 0,
-      returnRequested: 0,
+      returnRequested: pendingReturns.count ?? 0,
       refundPending: 0,
     }
   );
+  // Distinct orders with at least one such line
+  const cancelOrders = new Set<string>();
+  const refundOrders = new Set<string>();
+  for (const i of attentionItems.data ?? []) {
+    if (i.status === 'cancellation_requested') cancelOrders.add(i.order_id);
+    else refundOrders.add(i.order_id);
+  }
+  orders.cancellationRequested = cancelOrders.size;
+  orders.refundPending = refundOrders.size;
 
   // Low stock: available_stock > 0 but <= threshold
   const lowStockCount = (inventoryLowStock.data ?? []).filter(

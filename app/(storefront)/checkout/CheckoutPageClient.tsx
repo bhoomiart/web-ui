@@ -25,6 +25,7 @@ import { useAuthModalStore } from '@/lib/store/authModalStore';
 import { trackEvent } from '@/lib/analytics';
 import { INDIA_STATES } from '@/lib/india-states';
 import { validateEmail } from '@/lib/auth/validation';
+import type { SavedAddress } from '@/lib/addresses';
 
 export interface CheckoutInitial {
   authed: boolean;
@@ -37,6 +38,8 @@ export interface CheckoutInitial {
   state: string;
   postalCode: string;
 }
+
+const ADDRESS_FIELDS = new Set(['addressLine1', 'addressLine2', 'city', 'state', 'postalCode']);
 
 const fmt = (n: number) =>
   new Intl.NumberFormat('en-IN', {
@@ -93,7 +96,13 @@ const inputErrorClass = `${inputBase} border-[var(--color-error)] focus:border-[
 /** Server messages that mean "look at your cart again". */
 const CART_CODES = new Set(['CART_CHANGED', 'STOCK_CHANGED', 'CART_EMPTY']);
 
-export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
+export function CheckoutPageClient({
+  initial,
+  addresses,
+}: {
+  initial: CheckoutInitial;
+  addresses: SavedAddress[];
+}) {
   const router = useRouter();
 
   // The cart lives in localStorage, so the server cannot render it. Wait for the
@@ -130,6 +139,11 @@ export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
     notes: '',
     customization: '',
   });
+  // Which saved address the form was filled from. 'new' = typed by hand.
+  const [selectedId, setSelectedId] = React.useState<string>(
+    () => (addresses.find((a) => a.is_default) ?? addresses[0])?.id ?? 'new'
+  );
+  const [saveAddress, setSaveAddress] = React.useState(true);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitting, setSubmitting] = React.useState(false);
   const [serverError, setServerError] = React.useState<{ text: string; cart?: boolean } | null>(
@@ -190,11 +204,45 @@ export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
   const shippingKnown = Boolean(form.state) && totals != null && !totals.shippingPending;
   const grandTotal = shippingKnown ? totals!.total : subtotal;
 
+  // A chosen saved address is shown as a card; the fields appear for a new address
+  const showAddressFields = !signedIn || addresses.length === 0 || selectedId === 'new';
+
   // ── handlers ───────────────────────────────────────────────────────────────
 
   function set(field: string, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
     setErrors((e) => ({ ...e, [field]: '' }));
+    // Editing a saved address by hand makes it a new address
+    if (ADDRESS_FIELDS.has(field)) setSelectedId('new');
+  }
+  function pickAddress(a: SavedAddress) {
+    setSelectedId(a.id);
+    setForm((f) => ({
+      ...f,
+      customerName: a.full_name,
+      phone: a.phone,
+      addressLine1: a.address_line1,
+      addressLine2: a.address_line2 ?? '',
+      city: a.city,
+      state: a.state,
+      postalCode: a.postal_code,
+    }));
+    setErrors({});
+    setServerError(null);
+    setShippingState(a.state);
+    void syncWithServer({ force: true, notify: false });
+  }
+  function useNewAddress() {
+    setSelectedId('new');
+    setForm((f) => ({
+      ...f,
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      state: '',
+      postalCode: '',
+    }));
+    setShippingState(null);
   }
 
   function chooseState(value: string) {
@@ -211,6 +259,10 @@ export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
     else if (!/^\+?[0-9]{10,15}$/.test(form.phone.replace(/\s/g, '')))
       e.phone = 'Enter a valid phone number (10–15 digits).';
     if (form.email.trim() && validateEmail(form.email)) e.email = 'Enter a valid email address.';
+    if (!form.addressLine1.trim()) e.addressLine1 = 'Address line 1 is required.';
+    if (!form.city.trim()) e.city = 'City is required.';
+    if (!/^[1-9][0-9]{5}$/.test(form.postalCode.trim()))
+      e.postalCode = 'Enter a valid 6-digit postal code.';
     if (!form.state) e.state = 'Select where we should deliver.';
     return e;
   }
@@ -222,7 +274,15 @@ export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
     const errs = validate();
     if (Object.keys(errs).length) {
       setErrors(errs);
-      const first = ['customerName', 'phone', 'email', 'state'].find((k) => errs[k]);
+      const first = [
+        'customerName',
+        'phone',
+        'email',
+        'addressLine1',
+        'city',
+        'state',
+        'postalCode',
+      ].find((k) => errs[k]);
       if (first) document.getElementById(first)?.focus();
       return;
     }
@@ -240,7 +300,11 @@ export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // Only the form and the total the customer saw. The server builds the order from the saved cart.
-        body: JSON.stringify({ ...form, expectedTotal: totals!.total }),
+        body: JSON.stringify({
+          ...form,
+          saveAddress: signedIn && selectedId === 'new' && saveAddress,
+          expectedTotal: totals!.total,
+        }),
       });
 
       const data = (await res.json().catch(() => ({}))) as {
@@ -462,71 +526,158 @@ export function CheckoutPageClient({ initial }: { initial: CheckoutInitial }) {
                 {/* Delivery */}
                 <section>
                   <h2 className="heading-5 mb-[var(--spacing-5)]">Delivery Address</h2>
-                  <div className="grid sm:grid-cols-2 gap-[var(--spacing-4)]">
-                    <Field label="Address Line 1" htmlFor="addressLine1">
-                      <input
-                        id="addressLine1"
-                        type="text"
-                        value={form.addressLine1}
-                        onChange={(e) => set('addressLine1', e.target.value)}
-                        autoComplete="address-line1"
-                        placeholder="House / flat, street"
-                        className={inputClass}
-                      />
-                    </Field>
-                    <Field label="Address Line 2" htmlFor="addressLine2">
-                      <input
-                        id="addressLine2"
-                        type="text"
-                        value={form.addressLine2}
-                        onChange={(e) => set('addressLine2', e.target.value)}
-                        autoComplete="address-line2"
-                        placeholder="Area / landmark"
-                        className={inputClass}
-                      />
-                    </Field>
-                    <Field label="City" htmlFor="city">
-                      <input
-                        id="city"
-                        type="text"
-                        value={form.city}
-                        onChange={(e) => set('city', e.target.value)}
-                        autoComplete="address-level2"
-                        placeholder="City"
-                        className={inputClass}
-                      />
-                    </Field>
-                    <Field label="State" htmlFor="state" required error={errors.state}>
-                      <select
-                        id="state"
-                        value={form.state}
-                        onChange={(e) => chooseState(e.target.value)}
-                        autoComplete="address-level1"
-                        aria-invalid={Boolean(errors.state)}
-                        aria-describedby={errors.state ? 'state-error' : undefined}
-                        className={errors.state ? inputErrorClass : inputClass}
+                  {signedIn && addresses.length > 0 && (
+                    <fieldset className="mb-[var(--spacing-5)] flex flex-col gap-[var(--spacing-2)]">
+                      <legend className="text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] mb-[var(--spacing-2)]">
+                        Saved addresses
+                      </legend>
+                      {addresses.map((a) => (
+                        <label
+                          key={a.id}
+                          className={`flex items-start gap-[var(--spacing-3)] p-[var(--spacing-3)] rounded-[var(--radius-md)] border cursor-pointer ${
+                            selectedId === a.id
+                              ? 'border-[var(--color-brand-primary)] bg-[var(--color-earth-50)]'
+                              : 'border-[var(--color-earth-200)]'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="saved-address"
+                            checked={selectedId === a.id}
+                            onChange={() => pickAddress(a)}
+                            className="mt-1"
+                          />
+                          <span className="text-[var(--font-size-sm)] text-[var(--color-earth-700)] leading-relaxed">
+                            <span className="font-semibold text-[var(--color-earth-900)]">
+                              {a.full_name}
+                              {a.label ? ` · ${a.label}` : ''}
+                              {a.is_default ? ' (default)' : ''}
+                            </span>
+                            <br />
+                            {a.address_line1}
+                            {a.address_line2 ? `, ${a.address_line2}` : ''}, {a.city}, {a.state}{' '}
+                            {a.postal_code}
+                          </span>
+                        </label>
+                      ))}
+                      <label
+                        className={`flex items-center gap-[var(--spacing-3)] p-[var(--spacing-3)] rounded-[var(--radius-md)] border cursor-pointer text-[var(--font-size-sm)] ${
+                          selectedId === 'new'
+                            ? 'border-[var(--color-brand-primary)] bg-[var(--color-earth-50)]'
+                            : 'border-[var(--color-earth-200)]'
+                        }`}
                       >
-                        <option value="">Select state</option>
-                        {INDIA_STATES.map((s) => (
-                          <option key={s} value={s}>
-                            {s}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="Postal Code" htmlFor="postalCode">
+                        <input
+                          type="radio"
+                          name="saved-address"
+                          checked={selectedId === 'new'}
+                          onChange={useNewAddress}
+                        />
+                        Use a different address
+                      </label>
+                    </fieldset>
+                  )}
+                  {showAddressFields && (
+                    <div className="grid sm:grid-cols-2 gap-[var(--spacing-4)]">
+                      <Field
+                        label="Address Line 1"
+                        htmlFor="addressLine1"
+                        required
+                        error={errors.addressLine1}
+                      >
+                        <input
+                          id="addressLine1"
+                          type="text"
+                          value={form.addressLine1}
+                          onChange={(e) => set('addressLine1', e.target.value)}
+                          autoComplete="address-line1"
+                          placeholder="House / flat, street"
+                          aria-invalid={Boolean(errors.addressLine1)}
+                          aria-describedby={errors.addressLine1 ? 'addressLine1-error' : undefined}
+                          className={errors.addressLine1 ? inputErrorClass : inputClass}
+                        />
+                      </Field>
+                      <Field label="Address Line 2" htmlFor="addressLine2">
+                        <input
+                          id="addressLine2"
+                          type="text"
+                          value={form.addressLine2}
+                          onChange={(e) => set('addressLine2', e.target.value)}
+                          autoComplete="address-line2"
+                          placeholder="Area / landmark"
+                          className={inputClass}
+                        />
+                      </Field>
+                      <Field label="City" htmlFor="city" required error={errors.city}>
+                        <input
+                          id="city"
+                          type="text"
+                          value={form.city}
+                          onChange={(e) => set('city', e.target.value)}
+                          autoComplete="address-level2"
+                          placeholder="City"
+                          aria-invalid={Boolean(errors.city)}
+                          aria-describedby={errors.city ? 'city-error' : undefined}
+                          className={errors.city ? inputErrorClass : inputClass}
+                        />
+                      </Field>
+                      <Field label="State" htmlFor="state" required error={errors.state}>
+                        <select
+                          id="state"
+                          value={form.state}
+                          onChange={(e) => chooseState(e.target.value)}
+                          autoComplete="address-level1"
+                          aria-invalid={Boolean(errors.state)}
+                          aria-describedby={errors.state ? 'state-error' : undefined}
+                          className={errors.state ? inputErrorClass : inputClass}
+                        >
+                          <option value="">Select state</option>
+                          {INDIA_STATES.map((s) => (
+                            <option key={s} value={s}>
+                              {s}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field
+                        label="Postal Code"
+                        htmlFor="postalCode"
+                        required
+                        error={errors.postalCode}
+                      >
+                        <input
+                          id="postalCode"
+                          type="text"
+                          inputMode="numeric"
+                          value={form.postalCode}
+                          onChange={(e) => set('postalCode', e.target.value)}
+                          autoComplete="postal-code"
+                          placeholder="600001"
+                          maxLength={6}
+                          aria-invalid={Boolean(errors.postalCode)}
+                          aria-describedby={errors.postalCode ? 'postalCode-error' : undefined}
+                          className={errors.postalCode ? inputErrorClass : inputClass}
+                        />
+                      </Field>
+                    </div>
+                  )}
+                  {signedIn && addresses.length > 0 && (
+                    <p className="mt-[var(--spacing-3)] text-[var(--font-size-xs)] text-[var(--color-earth-500)]">
+                      <Link href="/account/addresses" className="underline">
+                        Manage saved addresses
+                      </Link>
+                    </p>
+                  )}
+                  {signedIn && selectedId === 'new' && (
+                    <label className="mt-[var(--spacing-4)] flex items-center gap-[var(--spacing-2)] text-[var(--font-size-sm)] text-[var(--color-earth-700)]">
                       <input
-                        id="postalCode"
-                        type="text"
-                        inputMode="numeric"
-                        value={form.postalCode}
-                        onChange={(e) => set('postalCode', e.target.value)}
-                        autoComplete="postal-code"
-                        placeholder="600001"
-                        className={inputClass}
+                        type="checkbox"
+                        checked={saveAddress}
+                        onChange={(e) => setSaveAddress(e.target.checked)}
                       />
-                    </Field>
-                  </div>
+                      Save this address to my account
+                    </label>
+                  )}
                 </section>
 
                 {/* Notes */}

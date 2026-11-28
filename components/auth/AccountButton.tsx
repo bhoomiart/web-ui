@@ -5,7 +5,7 @@
  *
  * Navbar entry for the customer account.
  *   signed out  "Sign in" button that opens the auth modal
- *   signed in   initial-letter button with a small menu: track orders, sign out
+ *   signed in   initial-letter button with a small menu: orders, saved addresses, sign out
  *
  * Rendered as the signed-out button until Supabase reports the session, so the
  * server HTML and the first client render match.
@@ -117,11 +117,27 @@ export function AccountButton() {
           )}
           <Link
             role="menuitem"
-            href="/track"
+            href="/account"
+            onClick={() => setMenuOpen(false)}
+            className={`block px-[var(--spacing-4)] py-[var(--spacing-2)] text-[var(--font-size-sm)] text-[var(--color-earth-800)] hover:bg-[var(--color-earth-50)] ${ring}`}
+          >
+            My profile
+          </Link>
+          <Link
+            role="menuitem"
+            href="/account/orders"
             onClick={() => setMenuOpen(false)}
             className={`block px-[var(--spacing-4)] py-[var(--spacing-2)] text-[var(--font-size-sm)] text-[var(--color-earth-800)] hover:bg-[var(--color-earth-50)] ${ring}`}
           >
             My orders
+          </Link>
+          <Link
+            role="menuitem"
+            href="/account/addresses"
+            onClick={() => setMenuOpen(false)}
+            className={`block px-[var(--spacing-4)] py-[var(--spacing-2)] text-[var(--font-size-sm)] text-[var(--color-earth-800)] hover:bg-[var(--color-earth-50)] ${ring}`}
+          >
+            Saved addresses
           </Link>
           <button
             type="button"
