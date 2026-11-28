@@ -287,10 +287,13 @@ export async function createReturnRequest({
   reason,
   description,
   items,
+  photos = [],
 }: {
   orderId: string;
   reason: 'damaged' | 'wrong_item' | 'changed_mind' | 'quality_issue' | 'other';
   description?: string;
+  /** Storage paths of customer photos, already validated by the caller. */
+  photos?: string[];
   items: Array<{ itemId: string; quantity: number }>;
 }) {
   const admin = createAdminClient();
@@ -306,7 +309,16 @@ export async function createReturnRequest({
     if (code) throw new ReturnError(RETURN_ERRORS[code]);
     throw new Error(`createReturnRequest: ${error.message}`);
   }
-  return { id: data as string };
+  const id = data as string;
+  if (photos.length > 0) {
+    // The return exists already, so a failure here is logged and does not fail the request.
+    const { error: photoError } = await admin
+      .from('return_requests')
+      .update({ photos })
+      .eq('id', id);
+    if (photoError) console.error('createReturnRequest: saving photos failed');
+  }
+  return { id };
 }
 
 /** Cancel a return that has not been reviewed yet. Its items go back to delivered. */

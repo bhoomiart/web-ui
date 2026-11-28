@@ -11,6 +11,7 @@ import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { AdminOnly } from '@/components/layout/AdminRole';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { Spinner } from '@/components/ui/Spinner';
+import { CustomerPhotos } from '@/components/admin/CustomerPhotos';
 import { listReturnRequests } from '@/lib/db/orders';
 
 type StatusFilter =
@@ -196,6 +197,7 @@ async function ReturnsContent({ statusFilter }: { statusFilter: StatusFilter }) 
                         {ri.order_items?.snapshot?.name ?? 'Item'} × {ri.quantity}
                       </p>
                     ))}
+                    <CustomerPhotos paths={r.photos} />
                     {r.description && (
                       <p className="text-[var(--font-size-xs)] text-[var(--color-earth-500)] mt-1">
                         “{r.description}”

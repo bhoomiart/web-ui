@@ -40,6 +40,7 @@ import { calcSubtotal, calcTotals } from '@/lib/pricing';
 import { getShippingQuote } from '@/lib/shipping';
 import { isIndiaState } from '@/lib/india-states';
 import { parseAddress } from '@/lib/addresses';
+import { parsePhotoPaths } from '@/lib/uploads';
 
 interface CheckoutBody {
   customerName?: unknown;
@@ -52,6 +53,7 @@ interface CheckoutBody {
   postalCode?: unknown;
   notes?: unknown;
   customization?: unknown;
+  customizationPhotos?: unknown;
   expectedTotal?: unknown;
   saveAddress?: unknown;
 }
@@ -105,6 +107,9 @@ export async function POST(request: NextRequest) {
   if (!state || !isIndiaState(state)) {
     return fail(400, 'Select the state we should deliver to.', { field: 'state' });
   }
+
+  const photos = parsePhotoPaths(body.customizationPhotos, 'customization', customer.id);
+  if (!photos) return fail(400, 'Invalid reference photos. Please remove them and add them again.');
 
   const addressCheck = parseAddress({
     full_name: name,
@@ -234,6 +239,16 @@ export async function POST(request: NextRequest) {
 
     const result = data as { order_id: string; order_number: string } | null;
     if (!result) return fail(500, 'We could not place your order. Please try again.');
+
+    // Attach the reference photos. The order already exists, so a failure here is logged, not fatal.
+    if (photos.length > 0) {
+      const { error: photoError } = await admin
+        .from('orders')
+        .update({ customization_photos: photos })
+        .eq('id', result.order_id)
+        .eq('user_id', customer.id);
+      if (photoError) console.error('checkout: saving customization photos failed');
+    }
 
     // Remember name and phone for next time. Best effort, never blocks the order.
     try {

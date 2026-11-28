@@ -6,7 +6,8 @@
  * Guests identify it by phone + order number.
  *
  * Body: { order_number, phone?, reason, description?,
- *         items: [{ order_item_id, quantity }] }
+ *         items: [{ order_item_id, quantity }], photos?: string[] }
+ * `photos` are storage paths returned by POST /api/uploads (kind 'return').
  *
  * A customer can return part of a line (for example 2 of 3). Each line has its own
  * delivered date and return window, so returning one product never touches the others.
@@ -20,6 +21,7 @@ import {
 } from '@/lib/db/orders';
 import { getCustomer } from '@/lib/auth/customer';
 import { getPolicySettings } from '@/lib/policy-settings';
+import { parsePhotoPaths } from '@/lib/uploads';
 
 type OrderLine = { id: string; status: string; quantity: number };
 type HistoryRow = { order_item_id: string | null; new_status: string; created_at: string };
@@ -98,9 +100,18 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const photos = parsePhotoPaths(body.photos, 'return', customer?.id ?? null);
+  if (!photos) {
+    return NextResponse.json(
+      { error: 'Invalid photos. Please remove them and add them again.' },
+      { status: 400 }
+    );
+  }
+
   try {
     const returnReq = await createReturnRequest({
       orderId: order.id,
+      photos,
       reason: reason as 'damaged' | 'wrong_item' | 'changed_mind' | 'quality_issue' | 'other',
       description: (body.description as string | undefined)?.slice(0, 1000) || undefined,
       items: wanted,

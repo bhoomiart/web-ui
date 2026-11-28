@@ -13,6 +13,7 @@ import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { OrderActionsPanel } from '@/components/admin/OrderActionsPanel';
 import { OrderItemStatusControl } from '@/components/admin/OrderItemStatusControl';
+import { CustomerPhotos } from '@/components/admin/CustomerPhotos';
 import { getOrderById } from '@/lib/db/orders';
 import type { Json } from '@/lib/types/database';
 
@@ -362,7 +363,7 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
           )}
 
           {/* Notes */}
-          {(order.notes || order.customization) && (
+          {(order.notes || order.customization || order.customization_photos?.length > 0) && (
             <div className="bg-white rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-[var(--spacing-5)]">
               <h3 className="heading-6 mb-[var(--spacing-3)]">Notes</h3>
               {order.notes && (
@@ -375,14 +376,17 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
                   </p>
                 </div>
               )}
-              {order.customization && (
+              {(order.customization || order.customization_photos?.length > 0) && (
                 <div>
                   <p className="text-[var(--font-size-xs)] text-[var(--color-earth-400)] mb-1">
                     Customization
                   </p>
-                  <p className="text-[var(--font-size-sm)] text-[var(--color-earth-700)]">
-                    {order.customization}
-                  </p>
+                  {order.customization && (
+                    <p className="text-[var(--font-size-sm)] text-[var(--color-earth-700)]">
+                      {order.customization}
+                    </p>
+                  )}
+                  <CustomerPhotos paths={order.customization_photos} />
                 </div>
               )}
             </div>

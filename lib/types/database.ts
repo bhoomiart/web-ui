@@ -602,6 +602,7 @@ export type Database = {
           created_at: string;
           customer_name: string;
           customization: string | null;
+          customization_photos: string[];
           discount_amount: number;
           email: string | null;
           id: string;
@@ -627,6 +628,7 @@ export type Database = {
           created_at?: string;
           customer_name: string;
           customization?: string | null;
+          customization_photos?: string[];
           discount_amount?: number;
           email?: string | null;
           id?: string;
@@ -652,6 +654,7 @@ export type Database = {
           created_at?: string;
           customer_name?: string;
           customization?: string | null;
+          customization_photos?: string[];
           discount_amount?: number;
           email?: string | null;
           id?: string;
@@ -1330,6 +1333,7 @@ export type Database = {
       return_requests: {
         Row: {
           admin_notes: string | null;
+          photos: string[];
           created_at: string;
           description: string | null;
           id: string;
@@ -1340,6 +1344,7 @@ export type Database = {
         };
         Insert: {
           admin_notes?: string | null;
+          photos?: string[];
           created_at?: string;
           description?: string | null;
           id?: string;
@@ -1350,6 +1355,7 @@ export type Database = {
         };
         Update: {
           admin_notes?: string | null;
+          photos?: string[];
           created_at?: string;
           description?: string | null;
           id?: string;

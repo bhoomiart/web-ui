@@ -26,6 +26,7 @@ import { trackEvent } from '@/lib/analytics';
 import { INDIA_STATES } from '@/lib/india-states';
 import { validateEmail } from '@/lib/auth/validation';
 import type { SavedAddress } from '@/lib/addresses';
+import { PhotoUploader } from '@/components/PhotoUploader';
 
 export interface CheckoutInitial {
   authed: boolean;
@@ -143,6 +144,8 @@ export function CheckoutPageClient({
   const [selectedId, setSelectedId] = React.useState<string>(
     () => (addresses.find((a) => a.is_default) ?? addresses[0])?.id ?? 'new'
   );
+  const [customizationPhotos, setCustomizationPhotos] = React.useState<string[]>([]);
+  const [photosBusy, setPhotosBusy] = React.useState(false);
   const [saveAddress, setSaveAddress] = React.useState(true);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [submitting, setSubmitting] = React.useState(false);
@@ -302,6 +305,7 @@ export function CheckoutPageClient({
         // Only the form and the total the customer saw. The server builds the order from the saved cart.
         body: JSON.stringify({
           ...form,
+          customizationPhotos,
           saveAddress: signedIn && selectedId === 'new' && saveAddress,
           expectedTotal: totals!.total,
         }),
@@ -386,7 +390,12 @@ export function CheckoutPageClient({
   }
 
   const placeDisabled =
-    submitting || syncing || blocking.length > 0 || !shippingKnown || items.length === 0;
+    submitting ||
+    syncing ||
+    photosBusy ||
+    blocking.length > 0 ||
+    !shippingKnown ||
+    items.length === 0;
 
   return (
     <div className="container-brand py-[var(--spacing-8)] md:py-[var(--spacing-12)]">
@@ -704,6 +713,13 @@ export function CheckoutPageClient({
                         className={inputClass}
                       />
                     </Field>
+                    <PhotoUploader
+                      kind="customization"
+                      label="Reference photos (optional)"
+                      hint="Add up to 5 photos (JPG, PNG or WebP, 5 MB each) to show what you have in mind."
+                      onChange={setCustomizationPhotos}
+                      onBusyChange={setPhotosBusy}
+                    />
                   </div>
                 </section>
 

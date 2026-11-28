@@ -4,6 +4,7 @@
  * Posts to /api/returns. Signed-in customers need only the order number.
  */
 import React from 'react';
+import { PhotoUploader } from '@/components/PhotoUploader';
 
 const REASONS = [
   { value: 'damaged', label: 'Item arrived damaged' },
@@ -38,6 +39,8 @@ export function ReturnRequestForm({
   const [selected, setSelected] = React.useState<Record<string, number>>({});
   const [reason, setReason] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [photos, setPhotos] = React.useState<string[]>([]);
+  const [photosBusy, setPhotosBusy] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -57,6 +60,7 @@ export function ReturnRequestForm({
     e.preventDefault();
     if (Object.keys(selected).length === 0) return setError('Select at least one item to return.');
     if (!reason) return setError('Please choose a reason.');
+    if (photosBusy) return setError('Please wait for your photos to finish uploading.');
     setLoading(true);
     setError(null);
     try {
@@ -68,6 +72,7 @@ export function ReturnRequestForm({
           ...(signedIn ? {} : { phone }),
           reason,
           description: description.trim() || undefined,
+          photos,
           items: Object.entries(selected).map(([order_item_id, quantity]) => ({
             order_item_id,
             quantity,
@@ -199,6 +204,13 @@ export function ReturnRequestForm({
           className={field}
         />
       </div>
+      <PhotoUploader
+        kind="return"
+        label="Photos (optional)"
+        hint="Add up to 5 photos (JPG, PNG or WebP, 5 MB each) showing the problem."
+        onChange={setPhotos}
+        onBusyChange={setPhotosBusy}
+      />
       {error && (
         <p role="alert" className="text-[var(--font-size-sm)] text-[var(--color-error)]">
           {error}
