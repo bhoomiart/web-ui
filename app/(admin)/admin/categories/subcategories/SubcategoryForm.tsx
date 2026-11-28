@@ -8,6 +8,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { ImageField } from '@/components/admin/ImageField';
 import { FormField, Input, Textarea, Select, Checkbox } from '@/components/ui/Form';
 
 type Category = { id: string; name: string };
@@ -19,6 +20,7 @@ type SubcatData = {
   description: string | null;
   is_visible: boolean;
   display_order: number;
+  image_url?: string | null;
 };
 
 function slugify(s: string) {
@@ -41,6 +43,7 @@ export function SubcategoryForm({
   const isEdit = !!subcategory;
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [imageUrl, setImageUrl] = React.useState<string | null>(subcategory?.image_url ?? null);
   const [slug, setSlug] = React.useState(subcategory?.slug ?? '');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -56,6 +59,7 @@ export function SubcategoryForm({
       description: fd.get('description') || null,
       is_visible: fd.has('is_visible'),
       display_order: Number(fd.get('display_order') ?? 0),
+      image_url: imageUrl,
     };
 
     const url = isEdit ? `/api/admin/subcategories/${subcategory.id}` : '/api/admin/subcategories';
@@ -136,6 +140,13 @@ export function SubcategoryForm({
             defaultValue={subcategory?.description ?? ''}
           />
         </FormField>
+
+        <ImageField
+          label="Subcategory image"
+          folder="subcategories"
+          value={imageUrl}
+          onChange={setImageUrl}
+        />
 
         <div className="flex items-center">
           <Checkbox

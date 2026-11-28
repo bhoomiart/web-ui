@@ -11,6 +11,7 @@
 
 import React from 'react';
 import { trackEvent } from '@/lib/analytics';
+import { PhotoUploader } from '@/components/PhotoUploader';
 
 interface ReviewFormProps {
   productId: string;
@@ -68,6 +69,8 @@ export function ReviewForm({
   const [rating, setRating] = React.useState(0);
   const [name, setName] = React.useState(defaultName);
   const [body, setBody] = React.useState('');
+  const [photos, setPhotos] = React.useState<string[]>([]);
+  const [photosBusy, setPhotosBusy] = React.useState(false);
   const [state, setState] = React.useState<State>('idle');
   const [errorMsg, setErrorMsg] = React.useState('');
 
@@ -85,6 +88,11 @@ export function ReviewForm({
       return;
     }
 
+    if (photosBusy) {
+      setErrorMsg('Please wait for your photos to finish uploading.');
+      setState('error');
+      return;
+    }
     setState('loading');
     setErrorMsg('');
 
@@ -99,6 +107,7 @@ export function ReviewForm({
           customer_name: name.trim(),
           rating,
           body: body.trim() || undefined,
+          photos,
         }),
       });
 
@@ -201,6 +210,15 @@ export function ReviewForm({
           />
         </div>
 
+        <div className="mb-[var(--spacing-5)]">
+          <PhotoUploader
+            kind="review"
+            label="Add photos (optional)"
+            hint="Up to 5 photos (JPG, PNG or WebP, 5 MB each)."
+            onChange={setPhotos}
+            onBusyChange={setPhotosBusy}
+          />
+        </div>
         {/* Error */}
         {state === 'error' && errorMsg && (
           <p

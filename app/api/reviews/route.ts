@@ -13,11 +13,14 @@
  *   customer_name string   (optional — defaults to the order's customer name)
  *   rating        1–5      (required)
  *   body          string   (optional)
+ *   photos        string[] (optional, paths from POST /api/uploads with kind 'review')
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { submitReview } from '@/lib/db/reviews';
 import { getOrderByPhoneAndNumber } from '@/lib/db/orders';
+import { getCustomer } from '@/lib/auth/customer';
+import { parsePhotoPaths } from '@/lib/uploads';
 
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as Record<string, unknown>;
@@ -44,6 +47,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const customer = await getCustomer();
+  const photos = parsePhotoPaths(body.photos, 'review', customer?.id ?? null);
+  if (!photos) {
+    return NextResponse.json(
+      { error: 'Invalid photos. Please remove them and add them again.' },
+      { status: 400 }
+    );
+  }
   const reviewBody = (body.body as string | undefined)?.trim() || undefined;
 
   const order = await getOrderByPhoneAndNumber(phone.replace(/\s/g, ''), orderNumber.toUpperCase());
@@ -78,6 +89,7 @@ export async function POST(request: NextRequest) {
       rating,
       body: reviewBody,
       orderId,
+      imageUrls: photos,
     });
 
     return NextResponse.json(

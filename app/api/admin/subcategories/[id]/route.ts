@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/api/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { parseImageUrl } from '@/lib/api/imageUrl';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -26,6 +27,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       description: (body.description as string) || null,
       is_visible: body.is_visible !== false,
       display_order: Number(body.display_order ?? 0),
+      image_url: parseImageUrl(body.image_url),
     } as never)
     .eq('id', id);
 

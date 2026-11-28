@@ -16,6 +16,7 @@ import { getStockForProducts } from '@/lib/cart/stock';
 import type { StockInfo } from '@/lib/cart/types';
 import { BreadcrumbNav } from '@/components/layout/BreadcrumbNav';
 import { ProductCard } from '@/components/storefront/ProductCard';
+import { PhotoThumbs } from '@/components/PhotoThumbs';
 import { ProductGallery } from './ProductGallery';
 import { AddToCartSection } from './AddToCartSection';
 import { ProductViewTracker } from './ProductViewTracker';
@@ -436,6 +437,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     )}
                   </div>
                   {r.body && <p className="body-base text-[var(--color-earth-700)]">{r.body}</p>}
+                  <PhotoThumbs
+                    urls={(r.review_media ?? []).map((m) => m.url)}
+                    label="Customer review photo"
+                  />
                   {/* Admin response */}
                   {r.admin_response && (
                     <div className="mt-[var(--spacing-3)] pl-[var(--spacing-4)] border-l-2 border-[var(--color-earth-200)]">

@@ -11,7 +11,7 @@ export const UPLOAD_BUCKET = 'customer-uploads';
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 export const MAX_PHOTOS = 5;
 
-export type UploadKind = 'customization' | 'return';
+export type UploadKind = 'customization' | 'return' | 'review';
 
 const EXT_BY_TYPE: Record<string, string> = {
   'image/jpeg': 'jpg',
@@ -70,9 +70,12 @@ export function parsePhotoPaths(
 }
 
 /** Signed URLs (1 hour) for stored paths. Paths that fail to sign are skipped. */
-export async function signPhotoPaths(paths: string[] | null | undefined): Promise<string[]> {
+export async function signPhotoPaths(
+  paths: string[] | null | undefined,
+  expiresIn = 3600
+): Promise<string[]> {
   if (!paths?.length) return [];
   const admin = createAdminClient();
-  const { data } = await admin.storage.from(UPLOAD_BUCKET).createSignedUrls(paths, 3600);
+  const { data } = await admin.storage.from(UPLOAD_BUCKET).createSignedUrls(paths, expiresIn);
   return (data ?? []).flatMap((d) => (d.signedUrl ? [d.signedUrl] : []));
 }

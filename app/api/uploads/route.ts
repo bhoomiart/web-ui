@@ -2,10 +2,10 @@
  * POST /api/uploads  (multipart/form-data)
  *
  * Customer photo upload. Fields: `file` (jpeg, png or webp, up to 5 MB) and
- * `kind` ('customization' or 'return').
+ * `kind` ('customization', 'return' or 'review').
  *
  * - customization: signed-in customers only (checkout needs an account anyway).
- * - return: signed-in customers, or guests (guests track orders by phone).
+ * - return, review: signed-in customers, or guests (guests track orders by phone).
  *
  * Returns { path }. The path is sent back with the checkout or return request,
  * where the server checks it belongs to the caller before saving it.
@@ -44,7 +44,8 @@ export async function POST(request: NextRequest) {
   }
 
   const kind = form.get('kind');
-  if (kind !== 'customization' && kind !== 'return') return fail(400, 'Invalid upload.');
+  if (kind !== 'customization' && kind !== 'return' && kind !== 'review')
+    return fail(400, 'Invalid upload.');
   if (kind === 'customization' && !customer) {
     return fail(401, 'Please sign in to continue.');
   }

@@ -75,6 +75,23 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const [error, setError] = React.useState<string | null>(null);
   const [slug, setSlug] = React.useState(product?.slug ?? '');
   const [autoSlug, setAutoSlug] = React.useState(!isEdit);
+  // New products: images picked now are uploaded right after the product is created.
+  const [queued, setQueued] = React.useState<File[]>([]);
+  const queuedInputRef = React.useRef<HTMLInputElement>(null);
+  const previews = React.useMemo(() => queued.map((f) => URL.createObjectURL(f)), [queued]);
+  React.useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
+
+  function addQueued(files: FileList | null) {
+    if (!files) return;
+    const ok = Array.from(files).filter(
+      (f) =>
+        ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(f.type) &&
+        f.size <= 52_428_800
+    );
+    if (ok.length < files.length)
+      setError('Some files were skipped. Use JPG, PNG, WebP or GIF up to 50MB.');
+    setQueued((q) => [...q, ...ok].slice(0, 10));
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -102,6 +119,23 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     }
 
     if (!isEdit && json.product?.id) {
+      let failed = 0;
+      for (const file of queued) {
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('productId', json.product.id);
+        try {
+          const up = await fetch('/api/admin/upload-product-media', { method: 'POST', body: fd });
+          if (!up.ok) failed++;
+        } catch {
+          failed++;
+        }
+      }
+      if (failed > 0) {
+        window.alert(
+          `The product was created, but ${failed} image(s) failed to upload. Add them on the next page.`
+        );
+      }
       router.push(`/admin/products/${json.product.id}/edit`);
     } else {
       router.refresh();
@@ -345,6 +379,56 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         </div>
       </div>
 
+      {/* Images for a new product (existing products use the Images & Media section below) */}
+      {!isEdit && (
+        <div className="bg-white rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-[var(--spacing-6)]">
+          <h2 className="heading-6 mb-[var(--spacing-3)]">Product Images</h2>
+          <input
+            ref={queuedInputRef}
+            type="file"
+            multiple
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className="sr-only"
+            aria-label="Add product images"
+            onChange={(e) => {
+              addQueued(e.target.files);
+              e.target.value = '';
+            }}
+          />
+          {previews.length > 0 && (
+            <ul className="flex flex-wrap gap-[var(--spacing-3)] mb-[var(--spacing-3)]">
+              {previews.map((url, i) => (
+                <li
+                  key={url}
+                  className="relative w-24 h-24 rounded-[var(--radius-md)] overflow-hidden border border-[var(--color-earth-200)]"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt={`Image ${i + 1}`} className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    aria-label={`Remove image ${i + 1}`}
+                    onClick={() => setQueued((q) => q.filter((_, j) => j !== i))}
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 text-white text-xs leading-5"
+                  >
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <button
+            type="button"
+            onClick={() => queuedInputRef.current?.click()}
+            className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-50)]"
+          >
+            Add images
+          </button>
+          <p className="mt-[var(--spacing-2)] text-[var(--font-size-xs)] text-[var(--color-earth-400)]">
+            The first image is the thumbnail. Images upload when you create the product. You can
+            reorder them afterwards.
+          </p>
+        </div>
+      )}
       {/* Error + Submit */}
       {error && (
         <div

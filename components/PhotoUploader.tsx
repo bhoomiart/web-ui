@@ -24,7 +24,7 @@ export function PhotoUploader({
   onChange,
   onBusyChange,
 }: {
-  kind: 'customization' | 'return';
+  kind: 'customization' | 'return' | 'review';
   max?: number;
   label: string;
   hint?: string;

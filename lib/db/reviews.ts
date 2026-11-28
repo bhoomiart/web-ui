@@ -7,6 +7,33 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
+type MediaRow = { url: string; alt_text?: string | null };
+
+/**
+ * Review photos are stored as private storage paths. Replace each with a signed URL.
+ * Entries that are already full URLs (older data) are left as they are.
+ */
+async function signReviewMedia<T extends { review_media: MediaRow[] | null }>(
+  reviews: T[],
+  expiresIn: number
+): Promise<T[]> {
+  const paths = reviews.flatMap((r) =>
+    (r.review_media ?? []).map((m) => m.url).filter((u) => !/^https?:/.test(u))
+  );
+  if (paths.length === 0) return reviews;
+  const admin = createAdminClient();
+  const { data } = await admin.storage.from('customer-uploads').createSignedUrls(paths, expiresIn);
+  const byPath = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
+  return reviews.map((r) => ({
+    ...r,
+    review_media: (r.review_media ?? []).flatMap((m) => {
+      if (/^https?:/.test(m.url)) return [m];
+      const url = byPath.get(m.url);
+      return url ? [{ ...m, url }] : [];
+    }),
+  }));
+}
+
 export type ReviewSortOrder = 'newest' | 'highest' | 'lowest';
 
 // ─── Public read ──────────────────────────────────────────────────────────
@@ -31,7 +58,8 @@ export async function listProductReviews(
     .range(offset, offset + limit - 1);
 
   if (error) throw new Error(`listProductReviews: ${error.message}`);
-  return { reviews: data ?? [], total: count ?? 0 };
+  const reviews = await signReviewMedia(data ?? [], 6 * 3600);
+  return { reviews, total: count ?? 0 };
 }
 
 export async function getProductRatingSummary(productId: string) {
@@ -168,5 +196,6 @@ export async function listAllReviews({
 
   const { data, error, count } = await query;
   if (error) throw new Error(`listAllReviews: ${error.message}`);
-  return { reviews: data ?? [], total: count ?? 0 };
+  const reviews = await signReviewMedia(data ?? [], 3600);
+  return { reviews, total: count ?? 0 };
 }

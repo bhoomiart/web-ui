@@ -8,6 +8,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { ImageField } from '@/components/admin/ImageField';
 import { FormField, Input, Textarea, Checkbox } from '@/components/ui/Form';
 
 type CategoryData = {
@@ -17,6 +18,7 @@ type CategoryData = {
   description: string | null;
   is_visible: boolean;
   display_order: number;
+  image_url?: string | null;
   seo_title: string | null;
   seo_description: string | null;
 };
@@ -35,6 +37,7 @@ export function CategoryForm({ category }: { category?: CategoryData }) {
   const isEdit = !!category;
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [imageUrl, setImageUrl] = React.useState<string | null>(category?.image_url ?? null);
   const [slug, setSlug] = React.useState(category?.slug ?? '');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -49,6 +52,7 @@ export function CategoryForm({ category }: { category?: CategoryData }) {
       description: fd.get('description') || null,
       is_visible: fd.has('is_visible'),
       display_order: Number(fd.get('display_order') ?? 0),
+      image_url: imageUrl,
       seo_title: fd.get('seo_title') || null,
       seo_description: fd.get('seo_description') || null,
     };
@@ -115,6 +119,13 @@ export function CategoryForm({ category }: { category?: CategoryData }) {
             defaultValue={category?.display_order ?? 0}
           />
         </FormField>
+
+        <ImageField
+          label="Category image"
+          folder="categories"
+          value={imageUrl}
+          onChange={setImageUrl}
+        />
 
         <div className="flex flex-col justify-end">
           <Checkbox

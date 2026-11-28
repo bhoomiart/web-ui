@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdminApi, requireStaffApi } from '@/lib/api/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { parseImageUrl } from '@/lib/api/imageUrl';
 import { slugify } from '@/lib/api/slugify';
 
 export async function GET(request: NextRequest) {
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
       description: (body.description as string) || null,
       is_visible: body.is_visible !== false,
       display_order: Number(body.display_order ?? 0),
+      image_url: parseImageUrl(body.image_url),
       seo_title: (body.seo_title as string) || null,
       seo_description: (body.seo_description as string) || null,
     })

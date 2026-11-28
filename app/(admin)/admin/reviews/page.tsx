@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { listAllReviews } from '@/lib/db/reviews';
+import { PhotoThumbs } from '@/components/PhotoThumbs';
 import { ReviewModerationActions } from '@/components/admin/ReviewModerationActions';
 
 type TabKey = 'all' | 'pending' | 'approved' | 'rejected';
@@ -188,6 +189,10 @@ export default async function ReviewsPage({
                           ↳ {review.admin_response}
                         </p>
                       )}
+                      <PhotoThumbs
+                        urls={(review.review_media as Array<{ url: string }>).map((m) => m.url)}
+                        label="Review photo"
+                      />
                     </td>
                     <td className="px-[var(--spacing-4)] py-[var(--spacing-3)]">
                       <StarRating rating={review.rating} />
