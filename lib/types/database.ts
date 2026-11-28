@@ -447,6 +447,7 @@ export type Database = {
           product_id: string;
           quantity: number;
           snapshot: Json;
+          status: Database['public']['Enums']['order_status'];
           unit_price: number;
           variant_id: string | null;
         };
@@ -456,6 +457,7 @@ export type Database = {
           order_id: string;
           product_id: string;
           quantity: number;
+          status?: Database['public']['Enums']['order_status'];
           snapshot: Json;
           unit_price: number;
           variant_id?: string | null;
@@ -467,6 +469,7 @@ export type Database = {
           product_id?: string;
           quantity?: number;
           snapshot?: Json;
+          status?: Database['public']['Enums']['order_status'];
           unit_price?: number;
           variant_id?: string | null;
         };
@@ -502,6 +505,7 @@ export type Database = {
           new_status: string;
           notes: string | null;
           order_id: string;
+          order_item_id: string | null;
           previous_status: string | null;
         };
         Insert: {
@@ -511,6 +515,7 @@ export type Database = {
           new_status: string;
           notes?: string | null;
           order_id: string;
+          order_item_id?: string | null;
           previous_status?: string | null;
         };
         Update: {
@@ -520,6 +525,7 @@ export type Database = {
           new_status?: string;
           notes?: string | null;
           order_id?: string;
+          order_item_id?: string | null;
           previous_status?: string | null;
         };
         Relationships: [
@@ -1462,10 +1468,6 @@ export type Database = {
       };
       is_admin: { Args: never; Returns: boolean };
       is_admin_or_staff: { Args: never; Returns: boolean };
-      release_stock_for_order: {
-        Args: { p_order_id: string; p_reason?: string };
-        Returns: undefined;
-      };
       reserve_stock_for_order: { Args: { p_items: Json }; Returns: undefined };
       show_limit: { Args: never; Returns: number };
       show_trgm: { Args: { '': string }; Returns: string[] };
@@ -1518,7 +1520,7 @@ export type Database = {
       product_status: 'active' | 'archived' | 'draft';
       refund_type: 'full' | 'partial';
       return_reason: 'damaged' | 'wrong_item' | 'changed_mind' | 'quality_issue' | 'other';
-      return_status: 'pending' | 'approved' | 'rejected' | 'in_transit' | 'completed';
+      return_status: 'pending' | 'approved' | 'rejected' | 'in_transit' | 'completed' | 'cancelled';
       review_status: 'pending' | 'approved' | 'rejected' | 'hidden';
       subscription_status: 'active' | 'notified' | 'unsubscribed';
       user_role: 'admin' | 'staff' | 'customer';
@@ -1693,7 +1695,7 @@ export const Constants = {
       product_status: ['active', 'archived', 'draft'],
       refund_type: ['full', 'partial'],
       return_reason: ['damaged', 'wrong_item', 'changed_mind', 'quality_issue', 'other'],
-      return_status: ['pending', 'approved', 'rejected', 'in_transit', 'completed'],
+      return_status: ['pending', 'approved', 'rejected', 'in_transit', 'completed', 'cancelled'],
       review_status: ['pending', 'approved', 'rejected', 'hidden'],
       subscription_status: ['active', 'notified', 'unsubscribed'],
       user_role: ['admin', 'staff', 'customer'],

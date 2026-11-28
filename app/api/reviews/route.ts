@@ -50,19 +50,17 @@ export async function POST(request: NextRequest) {
   if (!order) {
     return NextResponse.json({ error: 'No order found with those details.' }, { status: 404 });
   }
-  if (order.status !== 'delivered') {
+  const lines = order.order_items as Array<{ status: string; products: { id: string } | null }>;
+  const line = lines.find((i) => i.products?.id === productId);
+  if (!line) {
+    return NextResponse.json({ error: 'This product is not part of that order.' }, { status: 403 });
+  }
+  if (line.status !== 'delivered') {
     return NextResponse.json(
-      { error: 'You can review a product once your order has been delivered.' },
+      { error: 'You can review a product once it has been delivered.' },
       { status: 403 }
     );
   }
-  const inOrder = (order.order_items as Array<{ products: { id: string } | null }>).some(
-    (i) => i.products?.id === productId
-  );
-  if (!inOrder) {
-    return NextResponse.json({ error: 'This product is not part of that order.' }, { status: 403 });
-  }
-
   const customerName = (
     (body.customer_name as string | undefined)?.trim() ||
     order.customer_name ||

@@ -4,6 +4,7 @@ export const instant = false;
  */
 
 import Link from 'next/link';
+import { ReturnActions } from '@/components/admin/ReturnActions';
 import { Suspense } from 'react';
 import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
@@ -11,7 +12,8 @@ import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { Spinner } from '@/components/ui/Spinner';
 import { listReturnRequests } from '@/lib/db/orders';
 
-type StatusFilter = 'all' | 'pending' | 'approved' | 'rejected' | 'in_transit' | 'completed';
+type StatusFilter =
+  'all' | 'pending' | 'approved' | 'rejected' | 'in_transit' | 'completed' | 'cancelled';
 
 const TABS: { key: StatusFilter; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -20,6 +22,7 @@ const TABS: { key: StatusFilter; label: string }[] = [
   { key: 'in_transit', label: 'In Transit' },
   { key: 'completed', label: 'Completed' },
   { key: 'rejected', label: 'Rejected' },
+  { key: 'cancelled', label: 'Cancelled' },
 ];
 
 function returnStatusBadge(status: string) {
@@ -29,6 +32,7 @@ function returnStatusBadge(status: string) {
     rejected: { color: 'var(--color-error)', bg: 'var(--color-error-light)' },
     in_transit: { color: 'var(--color-info)', bg: 'var(--color-info-light)' },
     completed: { color: 'var(--color-success)', bg: 'var(--color-success-light)' },
+    cancelled: { color: 'var(--color-earth-500)', bg: 'var(--color-earth-100)' },
   };
   const cfg = map[status] ?? { color: 'var(--color-earth-500)', bg: 'var(--color-earth-100)' };
   return (
@@ -138,6 +142,9 @@ async function ReturnsContent({ statusFilter }: { statusFilter: StatusFilter }) 
                 Customer
               </th>
               <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
+                Items
+              </th>
+              <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
                 Reason
               </th>
               <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
@@ -174,6 +181,24 @@ async function ReturnsContent({ statusFilter }: { statusFilter: StatusFilter }) 
                   <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-900)] hidden md:table-cell">
                     {order?.customer_name ?? '—'}
                   </td>
+                  <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-[var(--color-earth-700)]">
+                    {(
+                      r.return_request_items as Array<{
+                        id: string;
+                        quantity: number;
+                        order_items: { snapshot: { name?: string } } | null;
+                      }>
+                    ).map((ri) => (
+                      <p key={ri.id}>
+                        {ri.order_items?.snapshot?.name ?? 'Item'} × {ri.quantity}
+                      </p>
+                    ))}
+                    {r.description && (
+                      <p className="text-[var(--font-size-xs)] text-[var(--color-earth-500)] mt-1">
+                        “{r.description}”
+                      </p>
+                    )}
+                  </td>
                   <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] capitalize text-[var(--color-earth-600)]">
                     {r.reason.replace(/_/g, ' ')}
                   </td>
@@ -188,6 +213,7 @@ async function ReturnsContent({ statusFilter }: { statusFilter: StatusFilter }) 
                     })}
                   </td>
                   <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right">
+                    <ReturnActions returnId={r.id} status={r.status} />
                     {order && (
                       <Link
                         href={`/admin/orders/${order.id}`}

@@ -31,6 +31,28 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     );
   }
 
+  // Only allow the next step in the flow
+  const flow: Record<string, string[]> = {
+    pending: ['approved', 'rejected'],
+    approved: ['in_transit'],
+    in_transit: ['completed'],
+  };
+  const { createAdminClient: makeAdmin } = await import('@/lib/supabase/admin');
+  const { data: current } = await makeAdmin()
+    .from('return_requests')
+    .select('status')
+    .eq('id', id)
+    .single();
+  if (!current) {
+    return NextResponse.json({ error: 'Return request not found.' }, { status: 404 });
+  }
+  if (!(flow[current.status] ?? []).includes(body.status)) {
+    return NextResponse.json(
+      { error: `Cannot move a '${current.status}' return to '${body.status}'.` },
+      { status: 422 }
+    );
+  }
+
   try {
     await updateReturnStatus({
       returnId: id,

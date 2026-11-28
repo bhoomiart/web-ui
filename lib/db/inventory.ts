@@ -46,18 +46,6 @@ export async function getInventoryWithProduct() {
 // transaction as the order, under row locks. There is intentionally no separate
 // reserve function here: reserving outside that transaction is how stock is oversold.
 
-export async function releaseStock(orderId: string, reason = 'order_cancelled') {
-  const admin = createAdminClient();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (admin.rpc as any)('release_stock_for_order', {
-    p_order_id: orderId,
-    p_reason: reason,
-  });
-
-  if (error) throw new Error(`releaseStock: ${error.message}`);
-}
-
 // ─── Manual stock adjustment ───────────────────────────────────────────────
 
 export async function adjustStock({

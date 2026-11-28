@@ -12,6 +12,7 @@ import { requireStaff } from '@/lib/auth/admin';
 import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { OrderActionsPanel } from '@/components/admin/OrderActionsPanel';
+import { OrderItemStatusControl } from '@/components/admin/OrderItemStatusControl';
 import { getOrderById } from '@/lib/db/orders';
 import type { Json } from '@/lib/types/database';
 
@@ -119,11 +120,13 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
       unit_price: number;
       item_total: number;
       snapshot: Json;
+      status: string;
     }>) ?? [];
 
   const history =
     (order.order_status_history as Array<{
       id: string;
+      order_item_id: string | null;
       previous_status: string | null;
       new_status: string;
       notes: string | null;
@@ -157,6 +160,9 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
                   <tr>
                     <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
                       Product
+                    </th>
+                    <th className="text-left px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
+                      Status
                     </th>
                     <th className="text-right px-[var(--spacing-4)] py-[var(--spacing-3)] font-semibold text-[var(--color-earth-600)]">
                       Qty
@@ -199,6 +205,13 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
                             </div>
                           </div>
                         </td>
+                        <td className="px-[var(--spacing-4)] py-[var(--spacing-3)]">
+                          <OrderItemStatusControl
+                            orderId={order.id}
+                            itemId={item.id}
+                            status={item.status}
+                          />
+                        </td>
                         <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right text-[var(--color-earth-700)]">
                           {item.quantity}
                         </td>
@@ -215,7 +228,7 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
                 <tfoot className="border-t border-[var(--color-earth-200)] bg-[var(--color-earth-50)]">
                   <tr>
                     <td
-                      colSpan={3}
+                      colSpan={4}
                       className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right font-semibold text-[var(--color-earth-700)]"
                     >
                       Order Total
@@ -250,6 +263,14 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
                         }}
                       />
                       <div className="flex flex-wrap items-center gap-[var(--spacing-2)] mb-1">
+                        {entry.order_item_id && (
+                          <span className="text-[var(--font-size-xs)] font-semibold text-[var(--color-earth-700)]">
+                            {parseSnapshot(
+                              items.find((i) => i.id === entry.order_item_id)?.snapshot ?? null
+                            ).name ?? 'Item'}
+                            :
+                          </span>
+                        )}
                         <OrderStatusBadge status={entry.new_status} />
                         {entry.previous_status && (
                           <span className="text-[var(--font-size-xs)] text-[var(--color-earth-400)]">
@@ -292,6 +313,7 @@ async function OrderDetailPageContent({ params }: { params: Promise<{ id: string
             customerName={order.customer_name}
             phone={order.phone}
             orderNumber={order.order_number}
+            itemStatuses={items.map((i) => i.status)}
           />
 
           {/* Customer info */}

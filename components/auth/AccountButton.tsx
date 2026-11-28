@@ -121,7 +121,7 @@ export function AccountButton() {
             onClick={() => setMenuOpen(false)}
             className={`block px-[var(--spacing-4)] py-[var(--spacing-2)] text-[var(--font-size-sm)] text-[var(--color-earth-800)] hover:bg-[var(--color-earth-50)] ${ring}`}
           >
-            Track an order
+            My orders
           </Link>
           <button
             type="button"

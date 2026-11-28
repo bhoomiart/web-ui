@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrderByPhoneAndNumber } from '@/lib/db/orders';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { withReturnInfo } from '@/lib/orders/returns';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -21,15 +22,19 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const order = await getOrderByPhoneAndNumber(phone.replace(/\s/g, ''), orderNumber.toUpperCase());
+  const found = await getOrderByPhoneAndNumber(phone.replace(/\s/g, ''), orderNumber.toUpperCase());
 
-  if (!order) {
+  if (!found) {
     return NextResponse.json({ error: 'No order found with those details.' }, { status: 404 });
   }
 
+  const {
+    orders: [order],
+  } = await withReturnInfo([found]);
+
   // Which products in this order already have a (pending/approved) review
   let reviewedProductIds: string[] = [];
-  if (order.status === 'delivered') {
+  if (order.order_items.some((i) => i.status === 'delivered')) {
     const admin = createAdminClient();
     const { data } = await admin
       .from('product_reviews')

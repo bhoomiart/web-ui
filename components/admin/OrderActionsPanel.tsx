@@ -4,7 +4,8 @@
  * OrderActionsPanel (A6-T4-3, A6-T4-5, A6-T4-6)
  *
  * Client component that lives in the admin order detail sidebar.
- * - Status update dropdown + confirm button
+ * - "All items" status update: moves every item that can make the move (each item
+ *   can also be moved on its own in the items table)
  * - Payment status update
  * - WhatsApp customer contact button with pre-filled messages
  */
@@ -13,6 +14,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { OrderStatusBadge } from './OrderStatusBadge';
 import { templates, customerWhatsAppUrl } from '@/lib/whatsapp';
+import { ITEM_ACTION_LABELS, nextStatuses } from '@/lib/orders/itemStatus';
 
 interface OrderActionsPanelProps {
   orderId: string;
@@ -21,36 +23,11 @@ interface OrderActionsPanelProps {
   customerName: string;
   phone: string;
   orderNumber: string;
+  /** Status of every line on the order */
+  itemStatuses: string[];
 }
 
-// Valid transitions from each status
-const VALID_TRANSITIONS: Record<string, string[]> = {
-  pending: ['confirmed', 'cancelled'],
-  confirmed: ['processing', 'cancelled'],
-  processing: ['customization_in_progress', 'ready_for_dispatch', 'cancelled'],
-  customization_in_progress: ['ready_for_dispatch', 'cancelled'],
-  ready_for_dispatch: ['shipped'],
-  shipped: ['delivered'],
-  delivered: [],
-  cancellation_requested: ['cancelled', 'confirmed'],
-  return_requested: ['return_approved', 'return_rejected'],
-  return_approved: ['return_in_transit'],
-  return_in_transit: ['returned'],
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  confirmed: 'Confirm Order',
-  processing: 'Mark Processing',
-  customization_in_progress: 'Mark Customizing',
-  ready_for_dispatch: 'Mark Ready for Dispatch',
-  shipped: 'Mark Shipped',
-  delivered: 'Mark Delivered',
-  cancelled: 'Cancel Order',
-  return_approved: 'Approve Return',
-  return_rejected: 'Reject Return',
-  return_in_transit: 'Mark Return in Transit',
-  returned: 'Mark Returned',
-};
+const STATUS_LABELS = ITEM_ACTION_LABELS;
 
 const WA_TEMPLATES: Record<string, (name: string, orderNum: string) => string> = {
   confirmed: (n, o) => templates.orderConfirmation(n, o),
@@ -70,6 +47,7 @@ export function OrderActionsPanel({
   customerName,
   phone,
   orderNumber,
+  itemStatuses,
 }: OrderActionsPanelProps) {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = React.useState('');
@@ -80,7 +58,8 @@ export function OrderActionsPanel({
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState<string | null>(null);
 
-  const transitions = VALID_TRANSITIONS[currentStatus] ?? [];
+  // Any move at least one item can make (items that can't are skipped)
+  const transitions = [...new Set(itemStatuses.flatMap((st) => nextStatuses(st)))];
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '917019400775';
 
   async function handleStatusUpdate() {
@@ -94,12 +73,15 @@ export function OrderActionsPanel({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: selectedStatus, notes: statusNotes || undefined }),
       });
-      const data = (await res.json()) as { error?: string };
+      const data = (await res.json()) as { error?: string; updated?: number; skipped?: number };
       if (!res.ok) {
         setError(data.error ?? 'Failed to update status.');
         return;
       }
-      setSuccess(`Status updated to "${selectedStatus}".`);
+      setSuccess(
+        `${data.updated ?? 0} item(s) moved to "${selectedStatus.replace(/_/g, ' ')}"` +
+          (data.skipped ? `, ${data.skipped} skipped (not at a stage that allows it).` : '.')
+      );
       setSelectedStatus('');
       setStatusNotes('');
       router.refresh();
@@ -154,7 +136,11 @@ export function OrderActionsPanel({
     <div className="flex flex-col gap-[var(--spacing-5)]">
       {/* Status update */}
       <div className="bg-white rounded-[var(--radius-lg)] shadow-[var(--shadow-card)] p-[var(--spacing-5)]">
-        <h3 className="heading-6 mb-[var(--spacing-4)]">Order Status</h3>
+        <h3 className="heading-6 mb-[var(--spacing-1)]">Order Status</h3>
+        <p className="text-[var(--font-size-xs)] text-[var(--color-earth-500)] mb-[var(--spacing-4)]">
+          Follows the items. Use the buttons here to move all items at once, or change one item in
+          the table.
+        </p>
 
         <div className="flex items-center justify-between mb-[var(--spacing-4)]">
           <span className="text-[var(--font-size-sm)] text-[var(--color-earth-500)]">Current</span>
@@ -167,9 +153,9 @@ export function OrderActionsPanel({
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
               className={inputClass}
-              aria-label="New order status"
+              aria-label="New status for all items"
             >
-              <option value="">Select new status…</option>
+              <option value="">Move all items to…</option>
               {transitions.map((s) => (
                 <option key={s} value={s}>
                   {STATUS_LABELS[s] ?? s.replace(/_/g, ' ')}
@@ -195,7 +181,7 @@ export function OrderActionsPanel({
                   aria-hidden="true"
                 />
               ) : null}
-              Update Status
+              Update All Items
             </button>
 
             {/* Quick WhatsApp for the selected transition */}
@@ -219,7 +205,8 @@ export function OrderActionsPanel({
           </div>
         ) : (
           <p className="text-[var(--font-size-xs)] text-[var(--color-earth-400)] italic">
-            No further transitions available.
+            No item can be moved by hand right now. Returns and refunds are handled on their own
+            pages.
           </p>
         )}
 

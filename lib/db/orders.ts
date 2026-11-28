@@ -30,10 +30,10 @@ export async function getOrderByPhoneAndNumber(phone: string, orderNumber: strin
       notes, customization, payment_status, status,
       created_at, updated_at,
       order_items(
-        id, quantity, unit_price, item_total, snapshot,
+        id, quantity, unit_price, item_total, snapshot, status,
         products(id, name, slug, product_media(url, alt_text))
       ),
-      order_status_history(id, previous_status, new_status, notes, created_at)
+      order_status_history(id, order_item_id, previous_status, new_status, notes, created_at)
     `
     )
     .eq('phone', phone)
@@ -43,6 +43,47 @@ export async function getOrderByPhoneAndNumber(phone: string, orderNumber: strin
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw new Error(`getOrderByPhoneAndNumber: ${error.message}`);
+  }
+  return data;
+}
+
+const CUSTOMER_ORDER_SELECT = `
+      id, order_number, customer_name, phone, email,
+      address_line1, city, state, postal_code, country,
+      notes, customization, payment_status, status,
+      created_at, updated_at,
+      order_items(
+        id, quantity, unit_price, item_total, snapshot, status,
+        products(id, name, slug, product_media(url, alt_text))
+      ),
+      order_status_history(id, order_item_id, previous_status, new_status, notes, created_at)
+    `;
+
+/** All orders placed by a signed-in customer, newest first. Caller must have verified the user. */
+export async function listOrdersForUser(userId: string) {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from('orders')
+    .select(CUSTOMER_ORDER_SELECT)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(50);
+  if (error) throw new Error(`listOrdersForUser: ${error.message}`);
+  return data ?? [];
+}
+
+/** One order by number, only if it belongs to this user. */
+export async function getOrderForUser(userId: string, orderNumber: string) {
+  const admin = createAdminClient();
+  const { data, error } = await admin
+    .from('orders')
+    .select(CUSTOMER_ORDER_SELECT)
+    .eq('user_id', userId)
+    .eq('order_number', orderNumber)
+    .single();
+  if (error) {
+    if (error.code === 'PGRST116') return null;
+    throw new Error(`getOrderForUser: ${error.message}`);
   }
   return data;
 }
@@ -63,7 +104,9 @@ export async function listOrders({
   const admin = createAdminClient();
   let query = admin
     .from('orders')
-    .select('*, order_items(id, quantity, unit_price, item_total, snapshot)', { count: 'exact' })
+    .select('*, order_items(id, quantity, unit_price, item_total, snapshot, status)', {
+      count: 'exact',
+    })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -88,10 +131,10 @@ export async function getOrderById(id: string) {
       `
       *,
       order_items(
-        id, quantity, unit_price, item_total, snapshot,
+        id, quantity, unit_price, item_total, snapshot, status,
         products(id, name, slug, sku, product_media(url, alt_text))
       ),
-      order_status_history(id, previous_status, new_status, notes, actor_id, created_at)
+      order_status_history(id, order_item_id, previous_status, new_status, notes, actor_id, created_at)
     `
     )
     .eq('id', id)
@@ -105,68 +148,39 @@ export async function getOrderById(id: string) {
 }
 
 // ─── Status update ────────────────────────────────────────────────────────
+// Status lives on each order line (order_items.status). The order's own status is
+// derived from its lines inside the database (derive_order_status), so there is no
+// function here that sets orders.status directly.
 
-export async function updateOrderStatus({
+/**
+ * Change the status of the given order lines in one transaction: history rows,
+ * stock release on cancel, and the order's derived status. Returns lines changed.
+ */
+export async function updateItemStatuses({
   orderId,
+  itemIds,
   newStatus,
   actorId,
   notes,
 }: {
   orderId: string;
+  itemIds: string[];
   newStatus: string;
-  actorId: string;
+  actorId: string | null;
   notes?: string;
-}) {
+}): Promise<number> {
+  if (itemIds.length === 0) return 0;
   const admin = createAdminClient();
-
-  // Get current status first
-  const { data: current, error: fetchError } = await admin
-    .from('orders')
-    .select('status')
-    .eq('id', orderId)
-    .single();
-
-  if (fetchError) throw new Error(`updateOrderStatus fetch: ${fetchError.message}`);
-
-  // Update order
-  const { error: updateError } = await admin
-    .from('orders')
-    .update({
-      status: newStatus as
-        | 'pending'
-        | 'confirmed'
-        | 'processing'
-        | 'customization_in_progress'
-        | 'ready_for_dispatch'
-        | 'shipped'
-        | 'delivered'
-        | 'cancellation_requested'
-        | 'cancelled'
-        | 'return_requested'
-        | 'return_approved'
-        | 'return_rejected'
-        | 'return_in_transit'
-        | 'returned'
-        | 'refund_requested'
-        | 'refund_under_review'
-        | 'refund_approved'
-        | 'refund_processing'
-        | 'partially_refunded'
-        | 'refunded'
-        | 'refund_rejected',
-    })
-    .eq('id', orderId);
-
-  if (updateError) throw new Error(`updateOrderStatus update: ${updateError.message}`);
-
-  // Record history
-  await admin.from('order_status_history').insert({
-    order_id: orderId,
-    previous_status: current.status,
-    new_status: newStatus,
-    actor_id: actorId,
-    notes: notes ?? null,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (admin.rpc as any)('apply_item_status', {
+    p_order_id: orderId,
+    p_item_ids: itemIds,
+    p_new_status: newStatus,
+    p_actor_id: actorId,
+    p_notes: notes ?? null,
   });
+  if (error) throw new Error(`updateItemStatuses: ${error.message}`);
+  return (data as number) ?? 0;
 }
 
 // ─── Payment status ───────────────────────────────────────────────────────────
@@ -249,6 +263,25 @@ export async function getReturnRequestById(id: string) {
   return data;
 }
 
+export class ReturnError extends Error {}
+
+const RETURN_ERRORS: Record<string, string> = {
+  ITEM_NOT_RETURNABLE: 'Only delivered items can be returned.',
+  ITEM_ALREADY_RETURNED: 'A return was already requested for one of these items.',
+  ITEM_NOT_IN_ORDER: 'One of the items is not part of this order.',
+  NO_ITEMS: 'At least one item is required.',
+  INVALID_QUANTITY: 'Choose a quantity between 1 and the number you received.',
+  ITEM_DUPLICATE: 'The same item was selected twice.',
+  RETURN_NOT_FOUND: 'Return request not found.',
+  RETURN_NOT_CANCELLABLE:
+    'This return can no longer be cancelled because it has already been reviewed.',
+  ORDER_NOT_FOUND: 'Order not found.',
+};
+
+/**
+ * Creates a return for delivered order lines. A quantity smaller than the line splits
+ * the line: the returned units become their own line, the rest stay as they were.
+ */
 export async function createReturnRequest({
   orderId,
   reason,
@@ -258,34 +291,43 @@ export async function createReturnRequest({
   orderId: string;
   reason: 'damaged' | 'wrong_item' | 'changed_mind' | 'quality_issue' | 'other';
   description?: string;
-  items: Array<{ orderItemId: string; quantity: number; imageUrls?: string[] }>;
+  items: Array<{ itemId: string; quantity: number }>;
 }) {
   const admin = createAdminClient();
-
-  const { data: returnReq, error: reqError } = await admin
-    .from('return_requests')
-    .insert({ order_id: orderId, reason, description: description ?? null })
-    .select()
-    .single();
-
-  if (reqError) throw new Error(`createReturnRequest: ${reqError.message}`);
-
-  if (items.length > 0) {
-    const { error: itemsError } = await admin.from('return_request_items').insert(
-      items.map((i) => ({
-        return_request_id: returnReq.id,
-        order_item_id: i.orderItemId,
-        quantity: i.quantity,
-        image_urls: i.imageUrls ?? [],
-      }))
-    );
-    if (itemsError) throw new Error(`createReturnRequest items: ${itemsError.message}`);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (admin.rpc as any)('create_return_request', {
+    p_order_id: orderId,
+    p_reason: reason,
+    p_description: description ?? null,
+    p_items: items.map((i) => ({ item_id: i.itemId, quantity: i.quantity })),
+  });
+  if (error) {
+    const code = Object.keys(RETURN_ERRORS).find((c) => error.message.includes(c));
+    if (code) throw new ReturnError(RETURN_ERRORS[code]);
+    throw new Error(`createReturnRequest: ${error.message}`);
   }
+  return { id: data as string };
+}
 
-  // Update order status
-  await admin.from('orders').update({ status: 'return_requested' }).eq('id', orderId);
-
-  return returnReq;
+/** Cancel a return that has not been reviewed yet. Its items go back to delivered. */
+export async function cancelReturnRequest({
+  orderId,
+  returnId,
+}: {
+  orderId: string;
+  returnId: string;
+}) {
+  const admin = createAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (admin.rpc as any)('cancel_return_request', {
+    p_order_id: orderId,
+    p_return_id: returnId,
+  });
+  if (error) {
+    const code = Object.keys(RETURN_ERRORS).find((c) => error.message.includes(c));
+    if (code) throw new ReturnError(RETURN_ERRORS[code]);
+    throw new Error(`cancelReturnRequest: ${error.message}`);
+  }
 }
 
 export async function updateReturnStatus({
@@ -316,22 +358,29 @@ export async function updateReturnStatus({
 
   if (error) throw new Error(`updateReturnStatus: ${error.message}`);
 
-  // Mirror to order status
-  const orderStatusMap: Record<string, string> = {
+  // Move the returned lines (not the whole order) to the matching status.
+  // A rejected return puts the lines back to delivered.
+  const itemStatusMap: Record<string, string> = {
     approved: 'return_approved',
-    rejected: 'return_rejected',
+    rejected: 'delivered',
     in_transit: 'return_in_transit',
     completed: 'returned',
   };
+  const { data: rows, error: itemsErr } = await admin
+    .from('return_request_items')
+    .select('order_item_id')
+    .eq('return_request_id', returnId);
+  if (itemsErr) throw new Error(`updateReturnStatus items: ${itemsErr.message}`);
 
-  if (orderStatusMap[status]) {
-    await updateOrderStatus({
-      orderId: returnReq.order_id,
-      newStatus: orderStatusMap[status],
-      actorId,
-      notes: adminNotes,
-    });
-  }
+  await updateItemStatuses({
+    orderId: returnReq.order_id,
+    itemIds: (rows ?? []).map((r) => r.order_item_id),
+    newStatus: itemStatusMap[status],
+    actorId,
+    notes: adminNotes
+      ? `Return ${status.replace('_', ' ')}: ${adminNotes}`
+      : `Return ${status.replace('_', ' ')}`,
+  });
 }
 
 // ─── Refunds ──────────────────────────────────────────────────────────────────
@@ -400,9 +449,31 @@ export async function createRefund({
     actor_id: actorId,
   });
 
-  // Update order status
-  const newOrderStatus = refundType === 'full' ? 'refunded' : 'partially_refunded';
-  await updateOrderStatus({ orderId, newStatus: newOrderStatus, actorId, notes });
+  // Mark the refunded lines. A refund tied to a return covers that return's lines.
+  // A full refund with no return covers every line still on the order.
+  // A partial refund with no return changes no line (it is only recorded).
+  let itemIds: string[] = [];
+  if (returnRequestId) {
+    const { data } = await admin
+      .from('return_request_items')
+      .select('order_item_id')
+      .eq('return_request_id', returnRequestId);
+    itemIds = (data ?? []).map((r) => r.order_item_id);
+  } else if (refundType === 'full') {
+    const { data } = await admin
+      .from('order_items')
+      .select('id')
+      .eq('order_id', orderId)
+      .neq('status', 'cancelled');
+    itemIds = (data ?? []).map((r) => r.id);
+  }
+  await updateItemStatuses({
+    orderId,
+    itemIds,
+    newStatus: processedAt ? 'refunded' : 'refund_processing',
+    actorId,
+    notes: notes ?? `Refund of ₹${amount} (${refundType})`,
+  });
 
   return refund;
 }
