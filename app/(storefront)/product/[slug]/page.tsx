@@ -12,6 +12,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getProductBySlug, getProductRecommendations } from '@/lib/db/products';
 import { listProductReviews, getProductRatingSummary } from '@/lib/db/reviews';
+import { getStockForProducts } from '@/lib/cart/stock';
+import type { StockInfo } from '@/lib/cart/types';
 import { BreadcrumbNav } from '@/components/layout/BreadcrumbNav';
 import { ProductCard } from '@/components/storefront/ProductCard';
 import { ProductGallery } from './ProductGallery';
@@ -72,11 +74,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const [ratingSummary, reviews, relatedRecs, alsoLikeRecs] = await Promise.all([
+  const [ratingSummary, reviews, relatedRecs, alsoLikeRecs, stockMap] = await Promise.all([
     getProductRatingSummary(product.id),
     listProductReviews(product.id, 'newest', 5),
     getProductRecommendations(product.id, 'related', 4),
     getProductRecommendations(product.id, 'you_may_also_like', 4),
+    // Live availability, rendered on the server so the page never flashes the wrong state.
+    // A failure here must not break the page: the client refetches and the server re-checks every add.
+    getStockForProducts([product.id]).catch(() => ({})),
   ]);
 
   const media = [...(product.product_media ?? [])].sort(
@@ -101,6 +106,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   ];
 
   const isOutOfStock = product.availability_type === 'out_of_stock';
+  const stockInfo: StockInfo | null = (stockMap as Record<string, StockInfo>)[product.id] ?? null;
+  // Ready-to-ship product whose last unit just sold: offer "notify me" next to the disabled button.
+  const soldOutByStock =
+    stockInfo != null && !stockInfo.hasVariants && stockInfo.availableQty === 0;
   const isMadeToOrder = product.availability_type === 'made_to_order';
 
   // Schema.org Product JSON-LD
@@ -257,11 +266,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               productName={product.name}
               value={product.price ?? undefined}
             />
-            {/* Add to cart or restock subscribe */}
-            {isOutOfStock ? (
-              <RestockSubscribeForm productId={product.id} productName={product.name} />
-            ) : (
+            {/* Add to cart, plus restock subscribe when nothing is left to buy */}
+            {!isOutOfStock && (
               <AddToCartSection
+                initialStock={stockInfo}
                 product={{
                   id: product.id,
                   name: product.name,
@@ -281,6 +289,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   }>
                 }
               />
+            )}
+            {(isOutOfStock || soldOutByStock) && (
+              <RestockSubscribeForm productId={product.id} productName={product.name} />
             )}
 
             {/* WhatsApp enquiry */}

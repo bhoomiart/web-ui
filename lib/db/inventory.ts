@@ -3,8 +3,8 @@
  *
  * Server-side inventory query and mutation functions.
  *
- * CRITICAL: reserveStock uses SELECT FOR UPDATE inside a transaction
- * to prevent overselling. Never bypass this with plain UPDATEs.
+ * CRITICAL: stock is reserved only by create_order_with_stock() (SELECT FOR UPDATE
+ * inside one transaction). Never bypass this with plain UPDATEs.
  */
 
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -41,40 +41,10 @@ export async function getInventoryWithProduct() {
   return data ?? [];
 }
 
-// ─── Atomic stock reservation (uses DB function) ───────────────────────────
-//
-// This runs a PostgreSQL transaction via RPC to prevent race conditions.
-// The DB function (see migration 015_stock_functions.sql) does:
-//   BEGIN
-//     SELECT ... FOR UPDATE  → lock the row
-//     CHECK available_stock >= qty
-//     UPDATE reserved_stock += qty
-//     INSERT inventory_movement
-//   COMMIT
-
-export async function reserveStock(
-  items: Array<{
-    productId: string;
-    variantId?: string;
-    quantity: number;
-    orderId: string;
-  }>
-) {
-  const admin = createAdminClient();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (admin.rpc as any)('reserve_stock_for_order', {
-    p_items: items.map((i) => ({
-      product_id: i.productId,
-      variant_id: i.variantId ?? null,
-      quantity: i.quantity,
-      order_id: i.orderId,
-    })),
-  });
-
-  if (error) throw new Error(`reserveStock: ${error.message}`);
-  return data;
-}
+// ─── Stock reservation ─────────────────────────────────────────────────────
+// Reservation happens inside create_order_with_stock() (migration 023), in the same
+// transaction as the order, under row locks. There is intentionally no separate
+// reserve function here: reserving outside that transaction is how stock is oversold.
 
 export async function releaseStock(orderId: string, reason = 'order_cancelled') {
   const admin = createAdminClient();

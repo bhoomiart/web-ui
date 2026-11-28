@@ -15,7 +15,9 @@ import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { MobileMenu } from './MobileMenu';
 import { CartDrawer } from '@/components/storefront/CartDrawer';
+import { AccountButton } from '@/components/auth/AccountButton';
 import { useCartStore } from '@/lib/store/cartStore';
+import { useCartUiStore } from '@/lib/store/cartUiStore';
 
 // ─── Nav links ───────────────────────────────────────────────────────────────
 
@@ -33,7 +35,8 @@ export const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [cartOpen, setCartOpen] = React.useState(false);
+  const cartOpen = useCartUiStore((s) => s.open);
+  const setCartOpen = useCartUiStore((s) => s.setOpen);
   const [scrolled, setScrolled] = React.useState(false);
 
   // Elevate navbar on scroll
@@ -149,6 +152,9 @@ export function Navbar() {
                 <SearchIcon />
               </Link>
 
+              {/* Account — sign in / menu */}
+              <AccountButton />
+
               {/* Cart — opens CartDrawer */}
               <CartButton onOpen={() => setCartOpen(true)} />
 
@@ -215,13 +221,23 @@ export function Navbar() {
 // ─── Cart button ─────────────────────────────────────────────────────────────
 
 function CartButton({ onOpen }: { onOpen: () => void }) {
-  const itemCount = useCartStore((s) => s.itemCount());
+  // The cart lives in localStorage, which the server cannot see. Render an empty
+  // badge on the server and during hydration, then the real count, so they match.
+  const hydrated = React.useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false
+  );
+  const storedCount = useCartStore((s) => s.itemCount());
+  const itemCount = hydrated ? storedCount : 0;
 
   return (
     <button
       type="button"
       onClick={onOpen}
-      aria-label={itemCount > 0 ? `Cart — ${itemCount} items` : 'Cart — empty'}
+      aria-label={
+        itemCount > 0 ? `Cart — ${itemCount} ${itemCount === 1 ? 'item' : 'items'}` : 'Cart — empty'
+      }
       className={[
         'relative flex items-center justify-center',
         'w-9 h-9 rounded-[var(--radius-full)]',

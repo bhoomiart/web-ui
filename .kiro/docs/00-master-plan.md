@@ -71,6 +71,7 @@ Phase D  →  Inventory & restock
 Phase E  →  Cart, checkout, orders
 Phase F  →  Reviews, WhatsApp communication layer
 Phase G  →  SEO, performance, deployment readiness
+Phase H  →  Customer accounts, server-side cart, stock-validated checkout (A10, done; see 04-cart-auth-flow-plan.md)
 ```
 
 See [03-execution.md](./03-execution.md) for the full agent + task breakdown.

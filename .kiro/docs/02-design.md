@@ -618,3 +618,35 @@ Target brand colors from requirements:
 - Warm Ivory `#FAF7F0` → maps to earth-50
 - Earthy Green `#68765A` → maps to forest-500 adjusted
 - Deep Charcoal `#302923` → maps to earth-900
+
+---
+
+## Customer Accounts, Server Cart & Checkout (A10)
+
+Full reasoning and test results: [04-cart-auth-flow-plan.md](./04-cart-auth-flow-plan.md). Setup steps: [05-auth-setup.md](./05-auth-setup.md).
+
+**Roles.** `user_role` is `admin | staff | customer`. New sign-ups are always `customer` (trigger `handle_new_user`). Every admin guard checks for `admin`/`staff`, so a customer is refused everywhere. The admin sign-in API also refuses customers.
+
+**New and changed tables**
+
+| Table / column                                                                         | Purpose                                                                                                                                                                    |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `carts`, `cart_items`                                                                  | One server cart per customer. Stores quantities only; prices are read live. Owner-only RLS. `variant_key` makes (cart, product, variant) unique even when variant is null. |
+| `shipping_rates`                                                                       | Fee and free-shipping threshold per state, plus a `*` fallback row. Admin edits at `/admin/settings/shipping`.                                                             |
+| `orders.user_id`, `subtotal_amount`, `shipping_fee`, `discount_amount`, `total_amount` | Owner and price breakdown. Legacy guest orders have NULL user and totals.                                                                                                  |
+
+**Functions.** `create_order_with_stock(order, items, clear_cart_for)` is the only way orders are created. In one transaction it takes the cart, creates the order and items, and reserves stock under row locks. Callable by the service role only. The older stock functions are also service-role only (migration 024).
+
+**Request flow**
+
+```
+browse -> add (validated against live stock) -> cart (guest: localStorage, signed in: server)
+-> Proceed to Checkout -> re-validate -> signed in? no -> modal -> sign in -> cart merged
+-> /checkout (prefilled, state -> shipping) -> POST /api/checkout
+     reads SERVER cart, re-checks stock + prices, computes shipping, compares expectedTotal,
+     create_order_with_stock() -> 201
+```
+
+**Single sources of truth.** Stock and price rules: `lib/cart/validateCart.ts`. Totals: `lib/pricing.ts`. Shipping: `lib/shipping.ts`. Client cart state: `lib/store/cartStore.ts`. Sign-in UI: `components/auth/AuthModal.tsx`.
+
+**Migrations:** 018 customer role value, 019 profiles/orders, 020 and 023 order function, 021 server cart, 022 shipping rates, 024 function privileges.

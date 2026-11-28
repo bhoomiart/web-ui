@@ -51,7 +51,7 @@ export default function GlobalErrorBoundary({
           style={{
             padding: '0.75rem 1.5rem',
             borderRadius: '9999px',
-            background: '#b65e3c',
+            background: '#a55536',
             color: '#fff',
             fontWeight: 600,
             border: 'none',
@@ -62,7 +62,7 @@ export default function GlobalErrorBoundary({
           Try Again
         </button>
         {error.digest && (
-          <p style={{ marginTop: '2rem', fontSize: '0.75rem', color: '#a8683a' }}>
+          <p style={{ marginTop: '2rem', fontSize: '0.75rem', color: '#975d34' }}>
             Reference: <code>{error.digest}</code>
           </p>
         )}

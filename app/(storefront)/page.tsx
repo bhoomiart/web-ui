@@ -591,7 +591,7 @@ function CustomizedSection() {
               href={`https://wa.me/${whatsapp}?text=${message}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-6)] py-[var(--spacing-3)] rounded-[var(--radius-button)] border border-[var(--color-brand-primary)] text-[var(--color-brand-primary)] font-semibold hover:bg-white transition-colors"
+              className="inline-flex items-center gap-[var(--spacing-2)] px-[var(--spacing-6)] py-[var(--spacing-3)] rounded-[var(--radius-button)] border border-[var(--color-brand-primary)] text-[var(--color-earth-700)] font-semibold hover:bg-white transition-colors"
             >
               {/* WhatsApp icon */}
               <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -606,7 +606,7 @@ function CustomizedSection() {
           <div className="w-80 h-80 rounded-full bg-[var(--color-earth-200)] flex items-center justify-center">
             <div className="text-center">
               <p className="text-[var(--font-size-7xl)] leading-none opacity-40">🏺</p>
-              <p className="label-uppercase text-[var(--color-earth-500)] mt-[var(--spacing-4)]">
+              <p className="label-uppercase text-[var(--color-earth-700)]! mt-[var(--spacing-4)]">
                 Your Vision
               </p>
             </div>
@@ -731,10 +731,10 @@ function WhatsAppCtaSection() {
     >
       <div className="container-brand flex flex-col sm:flex-row items-center justify-between gap-[var(--spacing-6)]">
         <div>
-          <h2 id="whatsapp-cta-heading" className="heading-4 text-white mb-[var(--spacing-2)]">
+          <h2 id="whatsapp-cta-heading" className="heading-4 text-white! mb-[var(--spacing-2)]">
             Have a question? Chat with us on WhatsApp.
           </h2>
-          <p className="body-small text-[var(--color-forest-100)]">
+          <p className="body-small text-[var(--color-forest-100)]!">
             We reply within a few hours — Monday to Saturday, 9 AM to 7 PM IST.
           </p>
         </div>

@@ -1,0 +1,20 @@
+<!--
+  Supabase → Authentication → Emails → "Magic Link"
+  Subject:  Your Bhoomi Art sign-in code
+  Sent when an existing customer asks for an email code.
+  The big number in the body is the one-time code. Do not add a confirmation link: the sign-in modal expects a code.
+-->
+<div style="font-family:Lato,Arial,sans-serif;background:#faf7f0;padding:32px 16px;">
+  <div style="max-width:440px;margin:0 auto;background:#ffffff;border-radius:12px;padding:32px;border:1px solid #e8d5be;">
+    <h1 style="font-family:Georgia,serif;font-size:22px;color:#3a1f12;margin:0 0 8px;">Bhoomi Art</h1>
+    <p style="color:#522e1c;font-size:15px;line-height:1.5;margin:0 0 20px;">
+      Use this code to sign in:
+    </p>
+    <p style="font-size:34px;letter-spacing:10px;font-weight:700;color:#a55536;margin:0 0 20px;">
+      {{ .Token }}
+    </p>
+    <p style="color:#6e3f26;font-size:13px;line-height:1.5;margin:0;">
+      The code works for a short time and only once. If you didn't ask for it, you can ignore this email.
+    </p>
+  </div>
+</div>

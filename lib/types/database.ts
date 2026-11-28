@@ -1457,7 +1457,7 @@ export type Database = {
         Returns: undefined;
       };
       create_order_with_stock: {
-        Args: { p_items: Json; p_order: Json };
+        Args: { p_clear_cart_for?: string; p_items: Json; p_order: Json };
         Returns: Json;
       };
       is_admin: { Args: never; Returns: boolean };

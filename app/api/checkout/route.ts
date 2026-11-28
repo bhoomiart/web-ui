@@ -1,213 +1,239 @@
 /**
  * POST /api/checkout
  *
- * Creates an order atomically:
- *   1. Validates all items still exist and prices match the DB
- *   2. Creates the order record + items
- *   3. Reserves stock (SELECT FOR UPDATE via RPC)
- *   4. Returns the order number for the confirmation page
+ * Places an order for the signed-in customer.
  *
- * No auth required — orders are anonymous, identified by phone.
+ * The order is built from the customer's SERVER cart, never from lines sent by
+ * the browser, so prices, quantities and totals cannot be tampered with, and a
+ * double click cannot place the same cart twice.
+ *
+ * Steps:
+ *   1. Require a signed-in customer with a confirmed email (401 otherwise).
+ *   2. Validate the form (name, phone, delivery state).
+ *   3. Load the server cart and re-check every line against live stock and prices.
+ *   4. Compute shipping for the delivery state and the final total (lib/pricing).
+ *   5. If the total differs from what the customer saw, stop and show the new one.
+ *   6. create_order_with_stock(): one transaction that takes the cart, creates the
+ *      order and items, and reserves stock under row locks.
+ *
+ * Body: { customerName, phone, email?, addressLine1?, addressLine2?, city?,
+ *         state, postalCode?, notes?, customization?, expectedTotal? }
+ *
+ * Responses:
+ *   201 { orderNumber, orderId, totals }
+ *   400 invalid form or empty cart
+ *   401 { code: 'AUTH_REQUIRED' }
+ *   409 { code: 'CART_CHANGED' | 'STOCK_CHANGED' | 'TOTAL_CHANGED', error, ... }
+ *   422 delivery not available
+ *   429 too many attempts
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { createOrder } from '@/lib/db/orders';
-import { reserveStock } from '@/lib/db/inventory';
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function generateOrderNumber(): string {
-  const now = new Date();
-  const date = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  return `BA-${date}-${rand}`;
-}
-
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-interface CartItemPayload {
-  productId: string;
-  variantId: string | null;
-  name: string;
-  price: number; // client-side price — will be validated
-  quantity: number;
-  image: string | null;
-  slug: string;
-}
+import { createAdminClient } from '@/lib/supabase/admin';
+import { requireCustomerApi } from '@/lib/auth/customer';
+import { rateLimit } from '@/lib/api/rateLimit';
+import { validateCart } from '@/lib/cart/validateCart';
+import { isPurchasable, type ValidatedLine } from '@/lib/cart/types';
+import { getOrCreateCartId, listCartRows } from '@/lib/db/cart';
+import { calcSubtotal, calcTotals } from '@/lib/pricing';
+import { getShippingQuote } from '@/lib/shipping';
+import { isIndiaState } from '@/lib/india-states';
 
 interface CheckoutBody {
-  customerName: string;
-  phone: string;
-  email?: string;
-  addressLine1?: string;
-  addressLine2?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  notes?: string;
-  customization?: string;
-  items: CartItemPayload[];
+  customerName?: unknown;
+  phone?: unknown;
+  email?: unknown;
+  addressLine1?: unknown;
+  addressLine2?: unknown;
+  city?: unknown;
+  state?: unknown;
+  postalCode?: unknown;
+  notes?: unknown;
+  customization?: unknown;
+  expectedTotal?: unknown;
 }
 
-// ─── Handler ─────────────────────────────────────────────────────────────────
+const str = (v: unknown, max: number): string =>
+  typeof v === 'string' ? v.trim().slice(0, max) : '';
+
+function fail(status: number, error: string, extra?: Record<string, unknown>) {
+  return NextResponse.json({ error, ...extra }, { status });
+}
+
+/** Postgres exception detail arrives as a JSON string. */
+function parseDetail(details: unknown): Record<string, unknown> {
+  if (typeof details !== 'string') return {};
+  try {
+    return JSON.parse(details) as Record<string, unknown>;
+  } catch {
+    return {};
+  }
+}
 
 export async function POST(request: NextRequest) {
-  const body = (await request.json()) as CheckoutBody;
+  // 1. Who is ordering
+  const customer = await requireCustomerApi();
+  if (customer instanceof NextResponse) return customer;
 
-  // ── Basic input validation ────────────────────────────────────────────────
-  const name = body.customerName?.trim();
-  const phone = body.phone?.trim();
-
-  if (!name) return NextResponse.json({ error: 'Customer name is required.' }, { status: 400 });
-  if (!phone) return NextResponse.json({ error: 'Phone number is required.' }, { status: 400 });
-  if (!/^\+?[0-9]{10,15}$/.test(phone.replace(/\s/g, '')))
-    return NextResponse.json({ error: 'Invalid phone number format.' }, { status: 400 });
-  if (!body.items || body.items.length === 0)
-    return NextResponse.json({ error: 'Your cart is empty.' }, { status: 400 });
-
-  // ── Validate prices + availability against DB ─────────────────────────────
-  const supabase = await createClient();
-
-  const productIds = [...new Set(body.items.map((i) => i.productId))];
-  const { data: products, error: prodError } = await supabase
-    .from('products')
-    .select('id, name, sku, price, availability_type, status, product_media(url, alt_text)')
-    .in('id', productIds);
-
-  if (prodError)
-    return NextResponse.json({ error: 'Failed to validate products.' }, { status: 500 });
-
-  const productMap = new Map((products ?? []).map((p) => [p.id, p]));
-
-  // Build validated order items
-  const validatedItems: Array<{
-    productId: string;
-    variantId?: string;
-    quantity: number;
-    unitPrice: number;
-    snapshot: { name: string; sku: string | null; image_url: string | null };
-  }> = [];
-
-  const unavailable: string[] = [];
-
-  for (const cartItem of body.items) {
-    const product = productMap.get(cartItem.productId);
-    if (!product) {
-      unavailable.push(cartItem.name);
-      continue;
-    }
-    if (product.status !== 'active') {
-      unavailable.push(product.name);
-      continue;
-    }
-    if (product.availability_type === 'out_of_stock') {
-      unavailable.push(product.name);
-      continue;
-    }
-
-    // Determine server-side unit price
-    let unitPrice = product.price ?? 0;
-    if (cartItem.variantId) {
-      const { data: variant } = await supabase
-        .from('product_variants')
-        .select('price_modifier, status')
-        .eq('id', cartItem.variantId)
-        .eq('product_id', cartItem.productId)
-        .single();
-
-      if (!variant || variant.status === 'archived') {
-        unavailable.push(`${product.name} (selected variant)`);
-        continue;
-      }
-      unitPrice += variant.price_modifier;
-    }
-
-    const media =
-      (product.product_media as Array<{ url: string; alt_text: string | null }> | null) ?? [];
-    const thumb = media[0] ?? null;
-
-    validatedItems.push({
-      productId: cartItem.productId,
-      variantId: cartItem.variantId ?? undefined,
-      quantity: Math.max(1, Math.floor(cartItem.quantity)),
-      unitPrice,
-      snapshot: {
-        name: product.name,
-        sku: product.sku,
-        image_url: thumb?.url ?? null,
-      },
-    });
+  if (!rateLimit(`checkout:${customer.id}`, 10, 60_000)) {
+    return fail(429, 'Too many attempts. Please wait a minute and try again.');
   }
 
-  if (unavailable.length > 0) {
-    return NextResponse.json(
-      {
-        error: `Some items are no longer available: ${unavailable.join(', ')}. Please update your cart.`,
-        unavailableItems: unavailable,
-      },
-      { status: 422 }
-    );
-  }
-
-  // ── Create order ──────────────────────────────────────────────────────────
-  const orderNumber = generateOrderNumber();
-
-  let order: { id: string; order_number: string };
+  let body: CheckoutBody;
   try {
-    order = await createOrder({
-      orderNumber,
-      customerName: name,
-      phone: phone.replace(/\s/g, ''),
-      email: body.email?.trim() || undefined,
-      addressLine1: body.addressLine1?.trim() || undefined,
-      addressLine2: body.addressLine2?.trim() || undefined,
-      city: body.city?.trim() || undefined,
-      state: body.state?.trim() || undefined,
-      postalCode: body.postalCode?.trim() || undefined,
-      notes: body.notes?.trim() || undefined,
-      customization: body.customization?.trim() || undefined,
-      items: validatedItems,
-    });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: `Failed to create order: ${msg}` }, { status: 500 });
+    body = (await request.json()) as CheckoutBody;
+  } catch {
+    return fail(400, 'Invalid request.');
   }
 
-  // ── Reserve stock (atomic, FOR UPDATE) ───────────────────────────────────
-  // Only attempt reservation for ready_to_ship products that have tracking enabled.
-  // Made-to-order products are allowed regardless of stock level.
-  const stockItems = validatedItems
-    .map((item) => {
-      const product = productMap.get(item.productId);
-      if (!product || product.availability_type !== 'ready_to_ship') return null;
-      return {
-        productId: item.productId,
-        variantId: item.variantId,
-        quantity: item.quantity,
-        orderId: order.id,
-      };
-    })
-    .filter(Boolean) as Array<{
-    productId: string;
-    variantId?: string;
-    quantity: number;
-    orderId: string;
-  }>;
+  // 2. Form
+  const name = str(body.customerName, 120);
+  const phone = str(body.phone, 20).replace(/\s/g, '');
+  const email = str(body.email, 254) || customer.email || '';
+  const state = str(body.state, 60);
 
-  if (stockItems.length > 0) {
-    try {
-      await reserveStock(stockItems);
-    } catch (err) {
-      // Stock reservation failed — delete the order we just created to avoid orphans
-      const { createAdminClient } = await import('@/lib/supabase/admin');
-      const admin = createAdminClient();
-      await admin.from('orders').delete().eq('id', order.id);
+  if (!name) return fail(400, 'Full name is required.', { field: 'customerName' });
+  if (!/^\+?[0-9]{10,15}$/.test(phone)) {
+    return fail(400, 'Enter a valid phone number (10 to 15 digits).', { field: 'phone' });
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return fail(400, 'Enter a valid email address.', { field: 'email' });
+  }
+  if (!state || !isIndiaState(state)) {
+    return fail(400, 'Select the state we should deliver to.', { field: 'state' });
+  }
 
-      const msg = err instanceof Error ? err.message : String(err);
-      return NextResponse.json({ error: `Stock no longer available: ${msg}` }, { status: 422 });
+  try {
+    // 3. Server cart, re-checked
+    const supabase = await createClient();
+    const cartId = await getOrCreateCartId(supabase, customer.id);
+    const rows = await listCartRows(supabase, cartId);
+    if (rows.length === 0) return fail(400, 'Your cart is empty.', { code: 'CART_EMPTY' });
+
+    const lines: ValidatedLine[] = await validateCart(
+      rows.map((r) => ({ productId: r.product_id, variantId: r.variant_id, quantity: r.quantity })),
+      supabase
+    );
+
+    const problems = lines.filter((l) => !isPurchasable(l.status));
+    if (problems.length > 0) {
+      return fail(409, 'Some items in your cart changed. Please review your cart and try again.', {
+        code: 'CART_CHANGED',
+        problems: problems.map((l) => ({ name: l.name, status: l.status, message: l.message })),
+      });
     }
-  }
 
-  return NextResponse.json({ orderNumber: order.order_number, orderId: order.id }, { status: 201 });
+    // 4. Shipping and total
+    const subtotal = calcSubtotal(lines);
+    const quote = await getShippingQuote(state, subtotal);
+    if (!quote) return fail(422, "We can't deliver to that state yet.", { field: 'state' });
+
+    const totals = calcTotals(lines, { state, fee: quote.baseFee, freeAbove: quote.freeAbove });
+
+    // 5. Is this the total the customer agreed to?
+    const expected = typeof body.expectedTotal === 'number' ? body.expectedTotal : null;
+    if (expected != null && Math.abs(expected - totals.total) > 0.009) {
+      return fail(
+        409,
+        'Prices or delivery charges changed. Please check your new total and place the order again.',
+        { code: 'TOTAL_CHANGED', totals }
+      );
+    }
+
+    // 6. One transaction: take the cart, create the order, reserve stock.
+    const admin = createAdminClient();
+    const { data, error } = await admin.rpc('create_order_with_stock', {
+      p_order: {
+        user_id: customer.id,
+        customer_name: name,
+        phone,
+        email,
+        address_line1: str(body.addressLine1, 200),
+        address_line2: str(body.addressLine2, 200),
+        city: str(body.city, 100),
+        state,
+        postal_code: str(body.postalCode, 12),
+        notes: str(body.notes, 1000),
+        customization: str(body.customization, 1000),
+        subtotal: totals.subtotal,
+        shipping_fee: totals.shippingFee ?? 0,
+        discount_amount: totals.discount,
+        total: totals.total,
+      },
+      p_items: lines.map((l) => ({
+        product_id: l.productId,
+        variant_id: l.variantId,
+        quantity: l.quantity,
+        unit_price: l.unitPrice,
+        snapshot: {
+          name: l.name,
+          variant_name: l.variantName,
+          sku: l.sku ?? null,
+          image_url: l.image,
+        },
+      })),
+      p_clear_cart_for: customer.id,
+    });
+
+    if (error) {
+      const code = error.message;
+      const detail = parseDetail(error.details);
+
+      if (code === 'INSUFFICIENT_STOCK') {
+        const line = lines.find(
+          (l) =>
+            l.productId === detail.product_id &&
+            (l.variantId ?? null) === ((detail.variant_id as string | null | undefined) ?? null)
+        );
+        const left = typeof detail.available === 'number' ? detail.available : 0;
+        return fail(
+          409,
+          left > 0
+            ? `Only ${left} of "${line?.name ?? 'an item'}" ${left === 1 ? 'is' : 'are'} left. Please update your cart.`
+            : `"${line?.name ?? 'An item'}" just sold out. Please update your cart.`,
+          { code: 'STOCK_CHANGED' }
+        );
+      }
+      if (code === 'PRODUCT_UNAVAILABLE' || code === 'NO_INVENTORY') {
+        return fail(409, 'An item in your cart is no longer available. Please update your cart.', {
+          code: 'STOCK_CHANGED',
+        });
+      }
+      if (code === 'CART_CHANGED') {
+        return fail(
+          409,
+          'Your cart changed in another window or device. Please review it and try again.',
+          { code: 'CART_CHANGED' }
+        );
+      }
+
+      // Anything else is a bug or an outage. Log the code only, never customer data.
+      console.error('checkout: create_order_with_stock failed', { code });
+      return fail(500, 'We could not place your order. Please try again.');
+    }
+
+    const result = data as { order_id: string; order_number: string } | null;
+    if (!result) return fail(500, 'We could not place your order. Please try again.');
+
+    // Remember name and phone for next time. Best effort, never blocks the order.
+    try {
+      await admin
+        .from('profiles')
+        .update({ full_name: name })
+        .eq('id', customer.id)
+        .is('full_name', null);
+      await admin.from('profiles').update({ phone }).eq('id', customer.id).is('phone', null);
+    } catch {
+      /* non-critical */
+    }
+
+    return NextResponse.json(
+      { orderNumber: result.order_number, orderId: result.order_id, totals },
+      { status: 201 }
+    );
+  } catch (err) {
+    console.error('checkout: unexpected failure', err instanceof Error ? err.message : 'unknown');
+    return fail(500, 'We could not place your order. Please try again.');
+  }
 }

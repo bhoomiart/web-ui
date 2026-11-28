@@ -63,9 +63,19 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // ── Authenticated on the login page — send to dashboard ───────────────────
+  // ── Staff already signed in on the login page — send to dashboard ─────────
+  // Customers share the same Supabase Auth. A customer session must NOT be sent
+  // to the dashboard: its own role check would send them straight back here,
+  // and the two redirects would loop forever. Only admin and staff are moved on.
   if (isLoginPage && user) {
-    return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle();
+    if (profile && ['admin', 'staff'].includes(profile.role)) {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+    }
   }
 
   return response;

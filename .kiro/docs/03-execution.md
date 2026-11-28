@@ -306,7 +306,7 @@ Wire up Supabase into the Next.js project.
 - [x] A4-T4-1 · Ready to Ship / Made to Order / Out of Stock — schema and enum in place from A2
 - [x] A4-T4-2 · Out-of-stock page shows subscriber count + link to restock queue
 - [x] A4-T4-3 · Low-stock threshold alerts in admin (overview cards + dedicated filtered page)
-- [ ] A4-T4-4 · Cart/product page enforcement — implemented in A5-T4 / A6
+- [x] A4-T4-4 · Cart/product page enforcement — implemented in A10-T3/T4
 
 ### A4-T5 · Restock Subscription (Customer Side) ✅
 
@@ -683,12 +683,12 @@ Wire up Supabase into the Next.js project.
 Full plan, audit, design and open questions: [04-cart-auth-flow-plan.md](./04-cart-auth-flow-plan.md). Supersedes "guest checkout only" once approved. Closes A4-T4-4.
 
 - [x] A10-T1 · Security & data foundation (migrations 018-022 applied and verified) — `customer` role (fixes default-`staff` profile trigger), `orders.user_id` + RLS, atomic `create_order_with_stock`
-- [ ] A10-T2 · Server validation service — `validateCart`, `lib/pricing.ts`, `POST /api/cart/validate`, shipping settings, checkout refactor
-- [ ] A10-T3 · Cart store & stock-aware product UI — stock caps, "Only N left", out-of-stock state, listing quick-add
-- [ ] A10-T4 · Cart experience — per-line status, sync triggers, price-change notices, blocked checkout when invalid
-- [ ] A10-T5 · Customer authentication — email OTP, email/password, reset (WhatsApp OTP deferred), `AuthModal`, account menu
-- [ ] A10-T6 · Checkout integration — auth gate (client + server), pre-fill, 401/422 handling, cart cleared after success
-- [ ] A10-T7 · QA, edge cases & docs
+- [x] A10-T2 · Server validation service — done: `validateCart`, `lib/pricing.ts`, `/api/cart/*`, per-state shipping + admin page. Checkout refactor moved to T6
+- [x] A10-T3 · Cart store & stock-aware product UI — stock caps, "Only N left", out-of-stock state, listing quick-add
+- [x] A10-T4 · Cart experience — per-line status, sync triggers, price-change notices, blocked checkout when invalid
+- [~] A10-T5 · Customer authentication (code done and tested; your Supabase email templates and custom SMTP are still to do, see 05-auth-setup.md) — email OTP, email/password, reset (WhatsApp OTP deferred), `AuthModal`, account menu
+- [x] A10-T6 · Checkout integration — auth gate (client + server), pre-fill, 401/422 handling, cart cleared after success
+- [x] A10-T7 · QA, edge cases & docs (see section 13 of 04-cart-auth-flow-plan.md for results and the go-live checklist)
 
 ---
 
@@ -710,6 +710,6 @@ Full plan, audit, design and open questions: [04-cart-auth-flow-plan.md](./04-ca
 
 ## Next Up
 
-**All agents complete.** The project is production-ready pending the three manual launch steps: Lighthouse audit with real photography, HTTPS at the host, and replacing the coming-soon page.
+**All agents complete, including A10.** Remaining before launch: the Supabase dashboard setup for customer sign-in (email templates, custom SMTP, Confirm email, leaked-password protection, Site URL: `05-auth-setup.md`), real per-state shipping fees, a Lighthouse audit with real photography, and HTTPS at the host. A go-live checklist is in section 13 of `04-cart-auth-flow-plan.md`.
 
 > **To go live:** swap `app/page.tsx` with a redirect to `/(storefront)` or move the storefront layout to the root route group.

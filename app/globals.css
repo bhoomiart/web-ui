@@ -12,7 +12,7 @@
   --color-earth-200: #e8d5be;
   --color-earth-300: #d4b08a;
   --color-earth-400: #c08b5c;
-  --color-earth-500: #a8683a;
+  --color-earth-500: #975d34; /* was #a8683a: 4.2:1 on ivory, now 5.0:1 (WCAG AA for small text) */
   --color-earth-600: #8b5230;
   --color-earth-700: #6e3f26;
   --color-earth-800: #522e1c;
@@ -31,7 +31,7 @@
   --color-forest-900: #082010;
 
   /* Semantic brand colours — these are the "named" colours used in components */
-  --color-brand-primary: #b65e3c; /* Terracotta — per requirements */
+  --color-brand-primary: #a55536; /* Terracotta. Slightly deepened from the brand #B65E3C so small text and white-on-terracotta reach WCAG AA (4.5:1) */
   --color-brand-clay: #80513b; /* Clay Brown */
   --color-brand-sand: #e9dcc8; /* Sand Beige */
   --color-brand-ivory: #faf7f0; /* Warm Ivory */
@@ -40,16 +40,16 @@
 
   /* Status colours */
   --color-success-light: #d1fae5;
-  --color-success: #059669;
+  --color-success: #047d58; /* was #059669: text on --color-success-light needed 4.5:1 */
   --color-success-dark: #065f46;
   --color-warning-light: #fef3c7;
   --color-warning: #d97706;
   --color-warning-dark: #92400e;
   --color-error-light: #fee2e2;
-  --color-error: #dc2626;
+  --color-error: #ca2121; /* was #dc2626: text on --color-error-light needed 4.5:1 */
   --color-error-dark: #991b1b;
   --color-info-light: #dbeafe;
-  --color-info: #2563eb;
+  --color-info: #1c5cea; /* was #2563eb: text on --color-info-light needed 4.5:1 */
   --color-info-dark: #1e40af;
 
   /* ─────────────────────────────────────────────

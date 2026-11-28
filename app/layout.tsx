@@ -28,7 +28,7 @@ const lato = Lato({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#b65e3c',
+  themeColor: '#a55536',
 };
 
 // ─── Default metadata ─────────────────────────────────────────────────────────

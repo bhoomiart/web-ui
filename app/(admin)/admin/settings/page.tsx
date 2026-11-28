@@ -110,6 +110,12 @@ async function SettingsPageContent() {
             >
               Return &amp; refund policy
             </Link>
+            <Link
+              href="/admin/settings/shipping"
+              className="px-[var(--spacing-4)] py-[var(--spacing-2)] rounded-[var(--radius-button)] border border-[var(--color-earth-200)] text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-700)] hover:bg-[var(--color-earth-100)]"
+            >
+              Shipping rates
+            </Link>
           </div>
         }
         breadcrumbs={[{ label: 'Dashboard', href: '/admin/dashboard' }, { label: 'Settings' }]}

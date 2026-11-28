@@ -35,14 +35,14 @@
 - [ ] Add/remove products, change quantities, select variants
 - [ ] Cart persists during browsing
 - [ ] Stock revalidated before order submission
-- [ ] Checkout without creating an account
+- [x] Sign in or create an account to check out (email code or email + password). Cart is kept through sign-in and follows the customer across devices (A10)
 - [ ] Provide name, phone (required), email (optional), address, notes, customization details
 - [ ] Receive a unique order ID after placing an order
 - [ ] See an order acknowledgement page with a WhatsApp link to notify admin
 
 ### Order Tracking
 
-- [ ] Look up order status using phone number + order number (no login required)
+- [ ] Look up order status using phone number + order number (no login required; kept for orders placed before accounts)
 - [ ] See order status timeline
 
 ### Out-of-Stock Products
@@ -210,7 +210,9 @@
 - Online payment processing
 - Automated WhatsApp Business Cloud API messaging
 - Automated transactional email
-- Customer accounts and loyalty programs
+- Loyalty programs (customer accounts themselves are in scope since A10)
+- Mobile / WhatsApp OTP sign-in (designed in 04-cart-auth-flow-plan.md, switched off)
+- A "My orders" page for signed-in customers (orders are already linked to the account)
 - Discount / coupon engine
 - Shipping provider integrations
 - Advanced recommendation algorithms

@@ -11,76 +11,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 // ─── Create ───────────────────────────────────────────────────────────────
-
-export interface CreateOrderInput {
-  orderNumber: string;
-  customerName: string;
-  phone: string;
-  email?: string;
-  addressLine1?: string;
-  addressLine2?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  notes?: string;
-  customization?: string;
-  items: Array<{
-    productId: string;
-    variantId?: string;
-    quantity: number;
-    unitPrice: number;
-    snapshot: { name: string; sku: string | null; image_url: string | null };
-  }>;
-}
-
-export async function createOrder(input: CreateOrderInput) {
-  const admin = createAdminClient();
-
-  // Insert order
-  const { data: order, error: orderError } = await admin
-    .from('orders')
-    .insert({
-      order_number: input.orderNumber,
-      customer_name: input.customerName,
-      phone: input.phone,
-      email: input.email ?? null,
-      address_line1: input.addressLine1 ?? null,
-      address_line2: input.addressLine2 ?? null,
-      city: input.city ?? null,
-      state: input.state ?? null,
-      postal_code: input.postalCode ?? null,
-      notes: input.notes ?? null,
-      customization: input.customization ?? null,
-    })
-    .select()
-    .single();
-
-  if (orderError) throw new Error(`createOrder: ${orderError.message}`);
-
-  // Insert order items
-  const { error: itemsError } = await admin.from('order_items').insert(
-    input.items.map((item) => ({
-      order_id: order.id,
-      product_id: item.productId,
-      variant_id: item.variantId ?? null,
-      quantity: item.quantity,
-      unit_price: item.unitPrice,
-      item_total: item.quantity * item.unitPrice,
-      snapshot: item.snapshot,
-    }))
-  );
-
-  if (itemsError) throw new Error(`createOrder items: ${itemsError.message}`);
-
-  // Record initial status history
-  await admin.from('order_status_history').insert({
-    order_id: order.id,
-    new_status: 'pending',
-    notes: 'Order created',
-  });
-
-  return order;
-}
+// Orders are created ONLY by POST /api/checkout, through the create_order_with_stock()
+// database function (one transaction: take the cart, create the order, reserve stock).
+// Do not add another way to insert orders: it would skip stock reservation and the
+// link to the customer's account.
 
 // ─── Customer lookup (secure) ─────────────────────────────────────────────
 

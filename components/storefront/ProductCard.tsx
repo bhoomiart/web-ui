@@ -4,12 +4,14 @@
  * Shared product listing card used by homepage sections, /shop, category pages,
  * search results, and recommendation rows.
  *
- * Server component — no interactivity. All variants are purely presentational.
- * Cart actions are handled on the product detail page (A6-T1).
+ * Server component. The card itself is presentational; the quick add-to-cart
+ * and live stock indicator are one small client island (ProductCardActions),
+ * so cached listing pages never show stale stock.
  */
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { ProductCardActions } from './ProductCardActions';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -185,8 +187,6 @@ export function ProductCard({ product, size = 'md', priority = false }: ProductC
       <Link
         href={`/product/${product.slug}`}
         className="relative block overflow-hidden rounded-[var(--radius-image)] bg-[var(--color-earth-100)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2"
-        tabIndex={0}
-        aria-label={product.name}
       >
         <div className={`relative w-full ${imageAspect[size]}`}>
           {thumb ? (
@@ -240,7 +240,7 @@ export function ProductCard({ product, size = 'md', priority = false }: ProductC
         {/* Name */}
         <Link
           href={`/product/${product.slug}`}
-          className="text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-900)] leading-snug hover:text-[var(--color-brand-primary)] transition-colors focus-visible:outline-none focus-visible:underline"
+          className="inline-block py-0.5 text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-900)] leading-snug hover:text-[var(--color-brand-primary)] transition-colors focus-visible:outline-none focus-visible:underline"
         >
           {product.name}
         </Link>
@@ -266,6 +266,18 @@ export function ProductCard({ product, size = 'md', priority = false }: ProductC
           )}
           <AvailabilityBadge type={product.availability_type} />
         </div>
+
+        {/* Quick add + live stock */}
+        <ProductCardActions
+          product={{
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            image: thumb?.url ?? null,
+            availabilityType: product.availability_type,
+          }}
+        />
       </div>
     </article>
   );
