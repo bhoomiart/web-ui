@@ -15,7 +15,7 @@ import { listOrders } from '@/lib/db/orders';
 type TabKey = 'all' | 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 const STATUS_TABS: { key: TabKey; label: string; value?: string }[] = [
-  { key: 'all', label: 'All' },
+  { key: 'all', label: 'All', value: 'all' },
   { key: 'pending', label: 'Pending', value: 'pending' },
   { key: 'processing', label: 'Processing', value: 'processing' },
   { key: 'shipped', label: 'Shipped', value: 'shipped' },

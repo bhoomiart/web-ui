@@ -35,6 +35,15 @@ export type OrderData = {
     /** Set by the server: its return is still pending, so it can be cancelled */
     canCancelReturn?: boolean;
     returnDeadline?: string;
+    /** Set by the server: details of this line's return request */
+    returnInfo?: {
+      id: string;
+      status: string;
+      reason: string;
+      description: string | null;
+      createdAt: string;
+      photos: string[];
+    } | null;
   }>;
   order_status_history: Array<{
     id: string;
@@ -70,6 +79,21 @@ export const STATUS_LABELS: Record<string, string> = {
   refunded: 'Refunded',
 };
 
+const RETURN_STATUS_LABELS: Record<string, string> = {
+  pending: 'Waiting for review',
+  approved: 'Approved',
+  rejected: 'Declined',
+  in_transit: 'Return in transit',
+  completed: 'Return received',
+  cancelled: 'Cancelled',
+};
+const REASON_LABELS: Record<string, string> = {
+  damaged: 'Item arrived damaged',
+  wrong_item: 'Wrong item received',
+  quality_issue: 'Quality issue',
+  changed_mind: 'Changed my mind',
+  other: 'Other',
+};
 export const fmt = (n: number) =>
   new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -116,8 +140,21 @@ export function OrderView({
   const returnable = order.order_items.filter((i) => i.canReturn);
   const deliveredItems = order.order_items.filter((i) => i.status === 'delivered');
   const mixed = new Set(order.order_items.map((i) => i.status)).size > 1;
-  const cancellable = order.order_items.filter((i) => i.canCancelReturn && i.returnId);
-  const cancellableReturns = [...new Set(cancellable.map((i) => i.returnId as string))];
+  const returnGroups = Object.values(
+    order.order_items.reduce<
+      Record<
+        string,
+        {
+          info: NonNullable<OrderData['order_items'][number]['returnInfo']>;
+          lines: OrderData['order_items'];
+        }
+      >
+    >((acc, i) => {
+      if (!i.returnInfo) return acc;
+      (acc[i.returnInfo.id] ??= { info: i.returnInfo, lines: [] }).lines.push(i);
+      return acc;
+    }, {})
+  );
   const [cancelling, setCancelling] = React.useState<string | null>(null);
   const [cancelError, setCancelError] = React.useState<string | null>(null);
   async function cancelReturn(returnId: string) {
@@ -288,30 +325,60 @@ export function OrderView({
         </div>
       )}
 
-      {/* Open return requests: can be cancelled until we review them */}
-      {cancellableReturns.length > 0 && (
-        <div className="bg-[var(--color-earth-50)] rounded-[var(--radius-xl)] border border-[var(--color-earth-200)] p-[var(--spacing-4)] flex flex-col gap-[var(--spacing-3)]">
+      {/* Return requests: details, photos and, until we review them, a cancel option */}
+      {returnGroups.length > 0 && (
+        <div className="flex flex-col gap-[var(--spacing-3)]">
           <h2 className="heading-5">Return requests</h2>
-          {cancellableReturns.map((rid) => (
+          {returnGroups.map(({ info, lines }) => (
             <div
-              key={rid}
-              className="flex items-center justify-between gap-[var(--spacing-3)] flex-wrap"
+              key={info.id}
+              className="bg-[var(--color-earth-50)] rounded-[var(--radius-xl)] border border-[var(--color-earth-200)] p-[var(--spacing-4)] flex flex-col gap-[var(--spacing-2)]"
             >
-              <p className="text-[var(--font-size-sm)] text-[var(--color-earth-700)]">
-                {cancellable
-                  .filter((i) => i.returnId === rid)
-                  .map((i) => `${i.snapshot?.name ?? 'Item'} × ${i.quantity}`)
-                  .join(', ')}{' '}
-                <span className="text-[var(--color-earth-500)]">(waiting for review)</span>
+              <div className="flex items-center justify-between gap-[var(--spacing-3)] flex-wrap">
+                <p className="text-[var(--font-size-sm)] font-semibold text-[var(--color-earth-900)]">
+                  {lines.map((i) => `${i.snapshot?.name ?? 'Item'} × ${i.quantity}`).join(', ')}
+                </p>
+                <span className="text-[var(--font-size-xs)] font-semibold text-[var(--color-info)]">
+                  {RETURN_STATUS_LABELS[info.status] ?? info.status.replace(/_/g, ' ')}
+                </span>
+              </div>
+              <p className="text-[var(--font-size-xs)] text-[var(--color-earth-500)]">
+                Requested {formatDate(info.createdAt)} · Reason:{' '}
+                {REASON_LABELS[info.reason] ?? info.reason.replace(/_/g, ' ')}
               </p>
-              <button
-                type="button"
-                onClick={() => cancelReturn(rid)}
-                disabled={cancelling === rid}
-                className="px-[var(--spacing-4)] h-9 rounded-[var(--radius-button)] border border-[var(--color-error)] text-[var(--color-error)] text-[var(--font-size-xs)] font-semibold disabled:opacity-60"
-              >
-                {cancelling === rid ? 'Cancelling…' : 'Cancel return request'}
-              </button>
+              {info.description && (
+                <p className="text-[var(--font-size-sm)] text-[var(--color-earth-700)]">
+                  “{info.description}”
+                </p>
+              )}
+              {info.photos.length > 0 && (
+                <ul className="flex flex-wrap gap-[var(--spacing-2)]">
+                  {info.photos.map((url, n) => (
+                    <li key={url}>
+                      <a href={url} target="_blank" rel="noopener noreferrer">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={url}
+                          alt={`Return photo ${n + 1}`}
+                          className="w-20 h-20 object-cover rounded-[var(--radius-md)] border border-[var(--color-earth-200)]"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {info.status === 'pending' && lines.some((i) => i.canCancelReturn) && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => cancelReturn(info.id)}
+                    disabled={cancelling === info.id}
+                    className="px-[var(--spacing-4)] h-9 rounded-[var(--radius-button)] border border-[var(--color-error)] text-[var(--color-error)] text-[var(--font-size-xs)] font-semibold disabled:opacity-60"
+                  >
+                    {cancelling === info.id ? 'Cancelling…' : 'Cancel return request'}
+                  </button>
+                </div>
+              )}
             </div>
           ))}
           {cancelError && (

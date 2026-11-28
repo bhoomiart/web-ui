@@ -4,6 +4,7 @@
  */
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getPolicySettings } from '@/lib/policy-settings';
+import { signPhotoPaths } from '@/lib/uploads';
 
 type Line = { id: string; status: string };
 type History = { order_item_id: string | null; new_status: string; created_at: string };
@@ -13,7 +14,16 @@ type OrderLike<L extends Line> = {
   order_status_history?: History[] | null;
 };
 
-type ActiveReturn = { returnId: string; returnStatus: string };
+export type ReturnSummary = {
+  id: string;
+  status: string;
+  reason: string;
+  description: string | null;
+  createdAt: string;
+  /** Signed, short-lived photo URLs */
+  photos: string[];
+};
+type ActiveReturn = { returnId: string; returnStatus: string; summary: ReturnSummary };
 
 /**
  * For each line, its current return request (cancelled ones are ignored).
@@ -26,18 +36,46 @@ async function activeReturnsByLine(orderIds: string[]): Promise<Map<string, Acti
   const admin = createAdminClient();
   const { data } = await admin
     .from('return_request_items')
-    .select('order_item_id, return_requests!inner(id, status, order_id)')
+    .select(
+      'order_item_id, return_requests!inner(id, status, order_id, reason, description, photos, created_at)'
+    )
     .in('return_requests.order_id', orderIds)
     .neq('return_requests.status', 'cancelled');
   for (const r of data ?? []) {
-    const rr = r.return_requests as unknown as { id: string; status: string };
-    map.set(r.order_item_id, { returnId: rr.id, returnStatus: rr.status });
+    const rr = r.return_requests as unknown as {
+      id: string;
+      status: string;
+      reason: string;
+      description: string | null;
+      photos: string[] | null;
+      created_at: string;
+    };
+    map.set(r.order_item_id, {
+      returnId: rr.id,
+      returnStatus: rr.status,
+      summary: {
+        id: rr.id,
+        status: rr.status,
+        reason: rr.reason,
+        description: rr.description,
+        createdAt: rr.created_at,
+        photos: rr.photos ?? [],
+      },
+    });
   }
+  // Photos are stored as private paths. Sign each distinct return once.
+  const summaries = new Map<string, ReturnSummary>();
+  for (const a of map.values()) summaries.set(a.summary.id, a.summary);
+  await Promise.all(
+    [...summaries.values()].map(async (sum) => {
+      sum.photos = await signPhotoPaths(sum.photos);
+    })
+  );
   return map;
 }
 
 /**
- * Adds `returned`, `returnId`, `returnStatus`, `canReturn`, `canCancelReturn` and
+ * Adds `returned`, `returnId`, `returnStatus`, `returnInfo`, `canReturn`, `canCancelReturn` and
  * `returnDeadline` to every line of each order.
  * The window runs from the line's own delivered date.
  */
@@ -63,6 +101,7 @@ export async function withReturnInfo<L extends Line, O extends OrderLike<L> & { 
         returned: !!ret,
         returnId: ret?.returnId ?? null,
         returnStatus: ret?.returnStatus ?? null,
+        returnInfo: ret?.summary ?? null,
         canReturn: i.status === 'delivered' && !ret && Date.now() <= Date.parse(returnDeadline),
         canCancelReturn: ret?.returnStatus === 'pending' && i.status === 'return_requested',
         returnDeadline,

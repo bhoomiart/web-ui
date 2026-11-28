@@ -11,6 +11,7 @@ import { AdminPageHeader } from '@/components/layout/AdminPageHeader';
 import { AdminOnly } from '@/components/layout/AdminRole';
 import { OrderStatusBadge } from '@/components/admin/OrderStatusBadge';
 import { Spinner } from '@/components/ui/Spinner';
+import { ReturnStatusBadge } from '@/components/admin/ReturnStatusBadge';
 import { CustomerPhotos } from '@/components/admin/CustomerPhotos';
 import { listReturnRequests } from '@/lib/db/orders';
 
@@ -27,26 +28,6 @@ const TABS: { key: StatusFilter; label: string }[] = [
   { key: 'cancelled', label: 'Cancelled' },
 ];
 
-function returnStatusBadge(status: string) {
-  const map: Record<string, { color: string; bg: string }> = {
-    pending: { color: 'var(--color-warning)', bg: 'var(--color-warning-light)' },
-    approved: { color: 'var(--color-info)', bg: 'var(--color-info-light)' },
-    rejected: { color: 'var(--color-error)', bg: 'var(--color-error-light)' },
-    in_transit: { color: 'var(--color-info)', bg: 'var(--color-info-light)' },
-    completed: { color: 'var(--color-success)', bg: 'var(--color-success-light)' },
-    cancelled: { color: 'var(--color-earth-500)', bg: 'var(--color-earth-100)' },
-  };
-  const cfg = map[status] ?? { color: 'var(--color-earth-500)', bg: 'var(--color-earth-100)' };
-  return (
-    <span
-      className="inline-flex items-center px-[var(--spacing-2)] py-0.5 rounded-[var(--radius-full)] text-[var(--font-size-xs)] font-semibold capitalize"
-      style={{ color: cfg.color, background: cfg.bg }}
-    >
-      {status.replace(/_/g, ' ')}
-    </span>
-  );
-}
-
 export default async function ReturnsPage({
   searchParams,
 }: {
@@ -54,7 +35,9 @@ export default async function ReturnsPage({
 }) {
   await requireStaff();
   const { status: rawStatus } = await searchParams;
-  const statusFilter = (typeof rawStatus === 'string' ? rawStatus : 'all') as StatusFilter;
+  const statusFilter = (
+    typeof rawStatus === 'string' && rawStatus ? rawStatus : 'pending'
+  ) as StatusFilter;
 
   return (
     <div>
@@ -85,11 +68,7 @@ export default async function ReturnsPage({
           return (
             <Link
               key={tab.key}
-              href={
-                tab.key === 'all'
-                  ? '/admin/orders/returns'
-                  : `/admin/orders/returns?status=${tab.key}`
-              }
+              href={`/admin/orders/returns?status=${tab.key}`}
               className={`px-[var(--spacing-4)] py-[var(--spacing-2)] text-[var(--font-size-sm)] font-semibold border-b-2 transition-colors -mb-px ${
                 active
                   ? 'border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]'
@@ -208,7 +187,7 @@ async function ReturnsContent({ statusFilter }: { statusFilter: StatusFilter }) 
                     {r.reason.replace(/_/g, ' ')}
                   </td>
                   <td className="px-[var(--spacing-4)] py-[var(--spacing-3)]">
-                    {returnStatusBadge(r.status)}
+                    <ReturnStatusBadge status={r.status} />
                   </td>
                   <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-[var(--color-earth-500)] hidden lg:table-cell whitespace-nowrap">
                     {new Date(r.created_at).toLocaleDateString('en-IN', {
@@ -219,6 +198,12 @@ async function ReturnsContent({ statusFilter }: { statusFilter: StatusFilter }) 
                   </td>
                   <td className="px-[var(--spacing-4)] py-[var(--spacing-3)] text-right">
                     <ReturnActions returnId={r.id} status={r.status} />
+                    <Link
+                      href={`/admin/orders/returns/${r.id}`}
+                      className="block text-[var(--font-size-xs)] font-semibold text-[var(--color-brand-primary)] hover:underline"
+                    >
+                      View details
+                    </Link>
                     {order && (
                       <Link
                         href={`/admin/orders/${order.id}`}
